@@ -5,8 +5,7 @@
 
 use base64::Engine;
 use rand::{RngCore, thread_rng};
-use rand::distributions::Alphanumeric;
-use rand::{Rng, distributions::DistString};
+use rand::distributions::{Alphanumeric, Distribution};
 
 /// Security utility functions
 pub struct SecureUtil;
@@ -60,7 +59,7 @@ impl SecureUtil {
     /// assert!(random_str.chars().all(|c| c.is_alphanumeric()));
     /// ```
     pub fn random_alphanumeric(len: usize) -> String {
-        Alphanumeric.sample_string(&mut thread_rng(), len)
+        (0..len).map(|_| Alphanumeric.sample(&mut thread_rng()) as char).collect()
     }
 
     /// Generate secure numeric string

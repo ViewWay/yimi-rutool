@@ -4,9 +4,8 @@
 
 use crate::error::{Error, Result};
 use rsa::{
-    Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey,
+    Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey, PublicKey, PublicKeyParts,
     pkcs1::DecodeRsaPublicKey, pkcs1::EncodeRsaPublicKey,
-    traits::PublicKeyParts,
     signature::SignatureEncoding,
 };
 use base64::Engine;
