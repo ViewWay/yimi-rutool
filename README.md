@@ -1,10 +1,10 @@
-# Rutool - A Comprehensive Rust Utility Library
+# yimi-rutool - A Comprehensive Rust Utility Library
 
-[![Crates.io](https://img.shields.io/crates/v/rutool.svg)](https://crates.io/crates/rutool)
-[![Documentation](https://docs.rs/rutool/badge.svg)](https://docs.rs/rutool)
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/yimiliya/rutool)
+[![Crates.io](https://img.shields.io/crates/v/yimi-rutool.svg)](https://crates.io/crates/yimi-rutool)
+[![Documentation](https://docs.rs/yimi-rutool/badge.svg)](https://docs.rs/yimi-rutool)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/yimiliya/yimi-rutool)
 
-**Rutool** 是一个受 [Hutool](https://hutool.cn/) 启发的综合性 Rust 工具库，为日常开发任务提供丰富的工具函数。
+**yimi-rutool** 是一个受 [Hutool](https://hutool.cn/) 启发的综合性 Rust 工具库，为日常开发任务提供丰富的工具函数。
 
 ## ✨ 特性
 
@@ -36,13 +36,13 @@
 
 ```toml
 [dependencies]
-rutool = "0.1"
+yimi-rutool = "0.1"
 ```
 
 ### 基础用法
 
 ```rust
-use rutool::core::{StrUtil, DateUtil};
+use yimi_rutool::core::{StrUtil, DateUtil};
 
 // 字符串工具
 let result = StrUtil::is_blank("   ");
@@ -62,7 +62,7 @@ println!("Tomorrow: {}", tomorrow);
 ### 加密解密
 
 ```rust
-use rutool::crypto::{AesUtil, Md5Util};
+use yimi_rutool::crypto::{AesUtil, Md5Util};
 
 #[cfg(feature = "crypto")]
 {
@@ -82,7 +82,7 @@ use rutool::crypto::{AesUtil, Md5Util};
 ### HTTP 请求
 
 ```rust
-use rutool::http::HttpUtil;
+use yimi_rutool::http::HttpUtil;
 
 #[cfg(feature = "http")]
 async fn example() -> Result<(), Box<dyn std::error::Error>> {
@@ -102,7 +102,7 @@ async fn example() -> Result<(), Box<dyn std::error::Error>> {
 ### JSON 处理
 
 ```rust
-use rutool::json::JsonUtil;
+use yimi_rutool::json::JsonUtil;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -135,7 +135,7 @@ Rutool 使用 Cargo 的功能标志来控制启用哪些模块：
 
 ```toml
 [dependencies]
-rutool = { version = "0.1", features = ["core", "crypto"] }
+yimi-rutool = { version = "0.1", features = ["core", "crypto"] }
 ```
 
 ### 可用功能标志
@@ -152,7 +152,7 @@ rutool = { version = "0.1", features = ["core", "crypto"] }
 
 ## 📚 详细文档
 
-- [API 文档](https://docs.rs/rutool) - 完整的 API 参考
+- [API 文档](https://docs.rs/yimi-rutool) - 完整的 API 参考
 - [使用指南](./docs/guide.md) - 详细的使用说明
 - [示例代码](./examples/) - 实际使用示例
 
@@ -164,8 +164,8 @@ rutool = { version = "0.1", features = ["core", "crypto"] }
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/yimiliya/rutool.git
-cd rutool
+git clone https://github.com/yimiliya/yimi-rutool.git
+cd yimi-rutool
 ```
 
 2. 运行测试：
@@ -210,8 +210,8 @@ cargo bench
 
 ## 📞 联系方式
 
-- 项目主页: [https://github.com/yimiliya/rutool](https://github.com/yimiliya/rutool)
-- 问题反馈: [GitHub Issues](https://github.com/yimiliya/rutool/issues)
+- 项目主页: [https://github.com/yimiliya/yimi-rutool](https://github.com/yimiliya/yimi-rutool)
+- 问题反馈: [GitHub Issues](https://github.com/yimiliya/yimi-rutool/issues)
 - 邮箱: yimiliya@example.com
 
 ---

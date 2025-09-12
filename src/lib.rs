@@ -1,6 +1,6 @@
-//! # Rutool - A Comprehensive Rust Utility Library
+//! # yimi-rutool - A Comprehensive Rust Utility Library
 //!
-//! Rutool is a comprehensive Rust utility library inspired by Hutool,
+//! yimi-rutool is a comprehensive Rust utility library inspired by Hutool,
 //! providing a rich set of tools for everyday development tasks.
 //!
 //! ## Features
@@ -26,7 +26,7 @@
 //! ## Example
 //!
 //! ```rust
-//! use rutool::core::{StrUtil, DateUtil};
+//! use yimi_rutool::core::{StrUtil, DateUtil};
 //!
 //! // String utilities
 //! let result = StrUtil::is_blank("   ");

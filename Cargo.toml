@@ -7,8 +7,8 @@ description = "A comprehensive Rust utility library inspired by Hutool"
 license = "MIT OR Apache-2.0"
 keywords = ["utilities", "tools", "helper", "library"]
 categories = ["development-tools", "text-processing", "encoding", "cryptography"]
-repository = "https://github.com/ViewWay/rutool"
-documentation = "https://docs.rs/rutool"
+repository = "https://github.com/yimiliya/yimi-rutool"
+documentation = "https://docs.rs/yimi-rutool"
 readme = "README.md"
 rust-version = "1.70"
 
