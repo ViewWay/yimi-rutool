@@ -7,7 +7,7 @@ description = "A comprehensive Rust utility library inspired by Hutool"
 license = "MIT OR Apache-2.0"
 keywords = ["utilities", "tools", "helper", "library"]
 categories = ["development-tools", "text-processing", "encoding", "cryptography"]
-repository = "https://github.com/yimiliya/rutool"
+repository = "https://github.com/ViewWay/rutool"
 documentation = "https://docs.rs/rutool"
 readme = "README.md"
 rust-version = "1.70"
@@ -35,16 +35,16 @@ extra = ["image", "qrcode", "zip"]
 
 [dependencies]
 # Core dependencies
-thiserror = "1.0"
-anyhow = "1.0"
+thiserror = "2.0.16"
+anyhow = "1.0.99"
 once_cell = "1.19"
 regex = "1.10"
 lazy_static = "1.4"
-itertools = "0.12"
-rayon = "1.8"
-rand = "0.8"
+itertools = "0.14.0"
+rayon = "1.11.0"
+rand = "0.9.2"
 chrono = { version = "0.4", features = ["serde"], optional = true }
-base64 = "0.21"
+base64 = "0.22.1"
 urlencoding = "2.1"
 hex = "0.4"
 
@@ -52,7 +52,7 @@ hex = "0.4"
 tokio = { version = "1.0", features = ["full"], optional = true }
 serde = { version = "1.0", features = ["derive"], optional = true }
 serde_json = { version = "1.0", optional = true }
-reqwest = { version = "0.11", features = ["json", "blocking"], optional = true }
+reqwest = { version = "0.12.23", features = ["json", "blocking"], optional = true }
 futures = { version = "0.3", optional = true }
 url = { version = "2.5", optional = true }
 
@@ -65,12 +65,11 @@ hmac = { version = "0.12", optional = true }
 pbkdf2 = { version = "0.12", optional = true }
 
 # Database dependencies
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite", "postgres", "mysql"], optional = true }
-
+sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "sqlite", "postgres", "mysql"], optional = true }
 # Extra dependencies
-image = { version = "0.24", optional = true }
-qrcode = { version = "0.13", optional = true }
-zip = { version = "0.6", optional = true }
+image = { version = "0.25.8", optional = true }
+qrcode = { version = "0.14.1", optional = true }
+zip = { version = "5.1.1", optional = true }
 
 [dev-dependencies]
 criterion = "0.7.0"

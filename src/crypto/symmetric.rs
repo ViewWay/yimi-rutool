@@ -9,7 +9,7 @@ use aes_gcm::{
     Aes256Gcm, Key, Nonce
 };
 use base64::Engine;
-use rand::{RngCore, thread_rng};
+use rand::{RngCore, rng};
 
 /// AES encryption utility
 pub struct AesUtil;
@@ -33,7 +33,7 @@ impl AesUtil {
     /// ```
     pub fn generate_key() -> Vec<u8> {
         let mut key = vec![0u8; Self::KEY_SIZE];
-        thread_rng().fill_bytes(&mut key);
+        rng().fill_bytes(&mut key);
         key
     }
 
@@ -49,7 +49,7 @@ impl AesUtil {
     /// ```
     pub fn generate_nonce() -> Vec<u8> {
         let mut nonce = vec![0u8; Self::NONCE_SIZE];
-        thread_rng().fill_bytes(&mut nonce);
+        rng().fill_bytes(&mut nonce);
         nonce
     }
 
@@ -240,7 +240,7 @@ impl AesUtil {
             Some(s) => s.to_vec(),
             None => {
                 let mut salt = vec![0u8; 16]; // 16-byte salt
-                thread_rng().fill_bytes(&mut salt);
+                rng().fill_bytes(&mut salt);
                 salt
             }
         };

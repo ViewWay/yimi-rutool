@@ -85,9 +85,9 @@ pub mod cache;
 #[cfg(feature = "cron")]
 pub mod cron;
 
-// /// Extra utilities (QR codes, images, compression, etc.)
-// #[cfg(feature = "extra")]
-// pub mod extra;
+/// Extra utilities (QR codes, images, compression, etc.)
+#[cfg(feature = "extra")]
+pub mod extra;
 
 /// Error types used throughout the library
 pub mod error;
