@@ -10,7 +10,7 @@ use rsa::{
     signature::SignatureEncoding,
 };
 use base64::Engine;
-use rand::rng;
+use rand::thread_rng;
 
 /// RSA utility functions
 pub struct RsaUtil;
@@ -26,7 +26,7 @@ impl RsaUtil {
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// ```
     pub fn generate_keypair(bits: usize) -> Result<(RsaPrivateKey, RsaPublicKey)> {
-        let mut rng = rng();
+        let mut rng = thread_rng();
         let private_key = RsaPrivateKey::new(&mut rng, bits)
             .map_err(|e| Error::crypto(format!("Failed to generate private key: {}", e)))?;
         let public_key = RsaPublicKey::from(&private_key);
@@ -114,7 +114,7 @@ impl RsaUtil {
     /// assert_eq!(decrypted, message);
     /// ```
     pub fn encrypt(public_key: &RsaPublicKey, data: &[u8]) -> Result<Vec<u8>> {
-        let mut rng = rng();
+        let mut rng = thread_rng();
         public_key.encrypt(&mut rng, Pkcs1v15Encrypt, data)
             .map_err(|e| Error::crypto(format!("Encryption failed: {}", e)))
     }
@@ -191,7 +191,7 @@ impl RsaUtil {
         use rsa::signature::{RandomizedSigner};
         use sha2::Sha256;
 
-        let mut rng = rng();
+        let mut rng = thread_rng();
         let signing_key = BlindedSigningKey::<Sha256>::new(private_key.clone());
         let signature = signing_key.sign_with_rng(&mut rng, message);
         Ok(signature.to_vec())

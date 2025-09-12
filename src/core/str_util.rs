@@ -600,13 +600,13 @@ impl StrUtil {
     /// assert_eq!(random_str.len(), 10);
     /// ```
     pub fn random_string(length: usize) -> String {
-        use rand::{Rng, rng};
+        use rand::{Rng, thread_rng};
         const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        let mut rng = rng();
+        let mut rng = thread_rng();
         (0..length)
             .map(|_| {
-                let idx = rng.random_range(0..CHARSET.len());
+                let idx = rng.gen_range(0..CHARSET.len());
                 CHARSET[idx] as char
             })
             .collect()
@@ -641,13 +641,13 @@ impl StrUtil {
     /// assert!(random_num.chars().all(|c| c.is_numeric()));
     /// ```
     pub fn random_numeric(length: usize) -> String {
-        use rand::{Rng, rng};
+        use rand::{Rng, thread_rng};
         const DIGITS: &[u8] = b"0123456789";
 
-        let mut rng = rng();
+        let mut rng = thread_rng();
         (0..length)
             .map(|_| {
-                let idx = rng.random_range(0..DIGITS.len());
+                let idx = rng.gen_range(0..DIGITS.len());
                 DIGITS[idx] as char
             })
             .collect()

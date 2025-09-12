@@ -273,8 +273,8 @@ impl CompressionUtil {
         Ok(CompressionStats::new(original_size, compressed_size, file_count))
     }
 
-    /// Compress data to GZIP format (requires flate2 crate)
-    #[allow(dead_code)]
+    /// Compress data to GZIP format
+    #[cfg(feature = "flate2")]
     pub fn compress_gzip(data: &[u8]) -> Result<Vec<u8>> {
         use flate2::{Compression, write::GzEncoder};
         
@@ -286,8 +286,8 @@ impl CompressionUtil {
             .map_err(|e| Error::validation(format!("Failed to finish GZIP compression: {}", e)))
     }
 
-    /// Decompress GZIP data (requires flate2 crate)
-    #[allow(dead_code)]
+    /// Decompress GZIP data
+    #[cfg(feature = "flate2")]
     pub fn decompress_gzip(data: &[u8]) -> Result<Vec<u8>> {
         use flate2::read::GzDecoder;
         
@@ -299,8 +299,8 @@ impl CompressionUtil {
         Ok(decompressed)
     }
 
-    /// Compress a file with GZIP (requires flate2 crate)
-    #[allow(dead_code)]
+    /// Compress a file with GZIP
+    #[cfg(feature = "flate2")]
     pub fn compress_file_gzip<P: AsRef<Path>, Q: AsRef<Path>>(
         source: P,
         destination: Q,
@@ -335,8 +335,8 @@ impl CompressionUtil {
         Ok(CompressionStats::new(original_size, compressed_size, 1))
     }
 
-    /// Decompress a GZIP file (requires flate2 crate)
-    #[allow(dead_code)]
+    /// Decompress a GZIP file
+    #[cfg(feature = "flate2")]
     pub fn decompress_file_gzip<P: AsRef<Path>, Q: AsRef<Path>>(
         source: P,
         destination: Q,
@@ -374,7 +374,7 @@ impl CompressionUtil {
         zip: &mut ZipWriter<File>,
         base_path: &Path,
         current_path: &Path,
-        options: FileOptions,
+        options: FileOptions<()>,
         total_size: &mut u64,
         file_count: &mut usize,
     ) -> Result<()> {
@@ -641,8 +641,8 @@ mod tests {
         assert_eq!(CompressionUtil::estimate_compression_ratio("unknown"), 0.5);
     }
 
+    #[cfg(feature = "flate2")]
     #[test]
-    #[ignore] // Requires flate2 crate
     fn test_gzip_compression() {
         let data = b"Hello, World! This is a test string for compression.".repeat(100);
         

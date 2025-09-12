@@ -746,7 +746,7 @@ mod tests {
         let mut pool = ConnectionPool::new();
         assert!(!pool.contains("test"));
         
-        let config = DatabaseConfig::new(DatabaseType::SQLite, ":memory:");
+        let _config = DatabaseConfig::new(DatabaseType::SQLite, ":memory:");
         // Note: We can't actually create a real connection in tests without tokio runtime
         // So we'll use a mock connection
         let connection = DatabaseConnection::Mock;

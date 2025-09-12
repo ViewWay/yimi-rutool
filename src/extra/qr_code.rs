@@ -287,16 +287,20 @@ impl QrCode {
             size, size
         );
 
-        let colors = self.qr_code.to_colors();
-        for (y, row) in colors.iter().enumerate() {
-            for (x, &cell) in row.iter().enumerate() {
-                if cell != qrcode::Color::Light {
-                    let x_pos = x as u32 * scale;
-                    let y_pos = y as u32 * scale;
-                    svg.push_str(&format!(
-                        "<rect x='{}' y='{}' width='{}' height='{}' fill='black'/>",
-                        x_pos, y_pos, scale, scale
-                    ));
+        let colors: Vec<qrcode::Color> = self.qr_code.to_colors();
+        let width: usize = self.qr_code.width();
+        for y in 0..width {
+            for x in 0..width {
+                let index = y * width + x;
+                if let Some(&cell) = colors.get(index) {
+                    if cell != qrcode::Color::Light {
+                        let x_pos = x as u32 * scale;
+                        let y_pos = y as u32 * scale;
+                        svg.push_str(&format!(
+                            "<rect x='{}' y='{}' width='{}' height='{}' fill='black'/>",
+                            x_pos, y_pos, scale, scale
+                        ));
+                    }
                 }
             }
         }

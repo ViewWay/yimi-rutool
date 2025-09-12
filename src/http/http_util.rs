@@ -739,7 +739,7 @@ mod tests {
 
     #[test]
     fn test_client_creation() {
-        let client = HttpUtil::client();
+        let _client = HttpUtil::client();
         // Just test that we can create a client without panicking
         // Note: reqwest::Client doesn't expose user_agent() method
         // We can't directly test the user agent, but we can test the client is created
@@ -749,7 +749,7 @@ mod tests {
     #[test]
     fn test_client_with_timeout() {
         let timeout = Duration::from_secs(60);
-        let client = HttpUtil::client_with_timeout(timeout);
+        let _client = HttpUtil::client_with_timeout(timeout);
         // Just test that we can create a client with custom timeout
         assert!(true); // Client creation succeeded if we reach here
     }

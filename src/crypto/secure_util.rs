@@ -4,7 +4,9 @@
 //! secure random number generation, password generation, and key generation.
 
 use base64::Engine;
-use rand::{RngCore, rng, distributions::{Alphanumeric, DistString}};
+use rand::{RngCore, thread_rng};
+use rand::distributions::Alphanumeric;
+use rand::{Rng, distributions::DistString};
 
 /// Security utility functions
 pub struct SecureUtil;
@@ -22,7 +24,7 @@ impl SecureUtil {
     /// ```
     pub fn random_bytes(len: usize) -> Vec<u8> {
         let mut bytes = vec![0u8; len];
-        rng().fill_bytes(&mut bytes);
+        thread_rng().fill_bytes(&mut bytes);
         bytes
     }
 
@@ -38,7 +40,7 @@ impl SecureUtil {
     /// ```
     pub fn random_string(len: usize, charset: &str) -> String {
         use rand::Rng;
-        let mut rng = rng();
+        let mut rng = thread_rng();
         let chars: Vec<char> = charset.chars().collect();
         
         (0..len)
@@ -58,7 +60,7 @@ impl SecureUtil {
     /// assert!(random_str.chars().all(|c| c.is_alphanumeric()));
     /// ```
     pub fn random_alphanumeric(len: usize) -> String {
-        Alphanumeric.sample_string(&mut rng(), len)
+        Alphanumeric.sample_string(&mut thread_rng(), len)
     }
 
     /// Generate secure numeric string
@@ -230,7 +232,7 @@ impl SecureUtil {
         if min >= max {
             return min;
         }
-        rng().random_range(min..max)
+        thread_rng().gen_range(min..max)
     }
 
     /// Check if a string is a valid UUID
