@@ -81,9 +81,9 @@ pub mod db;
 #[cfg(feature = "cache")]
 pub mod cache;
 
-// /// Cron scheduling utilities
-// #[cfg(feature = "cron")]
-// pub mod cron;
+/// Cron scheduling utilities
+#[cfg(feature = "cron")]
+pub mod cron;
 
 // /// Extra utilities (QR codes, images, compression, etc.)
 // #[cfg(feature = "extra")]
