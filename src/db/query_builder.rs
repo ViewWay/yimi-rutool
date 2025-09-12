@@ -31,15 +31,22 @@ enum QueryType {
 }
 
 #[derive(Debug, Clone)]
+/// Query value types for SQL operations
 pub enum QueryValue {
+    /// String value
     String(String),
+    /// Integer value  
     Integer(i64),
+    /// Float value
     Float(f64),
+    /// Boolean value
     Boolean(bool),
+    /// Null value
     Null,
 }
 
 #[derive(Debug, Clone)]
+/// SQL condition for WHERE clauses
 pub struct Condition {
     column: String,
     operator: String,
@@ -48,6 +55,7 @@ pub struct Condition {
 }
 
 #[derive(Debug, Clone)]
+/// SQL JOIN clause configuration
 pub struct Join {
     join_type: String, // INNER, LEFT, RIGHT, FULL
     table: String,
@@ -55,6 +63,7 @@ pub struct Join {
 }
 
 #[derive(Debug, Clone)]
+/// SQL ORDER BY clause configuration
 pub struct OrderBy {
     column: String,
     direction: String, // ASC, DESC

@@ -34,6 +34,7 @@ pub enum ImageFormat {
 impl ImageFormat {
     /// Convert to image crate format
     #[cfg(feature = "image")]
+    #[allow(dead_code)]
     fn to_image_format(self) -> ImgFormat {
         match self {
             Self::Png => ImgFormat::Png,
