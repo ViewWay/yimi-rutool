@@ -73,9 +73,9 @@ pub mod http;
 #[cfg(feature = "json")]
 pub mod json;
 
-// /// Database utilities
-// #[cfg(feature = "db")]
-// pub mod db;
+/// Database utilities
+#[cfg(feature = "db")]
+pub mod db;
 
 /// Caching utilities
 #[cfg(feature = "cache")]
