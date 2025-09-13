@@ -1,3 +1,8 @@
+// Allow some less critical clippy lints for better development experience
+#![allow(clippy::missing_errors_doc)]
+#![allow(clippy::missing_panics_doc)]
+#![allow(clippy::module_name_repetitions)]
+
 //! # yimi-rutool - A Comprehensive Rust Utility Library
 //!
 //! yimi-rutool is a comprehensive Rust utility library inspired by Hutool,

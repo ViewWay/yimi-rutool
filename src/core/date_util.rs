@@ -52,6 +52,10 @@ impl DateUtil {
     /// assert_eq!(date.month(), 12);
     /// assert_eq!(date.day(), 25);
     /// ```
+    ///
+    /// # Errors
+    ///
+    /// Returns `chrono::ParseError` if the date string cannot be parsed with the given format
     pub fn parse_date(date_str: &str, format: &str) -> Result<NaiveDate, chrono::ParseError> {
         NaiveDate::parse_from_str(date_str, format)
     }
@@ -261,7 +265,11 @@ impl DateUtil {
     /// assert_eq!(new_date, NaiveDate::from_ymd_opt(2024, 1, 25).unwrap());
     /// ```
     pub fn add_months(date: NaiveDate, months: i32) -> Option<NaiveDate> {
-        date.checked_add_months(chrono::Months::new(months as u32))
+        if months >= 0 {
+            date.checked_add_months(chrono::Months::new(months as u32))
+        } else {
+            date.checked_sub_months(chrono::Months::new((-months) as u32))
+        }
     }
 
     /// Add years to date
@@ -277,7 +285,12 @@ impl DateUtil {
     /// assert_eq!(new_date, NaiveDate::from_ymd_opt(2024, 12, 25).unwrap());
     /// ```
     pub fn add_years(date: NaiveDate, years: i32) -> Option<NaiveDate> {
-        date.checked_add_months(chrono::Months::new((years * 12) as u32))
+        let total_months = years * 12;
+        if total_months >= 0 {
+            date.checked_add_months(chrono::Months::new(total_months as u32))
+        } else {
+            date.checked_sub_months(chrono::Months::new((-total_months) as u32))
+        }
     }
 
     /// Subtract days from date
@@ -309,7 +322,11 @@ impl DateUtil {
     /// assert_eq!(new_date, NaiveDate::from_ymd_opt(2023, 11, 25).unwrap());
     /// ```
     pub fn subtract_months(date: NaiveDate, months: i32) -> Option<NaiveDate> {
-        date.checked_sub_months(chrono::Months::new(months as u32))
+        if months >= 0 {
+            date.checked_sub_months(chrono::Months::new(months as u32))
+        } else {
+            date.checked_add_months(chrono::Months::new((-months) as u32))
+        }
     }
 
     /// Subtract years from date
@@ -325,7 +342,12 @@ impl DateUtil {
     /// assert_eq!(new_date, NaiveDate::from_ymd_opt(2022, 12, 25).unwrap());
     /// ```
     pub fn subtract_years(date: NaiveDate, years: i32) -> Option<NaiveDate> {
-        date.checked_sub_months(chrono::Months::new((years * 12) as u32))
+        let total_months = years * 12;
+        if total_months >= 0 {
+            date.checked_sub_months(chrono::Months::new(total_months as u32))
+        } else {
+            date.checked_add_months(chrono::Months::new((-total_months) as u32))
+        }
     }
 
     /// Get the difference in days between two dates

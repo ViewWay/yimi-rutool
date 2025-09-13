@@ -435,6 +435,10 @@ impl StrUtil {
     /// assert_eq!(StrUtil::matches("hello123", r"^[a-z]+\d+$").unwrap(), true);
     /// assert_eq!(StrUtil::matches("hello", r"^[a-z]+\d+$").unwrap(), false);
     /// ```
+    ///
+    /// # Errors
+    ///
+    /// Returns `regex::Error` if the pattern is invalid
     pub fn matches(s: &str, pattern: &str) -> Result<bool, regex::Error> {
         let regex = Regex::new(pattern)?;
         Ok(regex.is_match(s))
@@ -450,6 +454,10 @@ impl StrUtil {
     /// let result = StrUtil::extract_first("hello123world", r"\d+").unwrap();
     /// assert_eq!(result, Some("123".to_string()));
     /// ```
+    ///
+    /// # Errors
+    ///
+    /// Returns `regex::Error` if the pattern is invalid
     pub fn extract_first(s: &str, pattern: &str) -> Result<Option<String>, regex::Error> {
         let regex = Regex::new(pattern)?;
         Ok(regex.find(s).map(|m| m.as_str().to_string()))
@@ -465,6 +473,10 @@ impl StrUtil {
     /// let result = StrUtil::extract_all("a1b2c3", r"\d+").unwrap();
     /// assert_eq!(result, vec!["1", "2", "3"]);
     /// ```
+    ///
+    /// # Errors
+    ///
+    /// Returns `regex::Error` if the pattern is invalid
     pub fn extract_all(s: &str, pattern: &str) -> Result<Vec<String>, regex::Error> {
         let regex = Regex::new(pattern)?;
         Ok(regex.find_iter(s)
@@ -501,7 +513,7 @@ impl StrUtil {
             s.to_string()
         } else {
             let pad_len = length - s.len();
-            let padding = std::iter::repeat(pad_char).take(pad_len).collect::<String>();
+            let padding = pad_char.to_string().repeat(pad_len);
             padding + s
         }
     }
@@ -521,7 +533,7 @@ impl StrUtil {
             s.to_string()
         } else {
             let pad_len = length - s.len();
-            let padding = std::iter::repeat(pad_char).take(pad_len).collect::<String>();
+            let padding = pad_char.to_string().repeat(pad_len);
             s.to_string() + &padding
         }
     }
@@ -543,8 +555,8 @@ impl StrUtil {
             let total_pad = length - s.len();
             let left_pad = total_pad / 2;
             let right_pad = total_pad - left_pad;
-            let left_padding = std::iter::repeat(pad_char).take(left_pad).collect::<String>();
-            let right_padding = std::iter::repeat(pad_char).take(right_pad).collect::<String>();
+            let left_padding = pad_char.to_string().repeat(left_pad);
+            let right_padding = pad_char.to_string().repeat(right_pad);
             left_padding + s + &right_padding
         }
     }
