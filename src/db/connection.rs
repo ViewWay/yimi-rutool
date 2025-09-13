@@ -61,7 +61,7 @@ impl DatabaseConfig {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConfig, DatabaseType};
     ///
     /// let config = DatabaseConfig::new(
     ///     DatabaseType::SQLite,
@@ -129,7 +129,7 @@ impl DatabaseConnection {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -197,7 +197,7 @@ impl DatabaseConnection {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -254,7 +254,7 @@ impl DatabaseConnection {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -327,7 +327,7 @@ impl DatabaseConnection {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -423,7 +423,7 @@ impl DatabaseConnection {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -520,7 +520,7 @@ impl DatabaseConnection {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {

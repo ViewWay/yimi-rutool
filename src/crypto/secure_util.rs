@@ -16,7 +16,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let random_bytes = SecureUtil::random_bytes(32);
     /// assert_eq!(random_bytes.len(), 32);
@@ -32,7 +32,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let random_str = SecureUtil::random_string(16, "abcdef0123456789");
     /// assert_eq!(random_str.len(), 16);
@@ -52,7 +52,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let random_str = SecureUtil::random_alphanumeric(16);
     /// assert_eq!(random_str.len(), 16);
@@ -67,7 +67,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let random_num = SecureUtil::random_numeric(8);
     /// assert_eq!(random_num.len(), 8);
@@ -82,7 +82,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let random_hex = SecureUtil::random_hex(16);
     /// assert_eq!(random_hex.len(), 16);
@@ -97,7 +97,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let password = SecureUtil::generate_password(12, true, true, true, false);
     /// assert_eq!(password.len(), 12);
@@ -137,7 +137,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let uuid = SecureUtil::generate_uuid();
     /// assert_eq!(uuid.len(), 36); // Standard UUID format: 8-4-4-4-12
@@ -165,7 +165,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let salt = SecureUtil::generate_salt(16);
     /// assert_eq!(salt.len(), 16);
@@ -179,7 +179,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let token = SecureUtil::generate_token(32);
     /// assert!(!token.is_empty());
@@ -195,7 +195,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let a = b"secret";
     /// let b = b"secret";
@@ -221,7 +221,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let random_int = SecureUtil::random_int(1, 100);
     /// assert!(random_int >= 1 && random_int < 100);
@@ -239,7 +239,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let uuid = SecureUtil::generate_uuid();
     /// assert!(SecureUtil::is_valid_uuid(&uuid));
@@ -257,7 +257,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let session_id = SecureUtil::generate_session_id();
     /// assert_eq!(session_id.len(), 64); // 32 bytes = 64 hex chars
@@ -272,7 +272,7 @@ impl SecureUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::SecureUtil;
+    /// use yimi_rutool::crypto::SecureUtil;
     ///
     /// let api_key = SecureUtil::generate_api_key(32);
     /// assert!(!api_key.is_empty());

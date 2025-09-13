@@ -66,7 +66,7 @@ impl QrCode {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::QrCode;
+    /// use yimi_rutool::extra::QrCode;
     ///
     /// let qr = QrCode::new("Hello, World!").unwrap();
     /// ```
@@ -79,7 +79,7 @@ impl QrCode {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::{QrCode, ErrorCorrectionLevel};
+    /// use yimi_rutool::extra::{QrCode, ErrorCorrectionLevel};
     ///
     /// let qr = QrCode::with_error_correction("Hello, World!", ErrorCorrectionLevel::High).unwrap();
     /// ```
@@ -167,7 +167,7 @@ impl QrCode {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::QrCode;
+    /// use yimi_rutool::extra::QrCode;
     ///
     /// let qr = QrCode::new("Test").unwrap();
     /// let ascii = qr.to_ascii();
@@ -407,7 +407,7 @@ impl QrCodeBuilder {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::{QrCodeBuilder, ErrorCorrectionLevel};
+    /// use yimi_rutool::extra::{QrCodeBuilder, ErrorCorrectionLevel};
     ///
     /// let qr = QrCodeBuilder::new("https://example.com")
     ///     .error_correction(ErrorCorrectionLevel::High)
@@ -453,7 +453,7 @@ impl QrCodeUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::QrCodeUtil;
+    /// use yimi_rutool::extra::QrCodeUtil;
     ///
     /// let qr = QrCodeUtil::url("https://github.com/rust-lang/rust").unwrap();
     /// ```
@@ -469,7 +469,7 @@ impl QrCodeUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::QrCodeUtil;
+    /// use yimi_rutool::extra::QrCodeUtil;
     ///
     /// let qr = QrCodeUtil::wifi("MyNetwork", "password123", "WPA").unwrap();
     /// ```
@@ -483,7 +483,7 @@ impl QrCodeUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::QrCodeUtil;
+    /// use yimi_rutool::extra::QrCodeUtil;
     ///
     /// let qr = QrCodeUtil::email("test@example.com", "Subject", "Body").unwrap();
     /// ```

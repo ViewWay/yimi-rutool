@@ -35,7 +35,7 @@ impl<K, V> Node<K, V> {
 /// # Examples
 ///
 /// ```rust
-/// use rutool::cache::LruCache;
+/// use yimi_rutool::cache::LruCache;
 ///
 /// let mut cache = LruCache::new(2);
 /// 
@@ -77,7 +77,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let cache: LruCache<String, i32> = LruCache::new(100);
     /// ```
@@ -102,7 +102,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key", "value").unwrap();
@@ -138,7 +138,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key", "value").unwrap();
@@ -182,7 +182,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key", "value").unwrap();
@@ -218,7 +218,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key", "value").unwrap();
@@ -238,7 +238,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(10);
     /// assert_eq!(cache.len().unwrap(), 0);
@@ -258,7 +258,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let cache = LruCache::new(10);
     /// assert!(cache.is_empty().unwrap());
@@ -272,7 +272,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let cache = LruCache::new(100);
     /// assert_eq!(cache.capacity().unwrap(), 100);
@@ -289,7 +289,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(10);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -325,7 +325,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(3);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -358,7 +358,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(3);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -387,7 +387,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(3);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -416,7 +416,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::LruCache;
+    /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(10);
     /// 

@@ -12,7 +12,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_int("123").unwrap(), 123);
     /// assert_eq!(Convert::to_int("abc"), None);
@@ -26,7 +26,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_long("123456789").unwrap(), 123456789i64);
     /// ```
@@ -39,7 +39,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_float("123.45").unwrap(), 123.45f32);
     /// ```
@@ -52,7 +52,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_double("123.45").unwrap(), 123.45f64);
     /// ```
@@ -65,7 +65,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_bool("true").unwrap(), true);
     /// assert_eq!(Convert::to_bool("false").unwrap(), false);
@@ -85,7 +85,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_str(&123), "123");
     /// assert_eq!(Convert::to_str(&true), "true");
@@ -100,7 +100,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let bytes = Convert::to_bytes("hello");
     /// assert_eq!(bytes, vec![104, 101, 108, 108, 111]);
@@ -114,7 +114,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let s = Convert::bytes_to_str(&[104, 101, 108, 108, 111]);
     /// assert_eq!(s, "hello");
@@ -128,7 +128,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let bytes = Convert::hex_to_bytes("48656c6c6f").unwrap();
     /// assert_eq!(bytes, vec![72, 101, 108, 108, 111]);
@@ -149,7 +149,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let hex = Convert::bytes_to_hex(&[72, 101, 108, 108, 111]);
     /// assert_eq!(hex, "48656c6c6f");
@@ -165,7 +165,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_u32(&42u32), 42u32);
     /// assert_eq!(Convert::to_f64(&3.0f32), 3.0f64);
@@ -204,7 +204,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let vec = Convert::to_string_vec(&["a", "b", "c"]);
     /// assert_eq!(vec, vec!["a", "b", "c"]);
@@ -218,7 +218,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let strings = vec!["a".to_string(), "b".to_string()];
     /// let array = Convert::to_str_array(&strings);
@@ -233,7 +233,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let chars = Convert::to_char_array("hello");
     /// assert_eq!(chars, vec!['h', 'e', 'l', 'l', 'o']);
@@ -247,7 +247,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// let s = Convert::chars_to_string(&['h', 'e', 'l', 'l', 'o']);
     /// assert_eq!(s, "hello");
@@ -261,7 +261,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_title_case("hello world"), "Hello World");
     /// assert_eq!(Convert::to_title_case("HELLO WORLD"), "Hello World");
@@ -284,7 +284,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_kebab_case("HelloWorld"), "hello-world");
     /// assert_eq!(Convert::to_kebab_case("userNameTest"), "user-name-test");
@@ -305,7 +305,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_upper_snake_case("helloWorld"), "HELLO_WORLD");
     /// assert_eq!(Convert::to_upper_snake_case("userName"), "USER_NAME");
@@ -326,7 +326,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_lower_snake_case("HelloWorld"), "hello_world");
     /// assert_eq!(Convert::to_lower_snake_case("UserName"), "user_name");
@@ -347,7 +347,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_binary_string(&42u8), "101010");
     /// assert_eq!(Convert::to_binary_string(&255u8), "11111111");
@@ -361,7 +361,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_octal_string(&42u8), "52");
     /// assert_eq!(Convert::to_octal_string(&255u8), "377");
@@ -375,7 +375,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_hex_string(&42u8), "2a");
     /// assert_eq!(Convert::to_hex_string(&255u8), "ff");
@@ -389,7 +389,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_hex_string_upper(&42u8), "2A");
     /// assert_eq!(Convert::to_hex_string_upper(&255u8), "FF");
@@ -403,7 +403,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_int_default("123", 0), 123);
     /// assert_eq!(Convert::to_int_default("abc", 42), 42);
@@ -417,7 +417,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_long_default("123456789", 0), 123456789i64);
     /// assert_eq!(Convert::to_long_default("abc", 42), 42);
@@ -431,7 +431,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_float_default("123.45", 0.0), 123.45f32);
     /// assert_eq!(Convert::to_float_default("abc", 3.14), 3.14);
@@ -445,7 +445,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_double_default("123.45", 0.0), 123.45f64);
     /// assert_eq!(Convert::to_double_default("abc", 3.14), 3.14);
@@ -459,7 +459,7 @@ impl Convert {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Convert;
+    /// use yimi_rutool::core::Convert;
     ///
     /// assert_eq!(Convert::to_bool_default("true", false), true);
     /// assert_eq!(Convert::to_bool_default("maybe", true), true);

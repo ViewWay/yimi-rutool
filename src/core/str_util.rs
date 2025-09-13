@@ -23,7 +23,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::is_empty(""), true);
     /// assert_eq!(StrUtil::is_empty("   "), false); // contains spaces
@@ -38,7 +38,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::is_blank(""), true);
     /// assert_eq!(StrUtil::is_blank("   "), true); // only whitespace
@@ -54,7 +54,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::is_not_empty("abc"), true);
     /// assert_eq!(StrUtil::is_not_empty(""), false);
@@ -68,7 +68,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::is_not_blank("abc"), true);
     /// assert_eq!(StrUtil::is_not_blank("   "), false);
@@ -83,7 +83,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::trim("  hello  "), "hello");
     /// assert_eq!(StrUtil::trim(""), "");
@@ -97,7 +97,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::trim_start("  hello  "), "hello  ");
     /// ```
@@ -110,7 +110,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::trim_end("  hello  "), "  hello");
     /// ```
@@ -123,7 +123,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::remove_all_whitespace("a b c"), "abc");
     /// assert_eq!(StrUtil::remove_all_whitespace("a\tb\nc"), "abc");
@@ -139,7 +139,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::to_lower_case("HELLO"), "hello");
     /// ```
@@ -152,7 +152,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::to_upper_case("hello"), "HELLO");
     /// ```
@@ -165,7 +165,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::capitalize("hello"), "Hello");
     /// assert_eq!(StrUtil::capitalize("HELLO"), "HELLO");
@@ -183,7 +183,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::to_camel_case("hello_world"), "helloWorld");
     /// assert_eq!(StrUtil::to_camel_case("user_name_test"), "userNameTest");
@@ -206,7 +206,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::to_pascal_case("hello_world"), "HelloWorld");
     /// assert_eq!(StrUtil::to_pascal_case("user_name"), "UserName");
@@ -225,7 +225,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::to_snake_case("HelloWorld"), "hello_world");
     /// assert_eq!(StrUtil::to_snake_case("UserName"), "user_name");
@@ -246,7 +246,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::starts_with("hello world", "hello"), true);
     /// assert_eq!(StrUtil::starts_with("hello world", "world"), false);
@@ -260,7 +260,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::ends_with("hello world", "world"), true);
     /// assert_eq!(StrUtil::ends_with("hello world", "hello"), false);
@@ -274,7 +274,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::contains("hello world", "world"), true);
     /// assert_eq!(StrUtil::contains("hello world", "test"), false);
@@ -288,7 +288,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::sub_string("hello world", 6, 11), "world");
     /// ```
@@ -305,7 +305,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::sub_string_from("hello world", 6), "world");
     /// ```
@@ -321,7 +321,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::replace("hello world", "world", "rust"), "hello rust");
     /// ```
@@ -334,7 +334,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::replace_first("hello world world", "world", "rust"), "hello rust world");
     /// ```
@@ -355,7 +355,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::replace_last("hello world world", "world", "rust"), "hello world rust");
     /// ```
@@ -376,7 +376,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let result = StrUtil::split("a,b,c", ",");
     /// assert_eq!(result, vec!["a", "b", "c"]);
@@ -392,7 +392,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let result = StrUtil::join(&["a", "b", "c"], ",");
     /// assert_eq!(result, "a,b,c");
@@ -406,7 +406,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let result = StrUtil::format("Hello, {0}!", &["World"]);
     /// assert_eq!(result, "Hello, World!");
@@ -428,7 +428,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::matches("hello123", r"^[a-z]+\d+$").unwrap(), true);
     /// assert_eq!(StrUtil::matches("hello", r"^[a-z]+\d+$").unwrap(), false);
@@ -443,7 +443,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let result = StrUtil::extract_first("hello123world", r"\d+").unwrap();
     /// assert_eq!(result, Some("123".to_string()));
@@ -458,7 +458,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let result = StrUtil::extract_all("a1b2c3", r"\d+").unwrap();
     /// assert_eq!(result, vec!["1", "2", "3"]);
@@ -475,7 +475,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::reverse("hello"), "olleh");
     /// assert_eq!(StrUtil::reverse("123"), "321");
@@ -489,7 +489,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::pad_left("5", 3, '0'), "005");
     /// assert_eq!(StrUtil::pad_left("hello", 3, ' '), "hello");
@@ -509,7 +509,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::pad_right("5", 3, '0'), "500");
     /// assert_eq!(StrUtil::pad_right("hello", 3, ' '), "hello");
@@ -529,7 +529,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::center("abc", 7, ' '), "  abc  ");
     /// assert_eq!(StrUtil::center("hello", 3, ' '), "hello");
@@ -552,7 +552,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::is_all_blank(&["", "  ", "\t"]), true);
     /// assert_eq!(StrUtil::is_all_blank(&["", "hello"]), false);
@@ -566,7 +566,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::has_blank(&["hello", "", "world"]), true);
     /// assert_eq!(StrUtil::has_blank(&["hello", "world"]), false);
@@ -580,7 +580,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// assert_eq!(StrUtil::is_all_not_blank(&["hello", "world"]), true);
     /// assert_eq!(StrUtil::is_all_not_blank(&["hello", ""]), false);
@@ -594,7 +594,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let random_str = StrUtil::random_string(10);
     /// assert_eq!(random_str.len(), 10);
@@ -617,7 +617,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let random_str = StrUtil::random_alphanumeric(8);
     /// assert_eq!(random_str.len(), 8);
@@ -633,7 +633,7 @@ impl StrUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::StrUtil;
+    /// use yimi_rutool::core::StrUtil;
     ///
     /// let random_num = StrUtil::random_numeric(5);
     /// assert_eq!(random_num.len(), 5);

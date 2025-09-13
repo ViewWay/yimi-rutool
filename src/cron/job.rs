@@ -92,7 +92,7 @@ impl Job {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::Job;
+    /// use yimi_rutool::cron::Job;
     ///
     /// let job = Job::new("daily_backup", Box::new(|| {
     ///     println!("Running daily backup...");
@@ -117,7 +117,7 @@ impl Job {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::Job;
+    /// use yimi_rutool::cron::Job;
     /// use std::future::Future;
     /// use std::pin::Pin;
     ///
@@ -318,7 +318,7 @@ impl JobBuilder {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::JobBuilder;
+    /// use yimi_rutool::cron::JobBuilder;
     /// use std::time::Duration;
     ///
     /// let job = JobBuilder::new("cleanup_job")

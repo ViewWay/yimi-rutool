@@ -15,7 +15,7 @@ impl Base64Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Base64Util;
+    /// use yimi_rutool::core::Base64Util;
     ///
     /// let encoded = Base64Util::encode("Hello, World!".as_bytes());
     /// assert_eq!(encoded, "SGVsbG8sIFdvcmxkIQ==");
@@ -29,7 +29,7 @@ impl Base64Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Base64Util;
+    /// use yimi_rutool::core::Base64Util;
     ///
     /// let decoded = Base64Util::decode("SGVsbG8sIFdvcmxkIQ==").unwrap();
     /// assert_eq!(String::from_utf8(decoded).unwrap(), "Hello, World!");
@@ -43,7 +43,7 @@ impl Base64Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Base64Util;
+    /// use yimi_rutool::core::Base64Util;
     ///
     /// let encoded = Base64Util::encode_str("Hello, World!");
     /// assert_eq!(encoded, "SGVsbG8sIFdvcmxkIQ==");
@@ -57,7 +57,7 @@ impl Base64Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Base64Util;
+    /// use yimi_rutool::core::Base64Util;
     ///
     /// let decoded = Base64Util::decode_str("SGVsbG8sIFdvcmxkIQ==").unwrap();
     /// assert_eq!(decoded, "Hello, World!");
@@ -79,7 +79,7 @@ impl Base58Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Base58Util;
+    /// use yimi_rutool::core::Base58Util;
     ///
     /// let encoded = Base58Util::encode("Hello".as_bytes());
     /// assert_eq!(encoded, "9Ajdvzr");
@@ -116,7 +116,7 @@ impl Base58Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::Base58Util;
+    /// use yimi_rutool::core::Base58Util;
     ///
     /// let decoded = Base58Util::decode("9Ajdvzr").unwrap();
     /// assert_eq!(String::from_utf8(decoded).unwrap(), "Hello");
@@ -172,7 +172,7 @@ impl HexUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::HexUtil;
+    /// use yimi_rutool::core::HexUtil;
     ///
     /// let encoded = HexUtil::encode("Hello".as_bytes());
     /// assert_eq!(encoded, "48656c6c6f");
@@ -188,7 +188,7 @@ impl HexUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::HexUtil;
+    /// use yimi_rutool::core::HexUtil;
     ///
     /// let encoded = HexUtil::encode_upper("Hello".as_bytes());
     /// assert_eq!(encoded, "48656C6C6F");
@@ -204,7 +204,7 @@ impl HexUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::HexUtil;
+    /// use yimi_rutool::core::HexUtil;
     ///
     /// let decoded = HexUtil::decode("48656c6c6f").unwrap();
     /// assert_eq!(String::from_utf8(decoded).unwrap(), "Hello");
@@ -225,7 +225,7 @@ impl HexUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::HexUtil;
+    /// use yimi_rutool::core::HexUtil;
     ///
     /// assert!(HexUtil::is_valid_hex("48656c6c6f"));
     /// assert!(!HexUtil::is_valid_hex("48656c6c6g")); // 'g' is not valid hex
@@ -245,7 +245,7 @@ impl UrlUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::codec::UrlUtil;
+    /// use yimi_rutool::core::codec::UrlUtil;
     ///
     /// let encoded = UrlUtil::encode("Hello World!");
     /// assert_eq!(encoded, "Hello%20World%21");
@@ -259,7 +259,7 @@ impl UrlUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::codec::UrlUtil;
+    /// use yimi_rutool::core::codec::UrlUtil;
     ///
     /// let decoded = UrlUtil::decode("Hello%20World%21").unwrap();
     /// assert_eq!(decoded, "Hello World!");
@@ -278,7 +278,7 @@ impl PercentUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::codec::PercentUtil;
+    /// use yimi_rutool::core::codec::PercentUtil;
     ///
     /// let encoded = PercentUtil::encode("Hello World!");
     /// assert_eq!(encoded, "Hello%20World%21");
@@ -303,7 +303,7 @@ impl PercentUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::codec::PercentUtil;
+    /// use yimi_rutool::core::codec::PercentUtil;
     ///
     /// let decoded = PercentUtil::decode("Hello%20World%21").unwrap();
     /// assert_eq!(decoded, "Hello World!");

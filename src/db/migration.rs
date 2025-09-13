@@ -26,7 +26,7 @@ impl Migration {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::Migration;
+    /// use yimi_rutool::db::Migration;
     ///
     /// let migration = Migration::new(
     ///     "20231201000001",
@@ -80,7 +80,7 @@ impl MigrationRunner {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType, MigrationRunner};
+    /// use yimi_rutool::db::{DatabaseConnection, DatabaseConfig, DatabaseType, MigrationRunner};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -119,7 +119,7 @@ impl MigrationRunner {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, MigrationRunner};
+    /// use yimi_rutool::db::{DatabaseConnection, MigrationRunner};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -182,7 +182,7 @@ impl MigrationRunner {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::{DatabaseConnection, Migration, MigrationRunner};
+    /// use yimi_rutool::db::{DatabaseConnection, Migration, MigrationRunner};
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -565,7 +565,7 @@ impl MigrationTimestamp {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::MigrationTimestamp;
+    /// use yimi_rutool::db::MigrationTimestamp;
     ///
     /// let version = MigrationTimestamp::generate();
     /// println!("New migration version: {}", version);

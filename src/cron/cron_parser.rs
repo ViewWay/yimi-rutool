@@ -65,7 +65,7 @@ impl CronExpression {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::CronExpression;
+    /// use yimi_rutool::cron::CronExpression;
     ///
     /// // Standard cron: every minute
     /// let expr = CronExpression::parse("* * * * *").unwrap();

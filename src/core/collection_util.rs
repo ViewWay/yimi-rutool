@@ -15,7 +15,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let empty_vec: Vec<i32> = vec![];
     /// let non_empty_vec = vec![1, 2, 3];
@@ -32,7 +32,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let empty_vec: Vec<i32> = vec![];
     /// let non_empty_vec = vec![1, 2, 3];
@@ -49,7 +49,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::size(&vec), 5);
@@ -63,7 +63,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert!(CollUtil::contains(&vec, &3));
@@ -78,7 +78,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::get_first(&vec), Some(&1));
@@ -95,7 +95,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::get_last(&vec), Some(&5));
@@ -112,7 +112,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::get(&vec, 2), Some(&3));
@@ -127,7 +127,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// let sublist = CollUtil::sub(&vec, 1, 4);
@@ -148,7 +148,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// let reversed = CollUtil::reverse(&vec);
@@ -165,7 +165,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3];
     /// let new_vec = CollUtil::add(&vec, &4);
@@ -182,7 +182,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec1 = vec![1, 2, 3];
     /// let vec2 = vec![4, 5, 6];
@@ -200,7 +200,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// let new_vec = CollUtil::remove(&vec, 2);
@@ -219,7 +219,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// let new_vec = CollUtil::remove_element(&vec, &3);
@@ -237,7 +237,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5, 6];
     /// let new_vec = CollUtil::remove_if(&vec, |&x| x % 2 == 0);
@@ -258,7 +258,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5, 6];
     /// let filtered = CollUtil::filter(&vec, |&x| x % 2 == 0);
@@ -279,7 +279,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// let mapped = CollUtil::map(&vec, |&x| x * 2);
@@ -297,7 +297,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// let found = CollUtil::find_first(&vec, |&x| x > 3);
@@ -318,7 +318,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5, 6];
     /// let found = CollUtil::find_all(&vec, |&x| x % 2 == 0);
@@ -336,7 +336,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert!(CollUtil::any_match(&vec, |&x| x > 3));
@@ -354,7 +354,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![2, 4, 6, 8, 10];
     /// assert!(CollUtil::all_match(&vec, |&x| x % 2 == 0));
@@ -372,7 +372,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 3, 5, 7, 9];
     /// assert!(CollUtil::none_match(&vec, |&x| x % 2 == 0));
@@ -390,7 +390,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 2, 3, 3, 3, 4, 5, 5];
     /// let distinct = CollUtil::distinct(&vec);
@@ -409,7 +409,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![3, 1, 4, 1, 5, 9, 2, 6];
     /// let sorted = CollUtil::sort(&vec);
@@ -426,7 +426,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![3, 1, 4, 1, 5];
     /// let sorted = CollUtil::sort_by(&vec, |&x| -x); // descending order
@@ -447,7 +447,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![3, 1, 4, 1, 5, 9, 2, 6];
     /// assert_eq!(CollUtil::max(&vec), Some(9));
@@ -464,7 +464,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![3, 1, 4, 1, 5, 9, 2, 6];
     /// assert_eq!(CollUtil::min(&vec), Some(1));
@@ -481,7 +481,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::sum(&vec), 15);
@@ -502,7 +502,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1.0, 2.0, 3.0, 4.0, 5.0];
     /// assert_eq!(CollUtil::average(&vec), Some(3.0));
@@ -527,7 +527,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     /// use std::collections::HashMap;
     ///
     /// let vec = vec![1, 2, 3, 4, 5, 6];
@@ -553,7 +553,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec = vec![1, 2, 3, 4, 5, 6, 7];
     /// let chunks = CollUtil::partition(&vec, 3);
@@ -574,7 +574,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     ///
     /// let vec1 = vec![1, 2, 3];
     /// let vec2 = vec!["a", "b", "c"];
@@ -593,7 +593,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     /// use std::collections::HashSet;
     ///
     /// let vec = vec![1, 2, 2, 3, 3, 3];
@@ -613,7 +613,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     /// use std::collections::BTreeSet;
     ///
     /// let vec = vec![3, 1, 4, 1, 5];
@@ -630,7 +630,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     /// use std::collections::HashMap;
     ///
     /// let pairs = vec![("a", 1), ("b", 2), ("c", 3)];
@@ -648,7 +648,7 @@ impl CollUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::CollUtil;
+    /// use yimi_rutool::core::CollUtil;
     /// use std::collections::BTreeMap;
     ///
     /// let pairs = vec![("c", 3), ("a", 1), ("b", 2)];

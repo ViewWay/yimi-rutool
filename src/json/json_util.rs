@@ -17,7 +17,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde::{Deserialize, Serialize};
     ///
     /// #[derive(Serialize)]
@@ -44,7 +44,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde::{Deserialize, Serialize};
     ///
     /// #[derive(Serialize)]
@@ -71,7 +71,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde::{Deserialize, Serialize};
     ///
     /// #[derive(Deserialize, PartialEq, Debug)]
@@ -95,7 +95,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::Value;
     ///
     /// let json = r#"{"name": "Alice", "age": 30}"#;
@@ -113,7 +113,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::{json, Value};
     ///
     /// let value = json!({"name": "Alice", "age": 30});
@@ -130,7 +130,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     ///
     /// assert!(JsonUtil::is_valid(r#"{"name": "Alice"}"#));
     /// assert!(JsonUtil::is_valid(r#"[1, 2, 3]"#));
@@ -145,7 +145,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     ///
     /// let pretty_json = r#"{
     ///     "name": "Alice",
@@ -166,7 +166,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     ///
     /// let compact_json = r#"{"name":"Alice","age":30}"#;
     /// let pretty = JsonUtil::prettify(compact_json).unwrap();
@@ -183,7 +183,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     ///
     /// let json = r#"{"user": {"name": "Alice", "address": {"city": "New York"}}}"#;
     /// let value = JsonUtil::parse(json).unwrap();
@@ -222,7 +222,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::{json, Value};
     ///
     /// let mut value = json!({"user": {"name": "Alice"}});
@@ -289,7 +289,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::json;
     ///
     /// let mut value = json!({"user": {"name": "Alice", "age": 30}});
@@ -351,7 +351,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::json;
     ///
     /// let mut base = json!({"a": 1, "b": {"c": 2}});
@@ -386,7 +386,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::json;
     /// use std::collections::HashMap;
     ///
@@ -442,7 +442,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::Value;
     ///
     /// let pairs = vec![
@@ -467,7 +467,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::json;
     ///
     /// let value = json!({"user": {"name": "Alice", "age": 30}, "status": "active"});
@@ -534,7 +534,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::json;
     ///
     /// let value = json!({"user": {"name": "Alice", "age": 30}, "status": "active"});
@@ -558,7 +558,7 @@ impl JsonUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::json::JsonUtil;
+    /// use yimi_rutool::json::JsonUtil;
     /// use serde_json::json;
     ///
     /// let value = json!(42);

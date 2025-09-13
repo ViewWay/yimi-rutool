@@ -75,7 +75,7 @@ impl QueryBuilder {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::QueryBuilder;
+    /// use yimi_rutool::db::QueryBuilder;
     ///
     /// let query = QueryBuilder::select()
     ///     .columns(&["id", "name"])
@@ -104,7 +104,7 @@ impl QueryBuilder {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::QueryBuilder;
+    /// use yimi_rutool::db::QueryBuilder;
     ///
     /// let query = QueryBuilder::insert()
     ///     .into("users")
@@ -133,7 +133,7 @@ impl QueryBuilder {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::QueryBuilder;
+    /// use yimi_rutool::db::QueryBuilder;
     ///
     /// let query = QueryBuilder::update()
     ///     .table("users")
@@ -162,7 +162,7 @@ impl QueryBuilder {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::db::QueryBuilder;
+    /// use yimi_rutool::db::QueryBuilder;
     ///
     /// let query = QueryBuilder::delete()
     ///     .from("users")

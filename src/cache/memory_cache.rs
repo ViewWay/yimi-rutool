@@ -46,7 +46,7 @@ impl<V> CacheEntry<V> {
 /// # Examples
 ///
 /// ```rust
-/// use rutool::cache::MemoryCache;
+/// use yimi_rutool::cache::MemoryCache;
 /// use std::time::Duration;
 ///
 /// let cache = MemoryCache::new();
@@ -81,7 +81,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache: MemoryCache<String, i32> = MemoryCache::new();
     /// ```
@@ -98,7 +98,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     /// use std::time::Duration;
     ///
     /// let cache: MemoryCache<String, i32> = MemoryCache::with_ttl(Duration::from_secs(300));
@@ -116,7 +116,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache: MemoryCache<String, i32> = MemoryCache::with_max_size(1000);
     /// ```
@@ -133,7 +133,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     /// use std::time::Duration;
     ///
     /// let cache: MemoryCache<String, i32> = MemoryCache::with_ttl_and_size(
@@ -154,7 +154,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
@@ -169,7 +169,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     /// use std::time::Duration;
     ///
     /// let cache = MemoryCache::new();
@@ -185,7 +185,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put_permanent("key".to_string(), "value".to_string()).unwrap();
@@ -226,7 +226,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
@@ -255,7 +255,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
@@ -279,7 +279,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
@@ -299,7 +299,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -321,7 +321,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -341,7 +341,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// assert!(cache.is_empty().unwrap());
@@ -358,7 +358,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     /// use std::time::Duration;
     ///
     /// let cache = MemoryCache::new();
@@ -390,7 +390,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -416,7 +416,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
@@ -454,7 +454,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     ///
     /// let cache = MemoryCache::new();
     /// 
@@ -485,7 +485,7 @@ where
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cache::MemoryCache;
+    /// use yimi_rutool::cache::MemoryCache;
     /// use std::time::Duration;
     ///
     /// let cache = MemoryCache::new();

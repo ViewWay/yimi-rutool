@@ -26,7 +26,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let key = AesUtil::generate_key();
     /// assert_eq!(key.len(), 32); // AES-256 key is 32 bytes
@@ -42,7 +42,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let nonce = AesUtil::generate_nonce();
     /// assert_eq!(nonce.len(), 12); // AES-GCM nonce is 12 bytes
@@ -68,7 +68,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let key = AesUtil::generate_key();
     /// let plaintext = b"Hello, World!";
@@ -113,7 +113,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let key = AesUtil::generate_key();
     /// let plaintext = b"Hello, World!";
@@ -155,7 +155,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let key = AesUtil::generate_key();
     /// let encrypted = AesUtil::encrypt_str("Hello, World!", &key).unwrap();
@@ -185,7 +185,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let key = AesUtil::generate_key();
     /// let encrypted = AesUtil::encrypt_str("Hello, World!", &key).unwrap();
@@ -228,7 +228,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let (encrypted, salt) = AesUtil::encrypt_with_password(b"Hello, World!", "my_password", None).unwrap();
     /// let decrypted = AesUtil::decrypt_with_password(&encrypted, "my_password", &salt).unwrap();
@@ -266,7 +266,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::{AesUtil, SecureUtil};
+    /// use yimi_rutool::crypto::{AesUtil, SecureUtil};
     ///
     /// // Create combined format manually for the example
     /// let password = "my_password";
@@ -308,7 +308,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let (encrypted, salt) = AesUtil::encrypt_with_password(b"Hello, World!", "my_password", None).unwrap();
     /// let decrypted = AesUtil::decrypt_with_password(&encrypted, "my_password", &salt).unwrap();
@@ -337,7 +337,7 @@ impl AesUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::AesUtil;
+    /// use yimi_rutool::crypto::AesUtil;
     ///
     /// let salt = b"my_salt_12345678";
     /// let key = AesUtil::derive_key_from_password("my_password", salt).unwrap();

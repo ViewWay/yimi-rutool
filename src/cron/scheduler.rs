@@ -103,7 +103,7 @@ impl Scheduler {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::Scheduler;
+    /// use yimi_rutool::cron::Scheduler;
     ///
     /// let scheduler = Scheduler::new();
     /// ```
@@ -116,7 +116,7 @@ impl Scheduler {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::{Scheduler, SchedulerConfig};
+    /// use yimi_rutool::cron::{Scheduler, SchedulerConfig};
     /// use std::time::Duration;
     ///
     /// let config = SchedulerConfig {
@@ -144,7 +144,7 @@ impl Scheduler {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::{Scheduler, Job, CronExpression};
+    /// use yimi_rutool::cron::{Scheduler, Job, CronExpression};
     ///
     /// let mut scheduler = Scheduler::new();
     /// let job = Job::new("test_job", Box::new(|| {
@@ -204,7 +204,7 @@ impl Scheduler {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::cron::Scheduler;
+    /// use yimi_rutool::cron::Scheduler;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {

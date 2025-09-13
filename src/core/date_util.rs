@@ -14,7 +14,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{DateTime, Local};
     ///
     /// let now = DateUtil::now();
@@ -29,7 +29,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{DateTime, Utc};
     ///
     /// let now_utc = DateUtil::now_utc();
@@ -44,7 +44,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{NaiveDate, Datelike};
     ///
     /// let date = DateUtil::parse_date("2023-12-25", "%Y-%m-%d").unwrap();
@@ -61,7 +61,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{NaiveDateTime, Timelike};
     ///
     /// let datetime = DateUtil::parse_datetime("2023-12-25 15:30:45", "%Y-%m-%d %H:%M:%S").unwrap();
@@ -78,7 +78,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -94,7 +94,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{NaiveDate, NaiveTime, NaiveDateTime};
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -112,7 +112,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{DateTime, Local};
     ///
     /// let now = Local::now();
@@ -132,7 +132,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -147,7 +147,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -162,7 +162,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -177,7 +177,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveTime;
     ///
     /// let time = NaiveTime::from_hms_opt(15, 30, 45).unwrap();
@@ -192,7 +192,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveTime;
     ///
     /// let time = NaiveTime::from_hms_opt(15, 30, 45).unwrap();
@@ -207,7 +207,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveTime;
     ///
     /// let time = NaiveTime::from_hms_opt(15, 30, 45).unwrap();
@@ -222,7 +222,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{NaiveDate, Weekday};
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap(); // Monday
@@ -237,7 +237,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -253,7 +253,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -269,7 +269,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -285,7 +285,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -301,7 +301,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -317,7 +317,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -333,7 +333,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date1 = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -350,7 +350,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::Local;
     ///
     /// let today = Local::now().date_naive();
@@ -368,7 +368,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::Local;
     ///
     /// let yesterday = DateUtil::subtract_days(Local::now().date_naive(), 1).unwrap();
@@ -386,7 +386,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::Local;
     ///
     /// let tomorrow = DateUtil::add_days(Local::now().date_naive(), 1).unwrap();
@@ -404,7 +404,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -420,7 +420,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -441,7 +441,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -457,7 +457,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -473,7 +473,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     ///
     /// assert!(DateUtil::is_leap_year(2020)); // 2020 is a leap year
     /// assert!(!DateUtil::is_leap_year(2023)); // 2023 is not a leap year
@@ -487,7 +487,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     ///
     /// assert_eq!(DateUtil::days_in_month(2023, 2), 28); // February 2023
     /// assert_eq!(DateUtil::days_in_month(2020, 2), 29); // February 2020 (leap year)
@@ -502,7 +502,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     ///
     /// assert_eq!(DateUtil::days_in_year(2023), 365); // 2023 is not a leap year
     /// assert_eq!(DateUtil::days_in_year(2020), 366); // 2020 is a leap year
@@ -516,7 +516,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::NaiveDate;
     ///
     /// let date = DateUtil::parse_auto("2023-12-25").unwrap();
@@ -551,7 +551,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{NaiveDate, NaiveTime, NaiveDateTime, TimeZone, Utc};
     ///
     /// let date = NaiveDate::from_ymd_opt(2023, 12, 25).unwrap();
@@ -569,7 +569,7 @@ impl DateUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::core::DateUtil;
+    /// use yimi_rutool::core::DateUtil;
     /// use chrono::{NaiveDate, NaiveTime, NaiveDateTime, TimeZone, Utc};
     ///
     /// let datetime = DateUtil::from_timestamp(1703462400);

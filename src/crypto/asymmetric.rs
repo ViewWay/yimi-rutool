@@ -20,7 +20,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// ```
@@ -37,7 +37,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, _) = RsaUtil::generate_keypair(2048).unwrap();
     /// let pem = RsaUtil::private_key_to_pem(&private_key).unwrap();
@@ -55,7 +55,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (_, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let pem = RsaUtil::public_key_to_pem(&public_key).unwrap();
@@ -71,7 +71,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (original_key, _) = RsaUtil::generate_keypair(2048).unwrap();
     /// let pem = RsaUtil::private_key_to_pem(&original_key).unwrap();
@@ -88,7 +88,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (_, original_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let pem = RsaUtil::public_key_to_pem(&original_key).unwrap();
@@ -104,7 +104,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let message = b"Hello, World!";
@@ -123,7 +123,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let encrypted = RsaUtil::encrypt_str(&public_key, "Hello, World!").unwrap();
@@ -140,7 +140,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let message = b"Hello, World!";
@@ -158,7 +158,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let encrypted = RsaUtil::encrypt_str(&public_key, "Hello, World!").unwrap();
@@ -178,7 +178,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let message = b"Hello, World!";
@@ -201,7 +201,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let signature = RsaUtil::sign_str(&private_key, "Hello, World!").unwrap();
@@ -217,7 +217,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let message = b"Hello, World!";
@@ -244,7 +244,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let signature = RsaUtil::sign_str(&private_key, "Hello, World!").unwrap();
@@ -261,7 +261,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, _) = RsaUtil::generate_keypair(2048).unwrap();
     /// assert_eq!(RsaUtil::key_size(&private_key), 2048);
@@ -275,7 +275,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (_, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let max_size = RsaUtil::max_encrypt_size(&public_key);
@@ -290,7 +290,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let large_message = "A".repeat(500); // Larger than RSA block size
@@ -317,7 +317,7 @@ impl RsaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::RsaUtil;
+    /// use yimi_rutool::crypto::RsaUtil;
     ///
     /// let (private_key, public_key) = RsaUtil::generate_keypair(2048).unwrap();
     /// let large_message = "A".repeat(500);

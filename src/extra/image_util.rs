@@ -138,7 +138,7 @@ impl ImageUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::ImageUtil;
+    /// use yimi_rutool::extra::ImageUtil;
     ///
     /// // let image = ImageUtil::load("path/to/image.jpg").unwrap();
     /// ```
@@ -226,7 +226,7 @@ impl ImageUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::{ImageUtil, ResizeFilter};
+    /// use yimi_rutool::extra::{ImageUtil, ResizeFilter};
     ///
     /// // let image = ImageUtil::load("input.jpg").unwrap();
     /// // let resized = ImageUtil::resize(&image, 800, 600, ResizeFilter::Lanczos3);

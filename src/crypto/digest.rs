@@ -17,7 +17,7 @@ impl Md5Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::Md5Util;
+    /// use yimi_rutool::crypto::Md5Util;
     ///
     /// let hash = Md5Util::digest(b"hello world");
     /// assert_eq!(hash.len(), 16); // MD5 produces 16 bytes
@@ -33,7 +33,7 @@ impl Md5Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::Md5Util;
+    /// use yimi_rutool::crypto::Md5Util;
     ///
     /// let hash_hex = Md5Util::digest_hex(b"hello world");
     /// assert_eq!(hash_hex, "5eb63bbbe01eeed093cb22bb8f5acdc3");
@@ -48,7 +48,7 @@ impl Md5Util {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::Md5Util;
+    /// use yimi_rutool::crypto::Md5Util;
     ///
     /// let hash_hex = Md5Util::digest_str("hello world");
     /// assert_eq!(hash_hex, "5eb63bbbe01eeed093cb22bb8f5acdc3");
@@ -67,7 +67,7 @@ impl ShaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::ShaUtil;
+    /// use yimi_rutool::crypto::ShaUtil;
     ///
     /// let hash = ShaUtil::sha256(b"hello world");
     /// assert_eq!(hash.len(), 32); // SHA-256 produces 32 bytes
@@ -83,7 +83,7 @@ impl ShaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::ShaUtil;
+    /// use yimi_rutool::crypto::ShaUtil;
     ///
     /// let hash_hex = ShaUtil::sha256_hex(b"hello world");
     /// assert_eq!(hash_hex, "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
@@ -98,7 +98,7 @@ impl ShaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::ShaUtil;
+    /// use yimi_rutool::crypto::ShaUtil;
     ///
     /// let hash_hex = ShaUtil::sha256_str("hello world");
     /// assert_eq!(hash_hex, "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
@@ -112,7 +112,7 @@ impl ShaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::ShaUtil;
+    /// use yimi_rutool::crypto::ShaUtil;
     ///
     /// let hash = ShaUtil::sha512(b"hello world");
     /// assert_eq!(hash.len(), 64); // SHA-512 produces 64 bytes
@@ -128,7 +128,7 @@ impl ShaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::ShaUtil;
+    /// use yimi_rutool::crypto::ShaUtil;
     ///
     /// let hash_hex = ShaUtil::sha512_hex(b"hello world");
     /// assert!(hash_hex.len() == 128); // SHA-512 hex is 128 characters
@@ -143,7 +143,7 @@ impl ShaUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::ShaUtil;
+    /// use yimi_rutool::crypto::ShaUtil;
     ///
     /// let hash_hex = ShaUtil::sha512_str("hello world");
     /// assert!(hash_hex.len() == 128);
@@ -162,7 +162,7 @@ impl HmacUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::HmacUtil;
+    /// use yimi_rutool::crypto::HmacUtil;
     ///
     /// let key = b"my-secret-key";
     /// let message = b"hello world";
@@ -184,7 +184,7 @@ impl HmacUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::HmacUtil;
+    /// use yimi_rutool::crypto::HmacUtil;
     ///
     /// let key = b"my-secret-key";
     /// let message = b"hello world";
@@ -201,7 +201,7 @@ impl HmacUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::HmacUtil;
+    /// use yimi_rutool::crypto::HmacUtil;
     ///
     /// let hmac_hex = HmacUtil::hmac_sha256_str("my-secret-key", "hello world").unwrap();
     /// assert_eq!(hmac_hex.len(), 64);
@@ -215,7 +215,7 @@ impl HmacUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::HmacUtil;
+    /// use yimi_rutool::crypto::HmacUtil;
     ///
     /// let key = b"my-secret-key";
     /// let message = b"hello world";
@@ -241,7 +241,7 @@ impl HmacUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::crypto::HmacUtil;
+    /// use yimi_rutool::crypto::HmacUtil;
     ///
     /// let key = b"my-secret-key";
     /// let message = b"hello world";

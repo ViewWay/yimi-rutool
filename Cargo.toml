@@ -34,6 +34,7 @@ db = ["sqlx", "tokio"]
 cron = ["tokio", "chrono"]
 extra = ["image", "qrcode", "zip", "flate2"]
 jwt = ["jsonwebtoken", "chrono", "serde", "serde_json"]
+integration_tests = []
 
 [dependencies]
 # Core dependencies

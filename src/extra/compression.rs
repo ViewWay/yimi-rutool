@@ -151,7 +151,7 @@ impl CompressionUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::extra::{CompressionUtil, CompressionLevel};
+    /// use yimi_rutool::extra::{CompressionUtil, CompressionLevel};
     ///
     /// // let stats = CompressionUtil::compress_zip(
     /// //     "source_directory",

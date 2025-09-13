@@ -20,7 +20,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -41,7 +41,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use std::time::Duration;
     ///
     /// #[tokio::main]
@@ -63,7 +63,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -86,7 +86,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -108,7 +108,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use serde::{Deserialize, Serialize};
     ///
     /// #[derive(Deserialize)]
@@ -136,7 +136,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use serde_json::json;
     ///
     /// #[tokio::main]
@@ -162,7 +162,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use std::collections::HashMap;
     ///
     /// #[tokio::main]
@@ -189,7 +189,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -214,7 +214,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use serde_json::json;
     ///
     /// #[tokio::main]
@@ -240,7 +240,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -263,7 +263,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use serde_json::json;
     ///
     /// #[tokio::main]
@@ -289,7 +289,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -313,7 +313,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use reqwest::Method;
     /// use std::collections::HashMap;
     ///
@@ -363,7 +363,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -390,7 +390,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -411,7 +411,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -430,7 +430,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -459,7 +459,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -494,7 +494,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use std::collections::HashMap;
     ///
     /// let mut params = HashMap::new();
@@ -518,7 +518,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// let query = "key1=value1&key2=value%20with%20spaces";
     /// let params = HttpUtil::parse_query_string(query);
@@ -547,7 +547,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use std::collections::HashMap;
     ///
     /// let mut params = HashMap::new();
@@ -572,7 +572,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// let domain = HttpUtil::extract_domain("https://www.example.com/path?query=value");
     /// assert_eq!(domain, Some("www.example.com".to_string()));
@@ -590,7 +590,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// assert!(HttpUtil::is_valid_url("https://www.example.com"));
     /// assert!(!HttpUtil::is_valid_url("not-a-url"));
@@ -607,7 +607,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let response = HttpUtil::get_blocking("https://httpbin.org/get")?;
@@ -633,7 +633,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     ///
     /// fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let text = HttpUtil::get_text_blocking("https://httpbin.org/get")?;
@@ -653,7 +653,7 @@ impl HttpUtil {
     /// # Examples
     ///
     /// ```rust
-    /// use rutool::http::HttpUtil;
+    /// use yimi_rutool::http::HttpUtil;
     /// use serde_json::json;
     ///
     /// fn main() -> Result<(), Box<dyn std::error::Error>> {
