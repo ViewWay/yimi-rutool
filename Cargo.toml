@@ -61,7 +61,7 @@ url = { version = "2.5", optional = true }
 # Crypto dependencies
 rand = { version = "0.8.5", optional = true }
 aes-gcm = { version = "0.10", optional = true }
-rsa = { version = "0.8.2", features = ["sha2"], optional = true }
+rsa = { version = "0.8", features = ["sha2"], optional = true }
 sha2 = { version = "0.10", optional = true }
 md-5 = { version = "0.10", optional = true }
 hmac = { version = "0.12", optional = true }
