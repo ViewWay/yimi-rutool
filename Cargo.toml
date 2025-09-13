@@ -94,5 +94,5 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [lib]
-name = "yimi-rutool"
+name = "yimi_rutool"
 path = "src/lib.rs"
