@@ -210,8 +210,8 @@ cargo bench
 
 ## 📞 联系方式
 
-- 项目主页: [https://github.com/yimiliya/yimi-rutool](https://github.com/yimiliya/yimi-rutool)
-- 问题反馈: [GitHub Issues](https://github.com/yimiliya/yimi-rutool/issues)
+- 项目主页: [https://github.com/yimiliya/yimi-rutool](https://github.com/ViewWay/yimi-rutool)
+- 问题反馈: [GitHub Issues](https://github.com/ViewWay/yimi-rutool/issues)
 - 邮箱: yimiliya@example.com
 
 ---
