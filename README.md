@@ -39,7 +39,7 @@
 
 ```toml
 [dependencies]
-yimi-rutool = "0.2.2"
+yimi-rutool = "0.2.3"
 ```
 
 ### 基础用法
