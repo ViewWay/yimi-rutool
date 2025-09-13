@@ -486,9 +486,7 @@ impl CollUtil {
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::sum(&vec), 15);
     /// ```
-    pub fn sum<T: Clone + std::iter::Sum>(collection: &[T]) -> T
-    where
-        T: std::iter::Sum + Default,
+    pub fn sum<T: Clone + std::iter::Sum + Default>(collection: &[T]) -> T
     {
         if collection.is_empty() {
             T::default()

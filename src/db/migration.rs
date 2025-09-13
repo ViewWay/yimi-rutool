@@ -131,11 +131,11 @@ impl MigrationRunner {
     /// ```
     pub async fn init(&self) -> Result<()> {
         let create_table_sql = format!(
-            r#"CREATE TABLE IF NOT EXISTS {} (
+            r"CREATE TABLE IF NOT EXISTS {} (
                 version TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
                 applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )"#,
+            )",
             self.migrations_table
         );
 

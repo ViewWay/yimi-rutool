@@ -488,19 +488,19 @@ pub struct ImageHistogram {
 impl ImageHistogram {
     /// Get the peak value for red channel
     pub fn red_peak(&self) -> (u8, u32) {
-        let (index, value) = self.red.iter().enumerate().max_by_key(|(_, &v)| v).unwrap();
+        let (index, value) = self.red.iter().enumerate().max_by_key(|&(_, &v)| v).unwrap();
         (index as u8, *value)
     }
 
     /// Get the peak value for green channel
     pub fn green_peak(&self) -> (u8, u32) {
-        let (index, &value) = self.green.iter().enumerate().max_by_key(|(_, &v)| v).unwrap();
+        let (index, &value) = self.green.iter().enumerate().max_by_key(|&(_, &v)| v).unwrap();
         (index as u8, value)
     }
 
     /// Get the peak value for blue channel
     pub fn blue_peak(&self) -> (u8, u32) {
-        let (index, &value) = self.blue.iter().enumerate().max_by_key(|(_, &v)| v).unwrap();
+        let (index, &value) = self.blue.iter().enumerate().max_by_key(|&(_, &v)| v).unwrap();
         (index as u8, value)
     }
 }

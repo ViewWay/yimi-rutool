@@ -1,7 +1,7 @@
 [package]
 name = "yimi-rutool"
-version = "0.2.0"
-edition = "2021"
+version = "0.2.1"
+edition = "2024"
 authors = ["yimiliya <yimiliya@example.com>"]
 description = "A comprehensive Rust utility library inspired by Hutool"
 license = "MIT OR Apache-2.0"
@@ -10,7 +10,7 @@ categories = ["development-tools", "text-processing", "encoding", "cryptography"
 repository = "https://github.com/ViewWay/yimi-rutool"
 documentation = "https://docs.rs/yimi-rutool"
 readme = "README.md"
-rust-version = "1.70"
+rust-version = "1.89"
 
 [features]
 default = ["full"]

@@ -449,19 +449,21 @@ where
     V: Clone,
 {
     unsafe fn move_to_front(&mut self, node_ptr: NonNull<Node<K, V>>) {
-        // Remove from current position
-        self.remove_node(node_ptr);
-        // Add to front
-        self.add_to_front(node_ptr);
+        unsafe {
+            // Remove from current position
+            self.remove_node(node_ptr);
+            // Add to front
+            self.add_to_front(node_ptr);
+        }
     }
 
     unsafe fn add_to_front(&mut self, mut node_ptr: NonNull<Node<K, V>>) {
-        let node_ref = node_ptr.as_mut();
+        let node_ref = unsafe { node_ptr.as_mut() };
         node_ref.prev = None;
         node_ref.next = self.head;
 
         if let Some(mut old_head) = self.head {
-            old_head.as_mut().prev = Some(node_ptr);
+            unsafe { old_head.as_mut() }.prev = Some(node_ptr);
         } else {
             // First node, also set as tail
             self.tail = Some(node_ptr);
@@ -471,17 +473,17 @@ where
     }
 
     unsafe fn remove_node(&mut self, node_ptr: NonNull<Node<K, V>>) {
-        let node_ref = node_ptr.as_ref();
-
+        let node_ref = unsafe { node_ptr.as_ref() };
+        
         if let Some(mut prev) = node_ref.prev {
-            prev.as_mut().next = node_ref.next;
+            unsafe { prev.as_mut() }.next = node_ref.next;
         } else {
             // This was the head
             self.head = node_ref.next;
         }
 
         if let Some(mut next) = node_ref.next {
-            next.as_mut().prev = node_ref.prev;
+            unsafe { next.as_mut() }.prev = node_ref.prev;
         } else {
             // This was the tail
             self.tail = node_ref.prev;
@@ -490,15 +492,15 @@ where
 
     unsafe fn remove_tail(&mut self) {
         if let Some(tail_ptr) = self.tail {
-            let tail_ref = tail_ptr.as_ref();
+            let tail_ref = unsafe { tail_ptr.as_ref() };
             let key = tail_ref.key.clone();
             
             self.map.remove(&key);
-            self.remove_node(tail_ptr);
+            unsafe { self.remove_node(tail_ptr) };
             self.len -= 1;
             
             // Deallocate the node
-            let _ = Box::from_raw(tail_ptr.as_ptr());
+            let _ = unsafe { Box::from_raw(tail_ptr.as_ptr()) };
         }
     }
 }

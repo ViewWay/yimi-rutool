@@ -257,27 +257,26 @@ impl JsonUtil {
                     }
                     _ => return Err(Error::validation("Cannot set value on non-object/array".to_string())),
                 }
-            } else {
-                // Navigate deeper
-                match current {
-                    Value::Object(map) => {
-                        if !map.contains_key(*part) {
-                            map.insert(part.to_string(), Value::Object(Map::new()));
-                        }
-                        current = map.get_mut(*part).unwrap();
+            }
+            // Navigate deeper
+            match current {
+                Value::Object(map) => {
+                    if !map.contains_key(*part) {
+                        map.insert(part.to_string(), Value::Object(Map::new()));
                     }
-                    Value::Array(arr) => {
-                        if let Ok(index) = part.parse::<usize>() {
-                            if index >= arr.len() {
-                                return Err(Error::validation("Array index out of bounds".to_string()));
-                            }
-                            current = &mut arr[index];
-                        } else {
-                            return Err(Error::validation("Invalid array index".to_string()));
-                        }
-                    }
-                    _ => return Err(Error::validation("Cannot navigate through non-object/array".to_string())),
+                    current = map.get_mut(*part).unwrap();
                 }
+                Value::Array(arr) => {
+                    if let Ok(index) = part.parse::<usize>() {
+                        if index >= arr.len() {
+                            return Err(Error::validation("Array index out of bounds".to_string()));
+                        }
+                        current = &mut arr[index];
+                    } else {
+                        return Err(Error::validation("Invalid array index".to_string()));
+                    }
+                }
+                _ => return Err(Error::validation("Cannot navigate through non-object/array".to_string())),
             }
         }
         
