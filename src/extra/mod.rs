@@ -18,10 +18,10 @@ pub mod compression;
 
 /// Re-export commonly used types for convenience
 #[cfg(feature = "qrcode")]
-pub use qr_code::{QrCode, QrCodeBuilder};
+pub use qr_code::{QrCode, QrCodeBuilder, QrCodeUtil, ErrorCorrectionLevel};
 
 #[cfg(feature = "image")]
-pub use image_util::{ImageUtil, ImageFormat};
+pub use image_util::{ImageUtil, ImageFormat, ResizeFilter};
 
 #[cfg(feature = "zip")]
-pub use compression::{CompressionUtil, CompressionFormat};
+pub use compression::{CompressionUtil, CompressionFormat, CompressionLevel};

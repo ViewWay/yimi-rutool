@@ -12,6 +12,6 @@ pub mod query_builder;
 pub mod migration;
 
 /// Re-export commonly used types for convenience
-pub use connection::{DatabaseConnection, ConnectionPool};
+pub use connection::{DatabaseConnection, ConnectionPool, DatabaseConfig, DatabaseType};
 pub use query_builder::QueryBuilder;
-pub use migration::Migration;
+pub use migration::{Migration, MigrationRunner, MigrationTimestamp};

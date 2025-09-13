@@ -4,12 +4,13 @@
 
 use crate::error::{Error, Result};
 use rsa::{
-    Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey, PublicKey, PublicKeyParts,
+    Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey,
     pkcs1::DecodeRsaPublicKey, pkcs1::EncodeRsaPublicKey,
     signature::SignatureEncoding,
+    traits::PublicKeyParts,
 };
 use base64::Engine;
-use rand::thread_rng;
+use rand::{thread_rng};
 
 /// RSA utility functions
 pub struct RsaUtil;

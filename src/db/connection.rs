@@ -431,8 +431,10 @@ impl DatabaseConnection {
     ///     let conn = DatabaseConnection::new(config).await?;
     ///     
     ///     let row = conn.fetch_one("SELECT 'Hello' as greeting").await?;
-    ///     if let Some(greeting) = row.get("greeting") {
-    ///         println!("Greeting: {}", greeting);
+    ///     if let Some(row_data) = row {
+    ///         if let Some(greeting) = row_data.get("greeting") {
+    ///             println!("Greeting: {}", greeting);
+    ///         }
     ///     }
     ///     Ok(())
     /// }

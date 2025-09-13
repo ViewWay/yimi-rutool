@@ -13,5 +13,5 @@ pub mod job;
 
 /// Re-export commonly used types for convenience
 pub use cron_parser::{CronExpression, CronField};
-pub use scheduler::{Scheduler, TaskHandle};
+pub use scheduler::{Scheduler, TaskHandle, SchedulerConfig};
 pub use job::{Job, JobBuilder};

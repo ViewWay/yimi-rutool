@@ -4,8 +4,7 @@
 //! secure random number generation, password generation, and key generation.
 
 use base64::Engine;
-use rand::{RngCore, thread_rng};
-use rand::distributions::{Alphanumeric, Distribution};
+use rand::{RngCore, thread_rng, distributions::{Alphanumeric, Distribution}};
 
 /// Security utility functions
 pub struct SecureUtil;

@@ -327,7 +327,7 @@ impl HttpUtil {
     ///         Method::GET,
     ///         "https://httpbin.org/headers",
     ///         Some(&headers),
-    ///         None::<&str>
+    ///         None::<&()>
     ///     ).await?;
     ///     println!("Status: {}", response.status());
     ///     Ok(())

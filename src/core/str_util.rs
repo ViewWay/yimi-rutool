@@ -7,6 +7,9 @@
 
 use regex::Regex;
 
+#[cfg(feature = "core")]
+use rand::Rng;
+
 /// String utility functions | 字符串工具类
 pub struct StrUtil;
 
@@ -614,7 +617,7 @@ impl StrUtil {
     /// assert_eq!(random_str.len(), 10);
     /// ```
     pub fn random_string(length: usize) -> String {
-        use rand::{Rng, thread_rng};
+        use rand::thread_rng;
         const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
         let mut rng = thread_rng();
@@ -655,7 +658,7 @@ impl StrUtil {
     /// assert!(random_num.chars().all(|c| c.is_numeric()));
     /// ```
     pub fn random_numeric(length: usize) -> String {
-        use rand::{Rng, thread_rng};
+        use rand::thread_rng;
         const DIGITS: &[u8] = b"0123456789";
 
         let mut rng = thread_rng();

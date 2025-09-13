@@ -105,10 +105,10 @@ where
     /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
-    /// cache.put("key", "value").unwrap();
+    /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// 
-    /// assert_eq!(cache.get("key").unwrap(), Some("value"));
-    /// assert_eq!(cache.get("nonexistent").unwrap(), None);
+    /// assert_eq!(cache.get(&"key".to_string()).unwrap(), Some("value".to_string()));
+    /// assert_eq!(cache.get(&"nonexistent".to_string()).unwrap(), None);
     /// ```
     pub fn get(&self, key: &K) -> Result<Option<V>> {
         let mut inner = self.inner.lock()
@@ -141,7 +141,7 @@ where
     /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
-    /// cache.put("key", "value").unwrap();
+    /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// ```
     pub fn put(&self, key: K, value: V) -> Result<()> {
         let mut inner = self.inner.lock()
@@ -185,11 +185,11 @@ where
     /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
-    /// cache.put("key", "value").unwrap();
+    /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// 
-    /// let removed = cache.remove("key").unwrap();
-    /// assert_eq!(removed, Some("value"));
-    /// assert_eq!(cache.get("key").unwrap(), None);
+    /// let removed = cache.remove(&"key".to_string()).unwrap();
+    /// assert_eq!(removed, Some("value".to_string()));
+    /// assert_eq!(cache.get(&"key".to_string()).unwrap(), None);
     /// ```
     pub fn remove(&self, key: &K) -> Result<Option<V>> {
         let mut inner = self.inner.lock()
@@ -221,10 +221,10 @@ where
     /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(2);
-    /// cache.put("key", "value").unwrap();
+    /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// 
-    /// assert!(cache.contains_key("key").unwrap());
-    /// assert!(!cache.contains_key("nonexistent").unwrap());
+    /// assert!(cache.contains_key(&"key".to_string()).unwrap());
+    /// assert!(!cache.contains_key(&"nonexistent".to_string()).unwrap());
     /// ```
     pub fn contains_key(&self, key: &K) -> Result<bool> {
         let inner = self.inner.lock()
@@ -243,7 +243,7 @@ where
     /// let mut cache = LruCache::new(10);
     /// assert_eq!(cache.len().unwrap(), 0);
     /// 
-    /// cache.put("key", "value").unwrap();
+    /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// assert_eq!(cache.len().unwrap(), 1);
     /// ```
     pub fn len(&self) -> Result<usize> {
@@ -260,7 +260,7 @@ where
     /// ```rust
     /// use yimi_rutool::cache::LruCache;
     ///
-    /// let cache = LruCache::new(10);
+    /// let cache: LruCache<String, String> = LruCache::new(10);
     /// assert!(cache.is_empty().unwrap());
     /// ```
     pub fn is_empty(&self) -> Result<bool> {
@@ -274,14 +274,12 @@ where
     /// ```rust
     /// use yimi_rutool::cache::LruCache;
     ///
-    /// let cache = LruCache::new(100);
-    /// assert_eq!(cache.capacity().unwrap(), 100);
+    /// let cache: LruCache<String, String> = LruCache::new(100);
+    /// assert_eq!(cache.capacity(), 100);
     /// ```
-    pub fn capacity(&self) -> Result<usize> {
-        let inner = self.inner.lock()
-            .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
-        Ok(inner.capacity)
+    pub fn capacity(&self) -> usize {
+        let inner = self.inner.lock().unwrap();
+        inner.capacity
     }
 
     /// Clear all items from the cache
@@ -556,7 +554,7 @@ mod tests {
         assert!(!cache.is_empty().unwrap());
         
         // Test capacity
-        assert_eq!(cache.capacity().unwrap(), 2);
+        assert_eq!(cache.capacity(), 2);
     }
 
     #[test]

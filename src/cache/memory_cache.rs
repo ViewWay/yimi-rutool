@@ -55,11 +55,11 @@ impl<V> CacheEntry<V> {
 /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
 /// 
 /// // Store value with TTL
-/// cache.put_with_ttl("key2", "value2", Duration::from_secs(60)).unwrap();
+    /// cache.put_with_ttl("key2".to_string(), "value2".to_string(), Duration::from_secs(60)).unwrap();
 /// 
 /// // Retrieve values
-/// assert_eq!(cache.get(&"key1".to_string()).unwrap(), Some("value1"));
-/// assert_eq!(cache.get(&"key2".to_string()).unwrap(), Some("value2"));
+    /// assert_eq!(cache.get(&"key1".to_string()).unwrap(), Some("value1".to_string()));
+    /// assert_eq!(cache.get(&"key2".to_string()).unwrap(), Some("value2".to_string()));
 /// ```
 pub struct MemoryCache<K, V> 
 where
@@ -260,8 +260,8 @@ where
     /// let cache = MemoryCache::new();
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// 
-    /// assert!(cache.contains_key("key").unwrap());
-    /// assert!(!cache.contains_key("nonexistent").unwrap());
+    /// assert!(cache.contains_key(&"key".to_string()).unwrap());
+    /// assert!(!cache.contains_key(&"nonexistent".to_string()).unwrap());
     /// ```
     pub fn contains_key(&self, key: &K) -> Result<bool> {
         let data = self.data.read()
@@ -284,7 +284,7 @@ where
     /// let cache = MemoryCache::new();
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// 
-    /// let removed = cache.remove("key").unwrap();
+    /// let removed = cache.remove(&"key".to_string()).unwrap();
     /// assert_eq!(removed, Some("value".to_string()));
     /// ```
     pub fn remove(&self, key: &K) -> Result<Option<V>> {
