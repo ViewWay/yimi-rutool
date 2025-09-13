@@ -89,6 +89,10 @@ pub mod cron;
 #[cfg(feature = "extra")]
 pub mod extra;
 
+/// JWT (JSON Web Token) utilities
+#[cfg(feature = "jwt")]
+pub mod jwt;
+
 /// Error types used throughout the library
 pub mod error;
 
