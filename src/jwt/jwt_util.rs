@@ -27,6 +27,7 @@ impl JwtHeader {
     }
     
     /// Create header with key ID
+    #[must_use]
     pub fn with_key_id(mut self, kid: impl Into<String>) -> Self {
         self.kid = Some(kid.into());
         self
@@ -44,11 +45,25 @@ pub struct JwtUtil;
 
 impl JwtUtil {
     /// Create a JWT token with HMAC signature
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Claims serialization fails
+    /// - Token encoding fails
+    /// - Secret key is invalid
     pub fn create_token(claims: &Claims, secret: &str) -> JwtResult<String> {
         Self::create_token_with_algorithm(claims, secret, Algorithm::HS256)
     }
     
     /// Create a JWT token with specified algorithm and HMAC secret
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Algorithm is not compatible with HMAC secrets
+    /// - Claims serialization fails
+    /// - Token encoding fails
     pub fn create_token_with_algorithm(claims: &Claims, secret: &str, algorithm: Algorithm) -> JwtResult<String> {
         if !algorithm.is_hmac() {
             return Err(JwtError::invalid_algorithm("Only HMAC algorithms supported with string secret"));
@@ -59,6 +74,14 @@ impl JwtUtil {
     }
     
     /// Create a JWT token with signing key
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Key is not compatible with the algorithm
+    /// - Key cannot be used for signing
+    /// - Claims serialization fails
+    /// - Token encoding fails
     pub fn create_token_with_key(claims: &Claims, key: &SigningKey, algorithm: Algorithm) -> JwtResult<String> {
         if !key.is_compatible_with(algorithm) {
             return Err(JwtError::invalid_key("Key not compatible with algorithm"));
@@ -118,11 +141,29 @@ impl JwtUtil {
     }
     
     /// Validate a JWT token with HMAC secret
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Token format is invalid
+    /// - Token signature is invalid
+    /// - Token has expired
+    /// - Token is not yet valid
+    /// - Secret key is invalid
     pub fn validate_token(token: &str, secret: &str) -> JwtResult<Claims> {
         Self::validate_token_with_algorithm(token, secret, Algorithm::HS256)
     }
     
     /// Validate a JWT token with specified algorithm and HMAC secret
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Algorithm is not compatible with HMAC secrets
+    /// - Token format is invalid
+    /// - Token signature is invalid
+    /// - Token has expired
+    /// - Token is not yet valid
     pub fn validate_token_with_algorithm(token: &str, secret: &str, algorithm: Algorithm) -> JwtResult<Claims> {
         if !algorithm.is_hmac() {
             return Err(JwtError::invalid_algorithm("Only HMAC algorithms supported with string secret"));
@@ -133,6 +174,15 @@ impl JwtUtil {
     }
     
     /// Validate a JWT token with signing key
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Key is not compatible with the algorithm
+    /// - Token format is invalid
+    /// - Token signature is invalid
+    /// - Token has expired
+    /// - Token is not yet valid
     pub fn validate_token_with_key(token: &str, key: &SigningKey, algorithm: Algorithm) -> JwtResult<Claims> {
         if !key.is_compatible_with(algorithm) {
             return Err(JwtError::invalid_key("Key not compatible with algorithm"));
@@ -216,6 +266,13 @@ impl JwtUtil {
     }
     
     /// Decode token without verification (for inspection)
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Token format is invalid (not 3 parts)
+    /// - Header or payload cannot be decoded
+    /// - JSON parsing fails
     pub fn decode_without_verification(token: &str) -> JwtResult<(JwtHeader, Claims)> {
         let parts: Vec<&str> = token.split('.').collect();
         if parts.len() != 3 {
@@ -234,24 +291,40 @@ impl JwtUtil {
     }
     
     /// Get token expiration time without verification
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if token cannot be decoded
     pub fn get_expiration(token: &str) -> JwtResult<Option<i64>> {
         let (_, claims) = Self::decode_without_verification(token)?;
         Ok(claims.expires_at)
     }
     
     /// Check if token is expired without verification
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if token cannot be decoded
     pub fn is_expired(token: &str) -> JwtResult<bool> {
         let (_, claims) = Self::decode_without_verification(token)?;
         Ok(claims.is_expired())
     }
     
     /// Get token subject without verification
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if token cannot be decoded
     pub fn get_subject(token: &str) -> JwtResult<Option<String>> {
         let (_, claims) = Self::decode_without_verification(token)?;
         Ok(claims.subject)
     }
     
     /// Create a refresh token (long-lived token with minimal claims)
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if token creation fails
     pub fn create_refresh_token(user_id: &str, secret: &str, duration_hours: i64) -> JwtResult<String> {
         let claims = Claims::new()
             .with_subject(user_id)
@@ -263,6 +336,13 @@ impl JwtUtil {
     }
     
     /// Validate refresh token and extract user ID
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Token validation fails
+    /// - Token is not a refresh token
+    /// - Subject claim is missing
     pub fn validate_refresh_token(token: &str, secret: &str) -> JwtResult<String> {
         let claims = Self::validate_token(token, secret)?;
         

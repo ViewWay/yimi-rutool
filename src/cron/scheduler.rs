@@ -218,6 +218,7 @@ impl Scheduler {
     /// }
     /// ```
     #[cfg(feature = "tokio")]
+    #[allow(clippy::unused_async)]
     pub async fn start(&mut self) -> Result<()> {
         if self.is_running.load(Ordering::SeqCst) {
             return Err(Error::validation("Scheduler is already running".to_string()));

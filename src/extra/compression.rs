@@ -190,7 +190,7 @@ impl CompressionUtil {
                 .to_string_lossy();
             
             zip.start_file(&file_name, options)
-                .map_err(|e| Error::validation(format!("Failed to start ZIP file entry: {}", e)))?;
+                .map_err(|e| Error::validation(format!("Failed to start ZIP file entry: {e}")))?;
 
             let mut source_file = File::open(source_path)
                 .map_err(|e| Error::validation(format!("Failed to open source file: {}", e)))?;
@@ -203,7 +203,7 @@ impl CompressionUtil {
             file_count += 1;
 
             zip.write_all(&buffer)
-                .map_err(|e| Error::validation(format!("Failed to write to ZIP: {}", e)))?;
+                .map_err(|e| Error::validation(format!("Failed to write to ZIP: {e}")))?;
         } else if source_path.is_dir() {
             // Compress directory
             Self::compress_directory_to_zip(&mut zip, source_path, source_path, options, &mut original_size, &mut file_count)?;
@@ -233,10 +233,10 @@ impl CompressionUtil {
         }
 
         let file = File::open(source_path)
-            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {e}")))?;
         
         let mut archive = ZipArchive::new(file)
-            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {e}")))?;
 
         let mut original_size = 0u64;
         let mut compressed_size = 0u64;
@@ -244,7 +244,7 @@ impl CompressionUtil {
 
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)
-                .map_err(|e| Error::validation(format!("Failed to read ZIP entry {}: {}", i, e)))?;
+                .map_err(|e| Error::validation(format!("Failed to read ZIP entry {i}: {e}")))?;
             
             let outpath = destination_path.join(file.name());
             
@@ -263,10 +263,10 @@ impl CompressionUtil {
                 }
                 
                 let mut outfile = File::create(&outpath)
-                    .map_err(|e| Error::validation(format!("Failed to create output file: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to create output file: {e}")))?;
                 
                 std::io::copy(&mut file, &mut outfile)
-                    .map_err(|e| Error::validation(format!("Failed to extract file: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to extract file: {e}")))?;
             }
         }
 
@@ -318,7 +318,7 @@ impl CompressionUtil {
             .map_err(|e| Error::validation(format!("Failed to open source file: {}", e)))?;
         
         let destination_file = File::create(destination_path)
-            .map_err(|e| Error::validation(format!("Failed to create destination file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to create destination file: {e}")))?;
         
         let mut encoder = GzEncoder::new(destination_file, Compression::default());
         
@@ -347,22 +347,22 @@ impl CompressionUtil {
         let destination_path = destination.as_ref();
 
         if !source_path.exists() {
-            return Err(Error::not_found(format!("GZIP file does not exist: {:?}", source_path)));
+            return Err(Error::not_found(format!("GZIP file does not exist: {source_path:?}")));
         }
 
         let source_file = File::open(source_path)
-            .map_err(|e| Error::validation(format!("Failed to open GZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to open GZIP file: {e}")))?;
         
         let mut decoder = GzDecoder::new(source_file);
         
         let mut destination_file = File::create(destination_path)
-            .map_err(|e| Error::validation(format!("Failed to create destination file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to create destination file: {e}")))?;
         
         let original_size = std::io::copy(&mut decoder, &mut destination_file)
-            .map_err(|e| Error::validation(format!("Failed to decompress file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to decompress file: {e}")))?;
 
         let compressed_size = std::fs::metadata(source_path)
-            .map_err(|e| Error::validation(format!("Failed to get source file size: {}", e)))?
+            .map_err(|e| Error::validation(format!("Failed to get source file size: {e}")))?
             .len();
 
         Ok(CompressionStats::new(original_size, compressed_size, 1))
@@ -379,38 +379,38 @@ impl CompressionUtil {
         file_count: &mut usize,
     ) -> Result<()> {
         let entries = std::fs::read_dir(current_path)
-            .map_err(|e| Error::validation(format!("Failed to read directory: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to read directory: {e}")))?;
 
         for entry in entries {
             let entry = entry
-                .map_err(|e| Error::validation(format!("Failed to read directory entry: {}", e)))?;
+                .map_err(|e| Error::validation(format!("Failed to read directory entry: {e}")))?;
             let path = entry.path();
             
             let relative_path = path.strip_prefix(base_path)
-                .map_err(|e| Error::validation(format!("Failed to create relative path: {}", e)))?;
+                .map_err(|e| Error::validation(format!("Failed to create relative path: {e}")))?;
             
             let name = relative_path.to_string_lossy().replace('\\', "/");
 
             if path.is_file() {
                 zip.start_file(&name, options)
-                    .map_err(|e| Error::validation(format!("Failed to start ZIP file entry: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to start ZIP file entry: {e}")))?;
 
                 let mut file = File::open(&path)
-                    .map_err(|e| Error::validation(format!("Failed to open file: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to open file: {e}")))?;
                 
                 let mut buffer = Vec::new();
                 file.read_to_end(&mut buffer)
-                    .map_err(|e| Error::validation(format!("Failed to read file: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to read file: {e}")))?;
                 
                 *total_size += buffer.len() as u64;
                 *file_count += 1;
 
                 zip.write_all(&buffer)
-                    .map_err(|e| Error::validation(format!("Failed to write to ZIP: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to write to ZIP: {e}")))?;
             } else if path.is_dir() {
                 // Add directory entry
-                zip.add_directory(&format!("{}/", name), options)
-                    .map_err(|e| Error::validation(format!("Failed to add directory to ZIP: {}", e)))?;
+                zip.add_directory(format!("{name}/"), options)
+                    .map_err(|e| Error::validation(format!("Failed to add directory to ZIP: {e}")))?;
                 
                 // Recursively process subdirectory
                 Self::compress_directory_to_zip(zip, base_path, &path, options, total_size, file_count)?;
@@ -421,13 +421,20 @@ impl CompressionUtil {
     }
 
     /// Get information about a ZIP file without extracting it
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `Error` if:
+    /// - ZIP file cannot be opened
+    /// - ZIP archive cannot be read
+    /// - Entry information cannot be accessed
     #[cfg(feature = "zip")]
     pub fn zip_info<P: AsRef<Path>>(path: P) -> Result<ZipInfo> {
         let file = File::open(&path)
-            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {e}")))?;
         
         let mut archive = ZipArchive::new(file)
-            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {e}")))?;
 
         let mut files = Vec::new();
         let mut total_compressed_size = 0u64;
@@ -435,7 +442,7 @@ impl CompressionUtil {
 
         for i in 0..archive.len() {
             let file = archive.by_index(i)
-                .map_err(|e| Error::validation(format!("Failed to read ZIP entry {}: {}", i, e)))?;
+                .map_err(|e| Error::validation(format!("Failed to read ZIP entry {i}: {e}")))?;
             
             let info = ZipFileInfo {
                 name: file.name().to_string(),
@@ -467,15 +474,15 @@ impl CompressionUtil {
     #[cfg(feature = "zip")]
     pub fn list_zip<P: AsRef<Path>>(path: P) -> Result<Vec<String>> {
         let file = File::open(&path)
-            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {e}")))?;
         
         let mut archive = ZipArchive::new(file)
-            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {e}")))?;
 
         let mut files = Vec::new();
         for i in 0..archive.len() {
             let file = archive.by_index(i)
-                .map_err(|e| Error::validation(format!("Failed to read ZIP entry {}: {}", i, e)))?;
+                .map_err(|e| Error::validation(format!("Failed to read ZIP entry {i}: {e}")))?;
             files.push(file.name().to_string());
         }
 
@@ -490,19 +497,19 @@ impl CompressionUtil {
         destination: Q,
     ) -> Result<()> {
         let file = File::open(&zip_path)
-            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to open ZIP file: {e}")))?;
         
         let mut archive = ZipArchive::new(file)
-            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to read ZIP archive: {e}")))?;
 
         let mut zip_file = archive.by_name(file_name)
-            .map_err(|e| Error::not_found(format!("File '{}' not found in ZIP: {}", file_name, e)))?;
+            .map_err(|e| Error::not_found(format!("File '{file_name}' not found in ZIP: {e}")))?;
 
         let mut output_file = File::create(destination)
-            .map_err(|e| Error::validation(format!("Failed to create output file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to create output file: {e}")))?;
 
         std::io::copy(&mut zip_file, &mut output_file)
-            .map_err(|e| Error::validation(format!("Failed to extract file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to extract file: {e}")))?;
 
         Ok(())
     }

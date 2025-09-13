@@ -566,7 +566,7 @@ impl DatabaseConnection {
     }
 
     /// Check if the connection is healthy
-    pub async fn is_healthy(&self) -> bool {
+    pub fn is_healthy(&self) -> bool {
         #[cfg(feature = "db")]
         {
             match self {
@@ -784,7 +784,7 @@ mod tests {
         assert!(row.is_ok());
         assert!(row.unwrap().is_none());
         
-        assert!(connection.is_healthy().await);
+        assert!(connection.is_healthy());
     }
 
     #[tokio::test]

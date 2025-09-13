@@ -4,9 +4,10 @@ use crate::jwt::errors::{JwtError, JwtResult};
 use serde::{Deserialize, Serialize};
 
 /// Supported JWT signing algorithms
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Algorithm {
     /// HMAC using SHA-256
+    #[default]
     HS256,
     /// HMAC using SHA-384  
     HS384,
@@ -43,6 +44,10 @@ impl Algorithm {
     }
     
     /// Parse algorithm from string
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError::InvalidAlgorithm` if the string is not a valid algorithm name
     pub fn from_str(s: &str) -> JwtResult<Self> {
         match s {
             "HS256" => Ok(Algorithm::HS256),
@@ -85,11 +90,6 @@ impl std::fmt::Display for Algorithm {
     }
 }
 
-impl Default for Algorithm {
-    fn default() -> Self {
-        Algorithm::HS256
-    }
-}
 
 /// Signing key for JWT operations
 #[derive(Debug, Clone)]

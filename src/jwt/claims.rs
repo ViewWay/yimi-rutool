@@ -56,24 +56,28 @@ impl Claims {
     }
     
     /// Set issuer claim
+    #[must_use]
     pub fn with_issuer(mut self, issuer: impl Into<String>) -> Self {
         self.issuer = Some(issuer.into());
         self
     }
     
     /// Set subject claim
+    #[must_use]
     pub fn with_subject(mut self, subject: impl Into<String>) -> Self {
         self.subject = Some(subject.into());
         self
     }
     
     /// Set audience claim
+    #[must_use]
     pub fn with_audience(mut self, audience: impl Into<String>) -> Self {
         self.audience = Some(audience.into());
         self
     }
     
     /// Set expiration time (Unix timestamp)
+    #[must_use]
     pub fn with_expiration(mut self, exp: i64) -> Self {
         self.expires_at = Some(exp);
         self
@@ -81,6 +85,7 @@ impl Claims {
     
     /// Set expiration time from duration
     #[cfg(feature = "chrono")]
+    #[must_use]
     pub fn with_expiration_from_now(mut self, duration: chrono::Duration) -> Self {
         let exp = chrono::Utc::now() + duration;
         self.expires_at = Some(exp.timestamp());
@@ -88,12 +93,14 @@ impl Claims {
     }
     
     /// Set not before time (Unix timestamp)
+    #[must_use]
     pub fn with_not_before(mut self, nbf: i64) -> Self {
         self.not_before = Some(nbf);
         self
     }
     
     /// Set issued at time (Unix timestamp)
+    #[must_use]
     pub fn with_issued_at(mut self, iat: i64) -> Self {
         self.issued_at = Some(iat);
         self
@@ -101,36 +108,42 @@ impl Claims {
     
     /// Set issued at time to now
     #[cfg(feature = "chrono")]
+    #[must_use]
     pub fn with_issued_at_now(mut self) -> Self {
         self.issued_at = Some(chrono::Utc::now().timestamp());
         self
     }
     
     /// Set JWT ID
+    #[must_use]
     pub fn with_jwt_id(mut self, jti: impl Into<String>) -> Self {
         self.jwt_id = Some(jti.into());
         self
     }
     
     /// Add custom claim
+    #[must_use]
     pub fn with_custom_claim(mut self, key: impl Into<String>, value: serde_json::Value) -> Self {
         self.custom.insert(key.into(), value);
         self
     }
     
     /// Add custom string claim
+    #[must_use]
     pub fn with_custom_string(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
         self.custom.insert(key.into(), serde_json::Value::String(value.into()));
         self
     }
     
     /// Add custom number claim
+    #[must_use]
     pub fn with_custom_number(mut self, key: impl Into<String>, value: impl Into<serde_json::Number>) -> Self {
         self.custom.insert(key.into(), serde_json::Value::Number(value.into()));
         self
     }
     
     /// Add custom boolean claim
+    #[must_use]
     pub fn with_custom_bool(mut self, key: impl Into<String>, value: bool) -> Self {
         self.custom.insert(key.into(), serde_json::Value::Bool(value));
         self
@@ -152,27 +165,37 @@ impl Claims {
     }
     
     /// Validate claims for timing constraints
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Token has expired (`expires_at` is in the past)
+    /// - Token is not yet valid (`not_before` is in the future)
     pub fn validate_time(&self) -> JwtResult<()> {
         self.validate_time_with_leeway(0)
     }
     
     /// Validate claims with time leeway (in seconds)
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if:
+    /// - Token has expired (considering leeway)
+    /// - Token is not yet valid (considering leeway)
     pub fn validate_time_with_leeway(&self, leeway: i64) -> JwtResult<()> {
         let now = chrono::Utc::now().timestamp();
         
         // Check expiration
-        if let Some(exp) = self.expires_at {
-            if now > exp + leeway {
+        if let Some(exp) = self.expires_at
+            && now > exp + leeway {
                 return Err(JwtError::TokenExpired);
             }
-        }
         
         // Check not before
-        if let Some(nbf) = self.not_before {
-            if now < nbf - leeway {
+        if let Some(nbf) = self.not_before
+            && now < nbf - leeway {
                 return Err(JwtError::TokenNotYetValid);
             }
-        }
         
         Ok(())
     }
@@ -201,11 +224,19 @@ impl Claims {
     }
     
     /// Convert claims to JSON string
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if JSON serialization fails
     pub fn to_json(&self) -> JwtResult<String> {
         serde_json::to_string(self).map_err(JwtError::from)
     }
     
     /// Parse claims from JSON string
+    /// 
+    /// # Errors
+    /// 
+    /// Returns `JwtError` if JSON parsing fails
     pub fn from_json(json: &str) -> JwtResult<Self> {
         serde_json::from_str(json).map_err(JwtError::from)
     }
@@ -231,24 +262,28 @@ impl ClaimsBuilder {
     }
     
     /// Set issuer
+    #[must_use]
     pub fn issuer(mut self, issuer: impl Into<String>) -> Self {
         self.claims.issuer = Some(issuer.into());
         self
     }
     
     /// Set subject
+    #[must_use]
     pub fn subject(mut self, subject: impl Into<String>) -> Self {
         self.claims.subject = Some(subject.into());
         self
     }
     
     /// Set audience
+    #[must_use]
     pub fn audience(mut self, audience: impl Into<String>) -> Self {
         self.claims.audience = Some(audience.into());
         self
     }
     
     /// Set expiration time
+    #[must_use]
     pub fn expires_at(mut self, exp: i64) -> Self {
         self.claims.expires_at = Some(exp);
         self
@@ -256,6 +291,7 @@ impl ClaimsBuilder {
     
     /// Set expiration from duration
     #[cfg(feature = "chrono")]
+    #[must_use]
     pub fn expires_in(mut self, duration: chrono::Duration) -> Self {
         let exp = chrono::Utc::now() + duration;
         self.claims.expires_at = Some(exp.timestamp());
@@ -263,12 +299,14 @@ impl ClaimsBuilder {
     }
     
     /// Set not before time
+    #[must_use]
     pub fn not_before(mut self, nbf: i64) -> Self {
         self.claims.not_before = Some(nbf);
         self
     }
     
     /// Set issued at time
+    #[must_use]
     pub fn issued_at(mut self, iat: i64) -> Self {
         self.claims.issued_at = Some(iat);
         self
@@ -276,24 +314,28 @@ impl ClaimsBuilder {
     
     /// Set issued at to now
     #[cfg(feature = "chrono")]
+    #[must_use]
     pub fn issued_now(mut self) -> Self {
         self.claims.issued_at = Some(chrono::Utc::now().timestamp());
         self
     }
     
     /// Set JWT ID
+    #[must_use]
     pub fn jwt_id(mut self, jti: impl Into<String>) -> Self {
         self.claims.jwt_id = Some(jti.into());
         self
     }
     
     /// Add custom claim
+    #[must_use]
     pub fn custom_claim(mut self, key: impl Into<String>, value: serde_json::Value) -> Self {
         self.claims.custom.insert(key.into(), value);
         self
     }
     
     /// Add custom string claim
+    #[must_use]
     pub fn custom_string(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
         self.claims.custom.insert(key.into(), serde_json::Value::String(value.into()));
         self
