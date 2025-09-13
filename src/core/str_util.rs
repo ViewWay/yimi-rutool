@@ -1,11 +1,13 @@
-//! String utility functions
+//! String utility functions | 字符串工具函数
 //!
 //! This module provides comprehensive string manipulation utilities,
-//! inspired by Hutool's CharSequenceUtil.
+//! inspired by Hutool's `CharSequenceUtil`.
+//! 
+//! 本模块提供全面的字符串操作工具，灵感来源于Hutool的字符序列工具。
 
 use regex::Regex;
 
-/// String utility functions
+/// String utility functions | 字符串工具类
 pub struct StrUtil;
 
 impl StrUtil {
@@ -201,7 +203,7 @@ impl StrUtil {
         result
     }
 
-    /// Convert string to PascalCase
+    /// Convert string to `PascalCase` | 将字符串转换为帕斯卡命名
     ///
     /// # Examples
     ///
@@ -220,7 +222,7 @@ impl StrUtil {
         result
     }
 
-    /// Convert string to snake_case
+    /// Convert string to `snake_case` | 将字符串转换为蛇形命名
     ///
     /// # Examples
     ///
@@ -383,7 +385,7 @@ impl StrUtil {
     /// ```
     pub fn split(s: &str, delimiter: &str) -> Vec<String> {
         s.split(delimiter)
-            .map(|s| s.to_string())
+            .map(std::string::ToString::to_string)
             .collect()
     }
 
@@ -417,7 +419,7 @@ impl StrUtil {
     pub fn format(template: &str, args: &[&str]) -> String {
         let mut result = template.to_string();
         for (i, arg) in args.iter().enumerate() {
-            let placeholder = format!("{{{}}}", i);
+            let placeholder = format!("{{{i}}}");
             result = result.replace(&placeholder, arg);
         }
         result

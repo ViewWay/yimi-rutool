@@ -92,7 +92,7 @@ impl Convert {
     /// assert_eq!(Convert::to_str(&3.14), "3.14");
     /// ```
     pub fn to_str<T: std::fmt::Display>(value: &T) -> String {
-        format!("{}", value)
+        format!("{value}")
     }
 
     /// Convert string to Vec<u8>
@@ -210,7 +210,7 @@ impl Convert {
     /// assert_eq!(vec, vec!["a", "b", "c"]);
     /// ```
     pub fn to_string_vec(strings: &[&str]) -> Vec<String> {
-        strings.iter().map(|s| s.to_string()).collect()
+        strings.iter().map(|s| (*s).to_string()).collect()
     }
 
     /// Convert Vec<String> to string array
@@ -225,7 +225,7 @@ impl Convert {
     /// assert_eq!(array, ["a", "b"]);
     /// ```
     pub fn to_str_array(strings: &[String]) -> Vec<&str> {
-        strings.iter().map(|s| s.as_str()).collect()
+        strings.iter().map(std::string::String::as_str).collect()
     }
 
     /// Convert string to char array
@@ -300,7 +300,7 @@ impl Convert {
         result
     }
 
-    /// Convert string to UPPER_SNAKE_CASE
+    /// Convert string to `UPPER_SNAKE_CASE` | 将字符串转换为大写蛇形命名
     ///
     /// # Examples
     ///
@@ -321,7 +321,7 @@ impl Convert {
         result
     }
 
-    /// Convert string to lower_snake_case
+    /// Convert string to `lower_snake_case` | 将字符串转换为小写蛇形命名
     ///
     /// # Examples
     ///

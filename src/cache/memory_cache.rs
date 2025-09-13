@@ -435,7 +435,12 @@ where
         
         let total_access_count: u64 = data.values().map(|entry| entry.access_count).sum();
         let avg_access_count = if total_entries > 0 {
-            total_access_count as f64 / total_entries as f64
+            // Use safe conversion for better precision
+            if total_entries == 0 {
+                0.0
+            } else {
+                (total_access_count as f64) / (total_entries as f64)
+            }
         } else {
             0.0
         };

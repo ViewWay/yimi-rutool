@@ -563,7 +563,7 @@ impl CollUtil {
         }
 
         collection.chunks(size)
-            .map(|chunk| chunk.to_vec())
+            .map(<[T]>::to_vec)
             .collect()
     }
 

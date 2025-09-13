@@ -1,7 +1,7 @@
 //! Date and time utility functions
 //!
 //! This module provides comprehensive date and time manipulation utilities,
-//! inspired by Hutool's DateUtil.
+//! inspired by Hutool's `DateUtil`.
 
 use chrono::{DateTime, Datelike, Duration, Local, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Timelike, Utc, Weekday};
 
@@ -107,7 +107,7 @@ impl DateUtil {
         datetime.format(format).to_string()
     }
 
-    /// Format DateTime to string
+    /// Format `DateTime` to string | 格式化日期时间为字符串
     ///
     /// # Examples
     ///
@@ -564,7 +564,7 @@ impl DateUtil {
         datetime.and_utc().timestamp()
     }
 
-    /// Convert Unix timestamp to NaiveDateTime
+    /// Convert Unix timestamp to `NaiveDateTime` | 将Unix时间戳转换为朴素日期时间
     ///
     /// # Examples
     ///

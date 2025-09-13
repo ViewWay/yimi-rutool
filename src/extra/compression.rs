@@ -107,14 +107,14 @@ impl CompressionStats {
     /// Create new compression statistics
     pub fn new(original_size: u64, compressed_size: u64, file_count: usize) -> Self {
         let compression_ratio = if original_size > 0 {
-            compressed_size as f64 / original_size as f64
+            if original_size == 0 { 0.0 } else { (compressed_size as f64) / (original_size as f64) }
         } else {
             0.0
         };
         
         let space_saved = original_size.saturating_sub(compressed_size);
         let space_saved_percentage = if original_size > 0 {
-            (space_saved as f64 / original_size as f64) * 100.0
+            if original_size == 0 { 0.0 } else { ((space_saved as f64) / (original_size as f64)) * 100.0 }
         } else {
             0.0
         };
@@ -173,7 +173,7 @@ impl CompressionUtil {
         }
 
         let file = File::create(destination_path)
-            .map_err(|e| Error::validation(format!("Failed to create ZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to create ZIP file: {e}")))?;
         
         let mut zip = ZipWriter::new(file);
         let options = FileOptions::<()>::default()
@@ -193,11 +193,11 @@ impl CompressionUtil {
                 .map_err(|e| Error::validation(format!("Failed to start ZIP file entry: {e}")))?;
 
             let mut source_file = File::open(source_path)
-                .map_err(|e| Error::validation(format!("Failed to open source file: {}", e)))?;
+                .map_err(|e| Error::validation(format!("Failed to open source file: {e}")))?;
             
             let mut buffer = Vec::new();
             source_file.read_to_end(&mut buffer)
-                .map_err(|e| Error::validation(format!("Failed to read source file: {}", e)))?;
+                .map_err(|e| Error::validation(format!("Failed to read source file: {e}")))?;
             
             original_size += buffer.len() as u64;
             file_count += 1;
@@ -210,10 +210,10 @@ impl CompressionUtil {
         }
 
         let zip_file = zip.finish()
-            .map_err(|e| Error::validation(format!("Failed to finish ZIP file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to finish ZIP file: {e}")))?;
         
         let compressed_size = zip_file.metadata()
-            .map_err(|e| Error::validation(format!("Failed to get ZIP file metadata: {}", e)))?
+            .map_err(|e| Error::validation(format!("Failed to get ZIP file metadata: {e}")))?
             .len();
 
         Ok(CompressionStats::new(original_size, compressed_size, file_count))
@@ -254,12 +254,12 @@ impl CompressionUtil {
             if file.name().ends_with('/') {
                 // Directory
                 create_dir_all(&outpath)
-                    .map_err(|e| Error::validation(format!("Failed to create directory: {}", e)))?;
+                    .map_err(|e| Error::validation(format!("Failed to create directory: {e}")))?;
             } else {
                 // File
                 if let Some(parent) = outpath.parent() {
                     create_dir_all(parent)
-                        .map_err(|e| Error::validation(format!("Failed to create parent directory: {}", e)))?;
+                        .map_err(|e| Error::validation(format!("Failed to create parent directory: {e}")))?;
                 }
                 
                 let mut outfile = File::create(&outpath)
@@ -280,10 +280,10 @@ impl CompressionUtil {
         
         let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
         encoder.write_all(data)
-            .map_err(|e| Error::validation(format!("Failed to compress with GZIP: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to compress with GZIP: {e}")))?;
         
         encoder.finish()
-            .map_err(|e| Error::validation(format!("Failed to finish GZIP compression: {}", e)))
+            .map_err(|e| Error::validation(format!("Failed to finish GZIP compression: {e}")))
     }
 
     /// Decompress GZIP data
@@ -315,7 +315,7 @@ impl CompressionUtil {
         }
 
         let mut source_file = File::open(source_path)
-            .map_err(|e| Error::validation(format!("Failed to open source file: {}", e)))?;
+            .map_err(|e| Error::validation(format!("Failed to open source file: {e}")))?;
         
         let destination_file = File::create(destination_path)
             .map_err(|e| Error::validation(format!("Failed to create destination file: {e}")))?;
@@ -462,7 +462,7 @@ impl CompressionUtil {
             total_compressed_size,
             total_uncompressed_size,
             compression_ratio: if total_uncompressed_size > 0 {
-                total_compressed_size as f64 / total_uncompressed_size as f64
+                if total_uncompressed_size == 0 { 0.0 } else { (total_compressed_size as f64) / (total_uncompressed_size as f64) }
             } else {
                 0.0
             },
@@ -517,7 +517,7 @@ impl CompressionUtil {
     /// Calculate compression ratio for a file
     pub fn calculate_compression_ratio(original_size: u64, compressed_size: u64) -> f64 {
         if original_size > 0 {
-            compressed_size as f64 / original_size as f64
+            if original_size == 0 { 0.0 } else { (compressed_size as f64) / (original_size as f64) }
         } else {
             0.0
         }
