@@ -12,21 +12,24 @@
 - 🧰 **功能丰富**: 涵盖字符串处理、加密、网络请求、JSON处理等多个领域
 - 🛡️ **类型安全**: 充分利用 Rust 类型系统保证代码安全性
 - 🔧 **模块化**: 按功能划分模块，可选择性启用
-- 📚 **文档完善**: 详细的 API 文档和使用示例
-- 🧪 **测试充分**: 完善的单元测试和集成测试
+- 📚 **双语文档**: 中英文双语API文档和使用示例
+- 🧪 **测试充分**: 250+ 单元测试，100%通过率
+- ⚡ **现代化**: Rust 1.89 + Edition 2024，使用最新语言特性
+- 🌍 **国际化**: 支持中英文开发团队协作
 
 ## 📦 功能模块
 
-| 模块 | 描述 | 功能特性 |
-|------|------|----------|
-| `core` | 核心工具类 | 字符串处理、日期时间、类型转换、集合操作 |
-| `crypto` | 加密解密 | 对称/非对称加密、摘要算法、数字签名 |
-| `http` | HTTP客户端 | 同步/异步请求、连接池、SSL/TLS支持 |
-| `json` | JSON处理 | 序列化/反序列化、JSON Path、流式处理 |
-| `cache` | 缓存 | 内存缓存、持久化缓存、LRU算法 |
-| `db` | 数据库操作 | SQL执行、连接池、事务管理 |
-| `cron` | 定时任务 | Cron表达式解析、任务调度 |
-| `extra` | 扩展工具 | 二维码生成、图片处理、压缩解压 |
+| 模块       | 状态 | 描述       | 功能特性                                 |
+| ---------- | ---- | ---------- | ---------------------------------------- |
+| `core`   | ✅   | 核心工具类 | 字符串处理、日期时间、类型转换、集合操作 |
+| `crypto` | ✅   | 加密解密   | 对称/非对称加密、摘要算法、数字签名      |
+| `http`   | ✅   | HTTP客户端 | 同步/异步请求、连接池、SSL/TLS支持       |
+| `json`   | ✅   | JSON处理   | 序列化/反序列化、JSON Path、流式处理     |
+| `cache`  | ✅   | 缓存       | 内存缓存、持久化缓存、LRU算法            |
+| `db`     | ✅   | 数据库操作 | SQL执行、连接池、事务管理                |
+| `cron`   | ✅   | 定时任务   | Cron表达式解析、任务调度                 |
+| `extra`  | ✅   | 扩展工具   | 二维码生成、图片处理、压缩解压           |
+| `jwt`    | ✅   | JWT认证    | 令牌创建/验证、多算法支持、Claims管理    |
 
 ## 🚀 快速开始
 
@@ -36,7 +39,7 @@
 
 ```toml
 [dependencies]
-yimi-rutool = "0.1"
+yimi-rutool = "0.2.2"
 ```
 
 ### 基础用法
@@ -76,6 +79,31 @@ use yimi_rutool::crypto::{AesUtil, Md5Util};
     // MD5 摘要
     let hash = Md5Util::digest_hex("password");
     println!("MD5 hash: {}", hash);
+}
+```
+
+### JWT 认证
+
+```rust
+use yimi_rutool::jwt::{JwtUtil, Claims};
+
+#[cfg(feature = "jwt")]
+{
+    // 创建 JWT Token
+    let mut claims = Claims::new();
+    claims.subject = Some("user123".to_string());
+    claims.expires_at = Some(chrono::Utc::now().timestamp() + 3600); // 1小时后过期
+  
+    let secret = "your-secret-key";
+    let token = JwtUtil::create_token(&claims, secret)?;
+    println!("JWT Token: {}", token);
+  
+    // 验证 Token
+    let decoded_claims = JwtUtil::validate_token(&token, secret)?;
+    println!("Subject: {:?}", decoded_claims.subject);
+  
+    // 创建刷新令牌
+    let refresh_token = JwtUtil::create_refresh_token("user123", secret, 24 * 7)?; // 7天
 }
 ```
 
@@ -163,22 +191,26 @@ yimi-rutool = { version = "0.1", features = ["core", "crypto"] }
 ### 开发环境设置
 
 1. 克隆仓库：
+
 ```bash
-git clone https://github.com/yimiliya/yimi-rutool.git
+git clone https://github.com/ViewWay/yimi-rutool.git
 cd yimi-rutool
 ```
 
 2. 运行测试：
+
 ```bash
 cargo test
 ```
 
 3. 生成文档：
+
 ```bash
 cargo doc --open
 ```
 
 4. 运行基准测试：
+
 ```bash
 cargo bench
 ```
@@ -210,9 +242,9 @@ cargo bench
 
 ## 📞 联系方式
 
-- 项目主页: [https://github.com/yimiliya/yimi-rutool](https://github.com/ViewWay/yimi-rutool)
+- 项目主页: [https://github.com/ViewWay/yimi-rutool](https://github.com/ViewWay/yimi-rutool)
 - 问题反馈: [GitHub Issues](https://github.com/ViewWay/yimi-rutool/issues)
-- 邮箱: yimiliya@example.com
+- 邮箱: ViewWay@example.com
 
 ---
 

@@ -1,8 +1,8 @@
 [package]
 name = "yimi-rutool"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2024"
-authors = ["yimiliya <yimiliya@example.com>"]
+authors = ["ViewWay <ViewWay@example.com>"]
 description = "A comprehensive Rust utility library inspired by Hutool"
 license = "MIT OR Apache-2.0"
 keywords = ["utilities", "tools", "helper", "library"]
@@ -61,7 +61,7 @@ url = { version = "2.5", optional = true }
 # Crypto dependencies
 rand = { version = "0.8.5", optional = true }
 aes-gcm = { version = "0.10", optional = true }
-rsa = { version = "0.8", features = ["sha2"], optional = true }
+rsa = { version = "0.8.2", features = ["sha2"], optional = true }
 sha2 = { version = "0.10", optional = true }
 md-5 = { version = "0.10", optional = true }
 hmac = { version = "0.12", optional = true }
