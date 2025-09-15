@@ -1,6 +1,6 @@
 [package]
 name = "yimi-rutool"
-version = "0.2.4"
+version = "0.2.5"
 edition = "2024"
 authors = ["ViewWay <ViewWay@example.com>"]
 description = "A comprehensive Rust utility library inspired by Hutool"
