@@ -30,7 +30,7 @@ impl HttpUtil {
     /// ```
     pub fn client() -> Client {
         Client::builder()
-            .timeout(Duration::from_secs(60))  // Increased timeout for network reliability
+            .timeout(Duration::from_secs(60)) // Increased timeout for network reliability
             .user_agent("rutool/0.1.0")
             .build()
             .unwrap()
@@ -75,11 +75,7 @@ impl HttpUtil {
     /// ```
     pub async fn get(url: &str) -> Result<Response> {
         let client = Self::client();
-        client
-            .get(url)
-            .send()
-            .await
-            .map_err(|e| Error::Http(e))
+        client.get(url).send().await.map_err(|e| Error::Http(e))
     }
 
     /// Perform a GET request and return response as text
@@ -98,10 +94,7 @@ impl HttpUtil {
     /// ```
     pub async fn get_text(url: &str) -> Result<String> {
         let response = Self::get(url).await?;
-        response
-            .text()
-            .await
-            .map_err(|e| Error::Http(e))
+        response.text().await.map_err(|e| Error::Http(e))
     }
 
     /// Perform a GET request and return response as JSON
@@ -127,10 +120,7 @@ impl HttpUtil {
     /// ```
     pub async fn get_json<T: for<'de> Deserialize<'de>>(url: &str) -> Result<T> {
         let response = Self::get(url).await?;
-        response
-            .json()
-            .await
-            .map_err(|e| Error::Http(e))
+        response.json().await.map_err(|e| Error::Http(e))
     }
 
     /// Perform a simple POST request with JSON body
@@ -253,11 +243,7 @@ impl HttpUtil {
     /// ```
     pub async fn delete(url: &str) -> Result<Response> {
         let client = Self::client();
-        client
-            .delete(url)
-            .send()
-            .await
-            .map_err(|e| Error::Http(e))
+        client.delete(url).send().await.map_err(|e| Error::Http(e))
     }
 
     /// Perform a PATCH request with JSON body
@@ -303,11 +289,7 @@ impl HttpUtil {
     /// ```
     pub async fn head(url: &str) -> Result<Response> {
         let client = Self::client();
-        client
-            .head(url)
-            .send()
-            .await
-            .map_err(|e| Error::Http(e))
+        client.head(url).send().await.map_err(|e| Error::Http(e))
     }
 
     /// Perform a request with custom method and headers
@@ -354,10 +336,7 @@ impl HttpUtil {
             request = request.json(body);
         }
 
-        request
-            .send()
-            .await
-            .map_err(|e| Error::Http(e))
+        request.send().await.map_err(|e| Error::Http(e))
     }
 
     /// Download a file from URL to local path
@@ -380,10 +359,10 @@ impl HttpUtil {
     pub async fn download_file(url: &str, path: &str) -> Result<()> {
         let response = Self::get(url).await?;
         let bytes = response.bytes().await.map_err(|e| Error::Http(e))?;
-        
+
         let mut file = File::create(path).await.map_err(|e| Error::Io(e))?;
         file.write_all(&bytes).await.map_err(|e| Error::Io(e))?;
-        
+
         Ok(())
     }
 
@@ -446,13 +425,13 @@ impl HttpUtil {
     pub async fn get_headers(url: &str) -> Result<HashMap<String, String>> {
         let response = Self::head(url).await?;
         let mut headers = HashMap::new();
-        
+
         for (name, value) in response.headers() {
             if let Ok(value_str) = value.to_str() {
                 headers.insert(name.to_string(), value_str.to_string());
             }
         }
-        
+
         Ok(headers)
     }
 
@@ -477,17 +456,15 @@ impl HttpUtil {
     /// ```
     pub async fn get_multiple(urls: &[&str]) -> Result<Vec<Response>> {
         let client = Self::client();
-        let futures: Vec<_> = urls.iter()
-            .map(|url| client.get(*url).send())
-            .collect();
-        
+        let futures: Vec<_> = urls.iter().map(|url| client.get(*url).send()).collect();
+
         let results = futures::future::join_all(futures).await;
         let mut responses = Vec::new();
-        
+
         for result in results {
             responses.push(result.map_err(|e| Error::Http(e))?);
         }
-        
+
         Ok(responses)
     }
 
@@ -502,14 +479,15 @@ impl HttpUtil {
     /// let mut params = HashMap::new();
     /// params.insert("key1", "value1");
     /// params.insert("key2", "value with spaces");
-    /// 
+    ///
     /// let query = HttpUtil::build_query_string(&params);
     /// println!("Query string: {}", query);
     /// ```
     pub fn build_query_string(params: &HashMap<&str, &str>) -> String {
         use urlencoding::encode;
-        
-        params.iter()
+
+        params
+            .iter()
             .map(|(key, value)| format!("{}={}", encode(key), encode(value)))
             .collect::<Vec<_>>()
             .join("&")
@@ -524,15 +502,15 @@ impl HttpUtil {
     ///
     /// let query = "key1=value1&key2=value%20with%20spaces";
     /// let params = HttpUtil::parse_query_string(query);
-    /// 
+    ///
     /// assert_eq!(params.get("key1"), Some(&"value1".to_string()));
     /// assert_eq!(params.get("key2"), Some(&"value with spaces".to_string()));
     /// ```
     pub fn parse_query_string(query: &str) -> HashMap<String, String> {
         use urlencoding::decode;
-        
+
         let mut params = HashMap::new();
-        
+
         for pair in query.split('&') {
             if let Some((key, value)) = pair.split_once('=') {
                 if let (Ok(decoded_key), Ok(decoded_value)) = (decode(key), decode(value)) {
@@ -540,7 +518,7 @@ impl HttpUtil {
                 }
             }
         }
-        
+
         params
     }
 
@@ -555,7 +533,7 @@ impl HttpUtil {
     /// let mut params = HashMap::new();
     /// params.insert("q", "rust programming");
     /// params.insert("page", "1");
-    /// 
+    ///
     /// let url = HttpUtil::build_url("https://example.com/search", &params);
     /// println!("URL: {}", url);
     /// ```
@@ -563,7 +541,7 @@ impl HttpUtil {
         if params.is_empty() {
             return base_url.to_string();
         }
-        
+
         let query = Self::build_query_string(params);
         let separator = if base_url.contains('?') { "&" } else { "?" };
         format!("{}{}{}", base_url, separator, query)
@@ -619,15 +597,12 @@ impl HttpUtil {
     /// ```
     pub fn get_blocking(url: &str) -> Result<reqwest::blocking::Response> {
         let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(60))  // Increased timeout for network reliability
+            .timeout(Duration::from_secs(60)) // Increased timeout for network reliability
             .user_agent("rutool/0.1.0")
             .build()
             .map_err(|e| Error::Http(e))?;
-        
-        client
-            .get(url)
-            .send()
-            .map_err(|e| Error::Http(e))
+
+        client.get(url).send().map_err(|e| Error::Http(e))
     }
 
     /// Perform a blocking GET request and return response as text
@@ -645,9 +620,7 @@ impl HttpUtil {
     /// ```
     pub fn get_text_blocking(url: &str) -> Result<String> {
         let response = Self::get_blocking(url)?;
-        response
-            .text()
-            .map_err(|e| Error::Http(e))
+        response.text().map_err(|e| Error::Http(e))
     }
 
     /// Perform a blocking POST request with JSON body
@@ -665,13 +638,16 @@ impl HttpUtil {
     ///     Ok(())
     /// }
     /// ```
-    pub fn post_json_blocking<T: Serialize>(url: &str, json: &T) -> Result<reqwest::blocking::Response> {
+    pub fn post_json_blocking<T: Serialize>(
+        url: &str,
+        json: &T,
+    ) -> Result<reqwest::blocking::Response> {
         let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(60))  // Increased timeout for network reliability
+            .timeout(Duration::from_secs(60)) // Increased timeout for network reliability
             .user_agent("rutool/0.1.0")
             .build()
             .map_err(|e| Error::Http(e))?;
-        
+
         client
             .post(url)
             .json(json)
@@ -690,7 +666,7 @@ mod tests {
         let mut params = HashMap::new();
         params.insert("key1", "value1");
         params.insert("key2", "value with spaces");
-        
+
         let query = HttpUtil::build_query_string(&params);
         assert!(query.contains("key1=value1"));
         assert!(query.contains("key2=value%20with%20spaces"));
@@ -700,7 +676,7 @@ mod tests {
     fn test_parse_query_string() {
         let query = "key1=value1&key2=value%20with%20spaces";
         let params = HttpUtil::parse_query_string(query);
-        
+
         assert_eq!(params.get("key1"), Some(&"value1".to_string()));
         assert_eq!(params.get("key2"), Some(&"value with spaces".to_string()));
     }
@@ -710,7 +686,7 @@ mod tests {
         let mut params = HashMap::new();
         params.insert("q", "rust programming");
         params.insert("page", "1");
-        
+
         let url = HttpUtil::build_url("https://example.com/search", &params);
         assert!(url.starts_with("https://example.com/search?"));
         assert!(url.contains("q=rust%20programming"));
@@ -777,16 +753,22 @@ mod tests {
         async fn test_post_json() {
             use serde_json::json;
             let payload = json!({"key": "test_value"});
-            let response = HttpUtil::post_json("https://httpbin.org/post", &payload).await.unwrap();
+            let response = HttpUtil::post_json("https://httpbin.org/post", &payload)
+                .await
+                .unwrap();
             assert!(response.status().is_success());
         }
 
         #[tokio::test]
         async fn test_is_reachable() {
-            let reachable = HttpUtil::is_reachable("https://httpbin.org/get").await.unwrap();
+            let reachable = HttpUtil::is_reachable("https://httpbin.org/get")
+                .await
+                .unwrap();
             assert!(reachable);
-            
-            let unreachable = HttpUtil::is_reachable("https://invalid-domain-12345.com").await.unwrap();
+
+            let unreachable = HttpUtil::is_reachable("https://invalid-domain-12345.com")
+                .await
+                .unwrap();
             assert!(!unreachable);
         }
 

@@ -3,9 +3,9 @@
 //! This module provides both standard and counting bloom filter implementations
 //! with automatic parameter optimization and multiple hash function support.
 
-use crate::error::{Error, Result};
 use super::bitmap::BitMap;
 use super::hash_functions::{HashFunction, Hasher};
+use crate::error::{Error, Result};
 use std::hash::Hash;
 
 /// A memory-efficient probabilistic data structure for set membership testing
@@ -50,7 +50,7 @@ impl BloomFilter {
         if capacity == 0 {
             return Err(Error::custom("Capacity must be greater than 0"));
         }
-        
+
         if false_positive_rate <= 0.0 || false_positive_rate >= 1.0 {
             return Err(Error::custom("False positive rate must be between 0 and 1"));
         }
@@ -72,13 +72,12 @@ impl BloomFilter {
     /// Returns (bitmap_size, num_hash_functions)
     fn optimal_parameters(capacity: usize, false_positive_rate: f64) -> (usize, usize) {
         // m = -(n * ln(p)) / (ln(2)^2)
-        let bitmap_size = (-(capacity as f64 * false_positive_rate.ln()) 
-            / (2.0_f64.ln().powi(2))).ceil() as usize;
-        
+        let bitmap_size = (-(capacity as f64 * false_positive_rate.ln()) / (2.0_f64.ln().powi(2)))
+            .ceil() as usize;
+
         // k = (m / n) * ln(2)
-        let num_hashes = ((bitmap_size as f64 / capacity as f64) * 2.0_f64.ln())
-            .round() as usize;
-        
+        let num_hashes = ((bitmap_size as f64 / capacity as f64) * 2.0_f64.ln()).round() as usize;
+
         (bitmap_size.max(1), num_hashes.max(1).min(10)) // Limit hash functions to reasonable range
     }
 
@@ -114,7 +113,7 @@ impl BloomFilter {
     ///
     /// let mut bloom = BloomFilter::new(100, 0.01).unwrap();
     /// bloom.insert("hello");
-    /// 
+    ///
     /// assert!(bloom.contains("hello"));
     /// // This might be true (false positive) or false
     /// let _might_contain = bloom.contains("world");
@@ -132,7 +131,8 @@ impl BloomFilter {
 
     /// Compute hash values for an item using all hash functions
     fn compute_hashes<T: Hash + ?Sized>(&self, item: &T) -> Vec<usize> {
-        self.hash_functions.iter()
+        self.hash_functions
+            .iter()
             .map(|hash_fn| hash_fn.hash(item))
             .collect()
     }
@@ -157,10 +157,10 @@ impl BloomFilter {
         if self.is_empty() {
             return 0.0;
         }
-        
+
         let bits_set = self.bitmap.count_ones();
         let total_bits = self.bitmap.len();
-        
+
         // p = (1 - e^(-kn/m))^k
         let ratio = bits_set as f64 / total_bits as f64;
         ratio.powf(self.hash_functions.len() as f64)
@@ -247,7 +247,7 @@ impl BloomFilterBuilder {
             // Manual parameters
             let bitmap = BitMap::new(bitmap_size);
             let hash_functions = HashFunction::generate_functions(num_hashes);
-            
+
             BloomFilter {
                 bitmap,
                 hash_functions,
@@ -256,18 +256,17 @@ impl BloomFilterBuilder {
             }
         } else {
             // Auto-calculated parameters
-            BloomFilter::new(capacity, false_positive_rate)
-                .unwrap_or_else(|_| {
-                    // Fallback to safe defaults
-                    let bitmap = BitMap::new(1024);
-                    let hash_functions = HashFunction::generate_functions(3);
-                    BloomFilter {
-                        bitmap,
-                        hash_functions,
-                        num_items: 0,
-                        capacity: 1000,
-                    }
-                })
+            BloomFilter::new(capacity, false_positive_rate).unwrap_or_else(|_| {
+                // Fallback to safe defaults
+                let bitmap = BitMap::new(1024);
+                let hash_functions = HashFunction::generate_functions(3);
+                BloomFilter {
+                    bitmap,
+                    hash_functions,
+                    num_items: 0,
+                    capacity: 1000,
+                }
+            })
         }
     }
 }
@@ -291,7 +290,7 @@ impl Default for BloomFilterBuilder {
 /// let mut filter = CountingBloomFilter::new(1000, 0.01).unwrap();
 /// filter.insert("hello");
 /// filter.insert("hello"); // Increment counter
-/// 
+///
 /// assert!(filter.contains("hello"));
 /// filter.remove("hello"); // Decrement counter
 /// assert!(filter.contains("hello")); // Still contains (counter > 0)
@@ -312,12 +311,13 @@ impl CountingBloomFilter {
         if capacity == 0 {
             return Err(Error::custom("Capacity must be greater than 0"));
         }
-        
+
         if false_positive_rate <= 0.0 || false_positive_rate >= 1.0 {
             return Err(Error::custom("False positive rate must be between 0 and 1"));
         }
 
-        let (counter_size, num_hashes) = BloomFilter::optimal_parameters(capacity, false_positive_rate);
+        let (counter_size, num_hashes) =
+            BloomFilter::optimal_parameters(capacity, false_positive_rate);
         let counters = vec![0u32; counter_size];
         let hash_functions = HashFunction::generate_functions(num_hashes);
 
@@ -344,7 +344,7 @@ impl CountingBloomFilter {
     /// Returns `true` if the item was potentially in the filter, `false` otherwise
     pub fn remove<T: Hash + ?Sized>(&mut self, item: &T) -> bool {
         let hashes = self.compute_hashes(item);
-        
+
         // First check if item might be present
         for &hash_value in &hashes {
             let index = hash_value % self.counters.len();
@@ -352,17 +352,17 @@ impl CountingBloomFilter {
                 return false; // Item definitely not present
             }
         }
-        
+
         // Decrement counters
         for &hash_value in &hashes {
             let index = hash_value % self.counters.len();
             self.counters[index] = self.counters[index].saturating_sub(1);
         }
-        
+
         if self.num_items > 0 {
             self.num_items -= 1;
         }
-        
+
         true
     }
 
@@ -380,7 +380,8 @@ impl CountingBloomFilter {
 
     /// Compute hash values for an item
     fn compute_hashes<T: Hash + ?Sized>(&self, item: &T) -> Vec<usize> {
-        self.hash_functions.iter()
+        self.hash_functions
+            .iter()
             .map(|hash_fn| hash_fn.hash(item))
             .collect()
     }
@@ -439,11 +440,11 @@ mod tests {
     #[test]
     fn test_bloom_filter_insert_and_contains() {
         let mut bloom = BloomFilter::new(100, 0.01).unwrap();
-        
+
         bloom.insert("hello");
         bloom.insert("world");
         bloom.insert(&42);
-        
+
         assert!(bloom.contains("hello"));
         assert!(bloom.contains("world"));
         assert!(bloom.contains(&42));
@@ -454,11 +455,11 @@ mod tests {
     fn test_bloom_filter_false_negatives_impossible() {
         let mut bloom = BloomFilter::new(10, 0.1).unwrap();
         let items = vec!["a", "b", "c", "d", "e"];
-        
+
         for item in &items {
             bloom.insert(item);
         }
-        
+
         // All inserted items must be found (no false negatives)
         for item in &items {
             assert!(bloom.contains(item));
@@ -471,7 +472,7 @@ mod tests {
             .expected_items(500)
             .false_positive_rate(0.05)
             .build();
-        
+
         assert_eq!(bloom.capacity(), 500);
         assert!(bloom.is_empty());
     }
@@ -482,7 +483,7 @@ mod tests {
             .bitmap_size(1024)
             .num_hash_functions(5)
             .build();
-        
+
         assert_eq!(bloom.bitmap_size(), 1024);
         assert_eq!(bloom.num_hash_functions(), 5);
     }
@@ -492,7 +493,7 @@ mod tests {
         let mut bloom = BloomFilter::new(100, 0.01).unwrap();
         bloom.insert("test");
         assert!(!bloom.is_empty());
-        
+
         bloom.clear();
         assert!(bloom.is_empty());
         assert_eq!(bloom.len(), 0);
@@ -501,21 +502,21 @@ mod tests {
     #[test]
     fn test_counting_bloom_filter() {
         let mut filter = CountingBloomFilter::new(100, 0.01).unwrap();
-        
+
         filter.insert("hello");
         assert!(filter.contains("hello"));
         assert_eq!(filter.len(), 1);
-        
+
         // Insert same item again
         filter.insert("hello");
         assert!(filter.contains("hello"));
         assert_eq!(filter.len(), 2);
-        
+
         // Remove once
         assert!(filter.remove("hello"));
         assert!(filter.contains("hello")); // Still there
         assert_eq!(filter.len(), 1);
-        
+
         // Remove again
         assert!(filter.remove("hello"));
         assert!(!filter.contains("hello")); // Now gone
@@ -525,7 +526,7 @@ mod tests {
     #[test]
     fn test_counting_bloom_filter_remove_nonexistent() {
         let mut filter = CountingBloomFilter::new(100, 0.01).unwrap();
-        
+
         // Try to remove item that was never added
         assert!(!filter.remove("nonexistent"));
         assert_eq!(filter.len(), 0);
@@ -534,15 +535,15 @@ mod tests {
     #[test]
     fn test_false_positive_rate_estimation() {
         let mut bloom = BloomFilter::new(100, 0.01).unwrap();
-        
+
         // Empty filter should have 0 false positive rate
         assert_eq!(bloom.false_positive_rate(), 0.0);
-        
+
         // Add some items
         for i in 0..50 {
             bloom.insert(&i);
         }
-        
+
         let fp_rate = bloom.false_positive_rate();
         assert!(fp_rate > 0.0 && fp_rate < 1.0);
     }
@@ -552,11 +553,11 @@ mod tests {
         let (m, k) = BloomFilter::optimal_parameters(1000, 0.01);
         assert!(m > 0);
         assert!(k > 0 && k <= 10);
-        
+
         // Larger capacity should need larger bitmap
         let (m2, _) = BloomFilter::optimal_parameters(10000, 0.01);
         assert!(m2 > m);
-        
+
         // Lower false positive rate should need larger bitmap
         let (m3, _) = BloomFilter::optimal_parameters(1000, 0.001);
         assert!(m3 > m);

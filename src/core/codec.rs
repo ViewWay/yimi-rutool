@@ -140,10 +140,14 @@ impl Base58Util {
 
         // Decode
         for &byte in data.as_bytes() {
-            let digit = Self::ALPHABET.iter().position(|&c| c == byte)
+            let digit = Self::ALPHABET
+                .iter()
+                .position(|&c| c == byte)
                 .ok_or("Invalid Base58 character")?;
             result = result.checked_mul(58).ok_or("Number too large")?;
-            result = result.checked_add(digit as u128).ok_or("Number too large")?;
+            result = result
+                .checked_add(digit as u128)
+                .ok_or("Number too large")?;
         }
 
         // Convert to bytes
@@ -178,9 +182,7 @@ impl HexUtil {
     /// assert_eq!(encoded, "48656c6c6f");
     /// ```
     pub fn encode(data: &[u8]) -> String {
-        data.iter()
-            .map(|b| format!("{:02x}", b))
-            .collect()
+        data.iter().map(|b| format!("{:02x}", b)).collect()
     }
 
     /// Encode bytes to hexadecimal string (uppercase)
@@ -194,9 +196,7 @@ impl HexUtil {
     /// assert_eq!(encoded, "48656C6C6F");
     /// ```
     pub fn encode_upper(data: &[u8]) -> String {
-        data.iter()
-            .map(|b| format!("{:02X}", b))
-            .collect()
+        data.iter().map(|b| format!("{:02X}", b)).collect()
     }
 
     /// Decode hexadecimal string to bytes
@@ -265,7 +265,9 @@ impl UrlUtil {
     /// assert_eq!(decoded, "Hello World!");
     /// ```
     pub fn decode(data: &str) -> Result<String, std::string::FromUtf8Error> {
-        urlencoding::decode(data).map(|cow| cow.to_string()).map_err(|e| e)
+        urlencoding::decode(data)
+            .map(|cow| cow.to_string())
+            .map_err(|e| e)
     }
 }
 
@@ -320,7 +322,8 @@ impl PercentUtil {
                         return Err("Invalid percent encoding");
                     }
                     let hex = &data[i + 1..i + 3];
-                    let byte = u8::from_str_radix(hex, 16).map_err(|_| "Invalid hex in percent encoding")?;
+                    let byte = u8::from_str_radix(hex, 16)
+                        .map_err(|_| "Invalid hex in percent encoding")?;
                     result.push(byte);
                     i += 3;
                 }

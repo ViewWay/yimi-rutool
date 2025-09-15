@@ -3,8 +3,8 @@
 //! This module provides tools for managing database schema changes
 //! through versioned migrations.
 
-use crate::error::{Error, Result};
 use crate::db::connection::DatabaseConnection;
+use crate::error::{Error, Result};
 use std::fmt;
 
 /// Database migration
@@ -206,7 +206,7 @@ impl MigrationRunner {
     /// ```
     pub async fn migrate_up(&self) -> Result<Vec<MigrationResult>> {
         self.init().await?;
-        
+
         let pending = self.get_pending_migrations().await?;
         let mut results = Vec::new();
 
@@ -231,7 +231,7 @@ impl MigrationRunner {
     /// Run migrations up to a specific version
     pub async fn migrate_to(&self, target_version: &str) -> Result<Vec<MigrationResult>> {
         self.init().await?;
-        
+
         let pending = self.get_pending_migrations().await?;
         let mut results = Vec::new();
 
@@ -260,7 +260,7 @@ impl MigrationRunner {
     /// Rollback the last migration
     pub async fn rollback(&self) -> Result<Option<MigrationResult>> {
         let applied = self.get_applied_migrations().await?;
-        
+
         if let Some(last_version) = applied.last() {
             if let Some(migration) = self.migrations.iter().find(|m| &m.version == last_version) {
                 let result = self.rollback_migration(migration).await;
@@ -311,7 +311,7 @@ impl MigrationRunner {
     /// Get migration status
     pub async fn status(&self) -> Result<MigrationStatus> {
         self.init().await?;
-        
+
         let applied = self.get_applied_migrations().await?;
         let pending = self.get_pending_migrations().await?;
 
@@ -452,7 +452,7 @@ impl MigrationRunner {
         // Check for invalid version format (should be sortable)
         let mut sorted_versions: Vec<_> = self.migrations.iter().map(|m| &m.version).collect();
         sorted_versions.sort();
-        
+
         let original_order: Vec<_> = self.migrations.iter().map(|m| &m.version).collect();
         if sorted_versions != original_order {
             errors.push(ValidationError {
@@ -513,15 +513,23 @@ impl fmt::Display for MigrationStatus {
         writeln!(f, "  Total migrations: {}", self.total_migrations)?;
         writeln!(f, "  Applied: {}", self.applied_count)?;
         writeln!(f, "  Pending: {}", self.pending_count)?;
-        
+
         if !self.applied_versions.is_empty() {
-            writeln!(f, "  Applied versions: {}", self.applied_versions.join(", "))?;
+            writeln!(
+                f,
+                "  Applied versions: {}",
+                self.applied_versions.join(", ")
+            )?;
         }
-        
+
         if !self.pending_versions.is_empty() {
-            writeln!(f, "  Pending versions: {}", self.pending_versions.join(", "))?;
+            writeln!(
+                f,
+                "  Pending versions: {}",
+                self.pending_versions.join(", ")
+            )?;
         }
-        
+
         Ok(())
     }
 }
@@ -572,11 +580,11 @@ impl MigrationTimestamp {
     /// ```
     pub fn generate() -> String {
         use std::time::{SystemTime, UNIX_EPOCH};
-        
+
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default();
-        
+
         format!("{}", now.as_secs())
     }
 
@@ -587,7 +595,7 @@ impl MigrationTimestamp {
             use chrono::Utc;
             Utc::now().format("%Y%m%d%H%M%S").to_string()
         }
-        
+
         #[cfg(not(feature = "chrono"))]
         {
             Self::generate()
@@ -673,26 +681,21 @@ mod tests {
         ));
 
         // Add migration with empty SQL
-        runner.add_migration(Migration::new(
-            "002",
-            "empty_migration",
-            vec![],
-            vec![],
-        ));
+        runner.add_migration(Migration::new("002", "empty_migration", vec![], vec![]));
 
         let errors = runner.validate().unwrap();
         assert!(!errors.is_empty());
 
         // Check for duplicate version error
-        let has_duplicate = errors.iter().any(|e| {
-            matches!(e.error_type, ValidationErrorType::DuplicateVersion)
-        });
+        let has_duplicate = errors
+            .iter()
+            .any(|e| matches!(e.error_type, ValidationErrorType::DuplicateVersion));
         assert!(has_duplicate);
 
         // Check for empty SQL errors
-        let has_empty_up = errors.iter().any(|e| {
-            matches!(e.error_type, ValidationErrorType::EmptyUpSql)
-        });
+        let has_empty_up = errors
+            .iter()
+            .any(|e| matches!(e.error_type, ValidationErrorType::EmptyUpSql));
         assert!(has_empty_up);
     }
 
@@ -700,10 +703,10 @@ mod tests {
     fn test_migration_timestamp() {
         let version1 = MigrationTimestamp::generate();
         let version2 = MigrationTimestamp::generate();
-        
+
         assert!(!version1.is_empty());
         assert!(!version2.is_empty());
-        
+
         // Generated timestamps should be different (assuming some time passed)
         // In practice, they might be the same if generated too quickly
         // So we just test that they're valid numeric strings

@@ -9,7 +9,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 #[cfg(feature = "db")]
-use sqlx::{Pool, Sqlite, Postgres, MySql, Row, Column};
+use sqlx::{Column, MySql, Pool, Postgres, Row, Sqlite};
 
 /// Database type enumeration
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -141,9 +141,9 @@ impl DatabaseConnection {
     pub async fn new(config: DatabaseConfig) -> Result<Self> {
         #[cfg(feature = "db")]
         {
-            use sqlx::sqlite::SqlitePoolOptions;
-            use sqlx::postgres::PgPoolOptions;
             use sqlx::mysql::MySqlPoolOptions;
+            use sqlx::postgres::PgPoolOptions;
+            use sqlx::sqlite::SqlitePoolOptions;
 
             match config.db_type {
                 DatabaseType::SQLite => {
@@ -155,7 +155,9 @@ impl DatabaseConnection {
                         .max_lifetime(config.max_lifetime)
                         .connect(&config.url)
                         .await
-                        .map_err(|e| Error::database(format!("Failed to connect to SQLite: {}", e)))?;
+                        .map_err(|e| {
+                            Error::database(format!("Failed to connect to SQLite: {}", e))
+                        })?;
                     Ok(DatabaseConnection::SQLite(pool))
                 }
                 DatabaseType::PostgreSQL => {
@@ -167,7 +169,9 @@ impl DatabaseConnection {
                         .max_lifetime(config.max_lifetime)
                         .connect(&config.url)
                         .await
-                        .map_err(|e| Error::database(format!("Failed to connect to PostgreSQL: {}", e)))?;
+                        .map_err(|e| {
+                            Error::database(format!("Failed to connect to PostgreSQL: {}", e))
+                        })?;
                     Ok(DatabaseConnection::PostgreSQL(pool))
                 }
                 DatabaseType::MySQL => {
@@ -179,7 +183,9 @@ impl DatabaseConnection {
                         .max_lifetime(config.max_lifetime)
                         .connect(&config.url)
                         .await
-                        .map_err(|e| Error::database(format!("Failed to connect to MySQL: {}", e)))?;
+                        .map_err(|e| {
+                            Error::database(format!("Failed to connect to MySQL: {}", e))
+                        })?;
                     Ok(DatabaseConnection::MySQL(pool))
                 }
             }
@@ -215,7 +221,6 @@ impl DatabaseConnection {
     pub async fn execute(&self, sql: &str) -> Result<u64> {
         #[cfg(feature = "db")]
         {
-
             match self {
                 DatabaseConnection::SQLite(pool) => {
                     let result = sqlx::query(sql)
@@ -348,7 +353,7 @@ impl DatabaseConnection {
                         .fetch_all(pool)
                         .await
                         .map_err(|e| Error::database(format!("SQL fetch failed: {}", e)))?;
-                    
+
                     let mut result = Vec::new();
                     for row in rows {
                         let mut map = HashMap::new();
@@ -370,7 +375,7 @@ impl DatabaseConnection {
                         .fetch_all(pool)
                         .await
                         .map_err(|e| Error::database(format!("SQL fetch failed: {}", e)))?;
-                    
+
                     let mut result = Vec::new();
                     for row in rows {
                         let mut map = HashMap::new();
@@ -391,7 +396,7 @@ impl DatabaseConnection {
                         .fetch_all(pool)
                         .await
                         .map_err(|e| Error::database(format!("SQL fetch failed: {}", e)))?;
-                    
+
                     let mut result = Vec::new();
                     for row in rows {
                         let mut map = HashMap::new();
@@ -448,7 +453,7 @@ impl DatabaseConnection {
                         .fetch_optional(pool)
                         .await
                         .map_err(|e| Error::database(format!("SQL fetch failed: {}", e)))?;
-                    
+
                     if let Some(row) = row {
                         let mut map = HashMap::new();
                         for (i, column) in row.columns().iter().enumerate() {
@@ -469,7 +474,7 @@ impl DatabaseConnection {
                         .fetch_optional(pool)
                         .await
                         .map_err(|e| Error::database(format!("SQL fetch failed: {}", e)))?;
-                    
+
                     if let Some(row) = row {
                         let mut map = HashMap::new();
                         for (i, column) in row.columns().iter().enumerate() {
@@ -490,7 +495,7 @@ impl DatabaseConnection {
                         .fetch_optional(pool)
                         .await
                         .map_err(|e| Error::database(format!("SQL fetch failed: {}", e)))?;
-                    
+
                     if let Some(row) = row {
                         let mut map = HashMap::new();
                         for (i, column) in row.columns().iter().enumerate() {
@@ -540,21 +545,21 @@ impl DatabaseConnection {
         {
             match self {
                 DatabaseConnection::SQLite(pool) => {
-                    let tx = pool.begin()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to begin transaction: {}", e)))?;
+                    let tx = pool.begin().await.map_err(|e| {
+                        Error::database(format!("Failed to begin transaction: {}", e))
+                    })?;
                     Ok(DatabaseTransaction::SQLite(tx))
                 }
                 DatabaseConnection::PostgreSQL(pool) => {
-                    let tx = pool.begin()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to begin transaction: {}", e)))?;
+                    let tx = pool.begin().await.map_err(|e| {
+                        Error::database(format!("Failed to begin transaction: {}", e))
+                    })?;
                     Ok(DatabaseTransaction::PostgreSQL(tx))
                 }
                 DatabaseConnection::MySQL(pool) => {
-                    let tx = pool.begin()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to begin transaction: {}", e)))?;
+                    let tx = pool.begin().await.map_err(|e| {
+                        Error::database(format!("Failed to begin transaction: {}", e))
+                    })?;
                     Ok(DatabaseTransaction::MySQL(tx))
                 }
                 DatabaseConnection::Mock => Ok(DatabaseTransaction::Mock),
@@ -591,7 +596,7 @@ impl DatabaseConnection {
                 DatabaseConnection::SQLite(pool) => pool.close().await,
                 DatabaseConnection::PostgreSQL(pool) => pool.close().await,
                 DatabaseConnection::MySQL(pool) => pool.close().await,
-                DatabaseConnection::Mock => {},
+                DatabaseConnection::Mock => {}
             }
         }
     }
@@ -619,21 +624,21 @@ impl DatabaseTransaction {
         {
             match self {
                 DatabaseTransaction::SQLite(tx) => {
-                    tx.commit()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to commit transaction: {}", e)))?;
+                    tx.commit().await.map_err(|e| {
+                        Error::database(format!("Failed to commit transaction: {}", e))
+                    })?;
                 }
                 DatabaseTransaction::PostgreSQL(tx) => {
-                    tx.commit()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to commit transaction: {}", e)))?;
+                    tx.commit().await.map_err(|e| {
+                        Error::database(format!("Failed to commit transaction: {}", e))
+                    })?;
                 }
                 DatabaseTransaction::MySQL(tx) => {
-                    tx.commit()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to commit transaction: {}", e)))?;
+                    tx.commit().await.map_err(|e| {
+                        Error::database(format!("Failed to commit transaction: {}", e))
+                    })?;
                 }
-                DatabaseTransaction::Mock => {},
+                DatabaseTransaction::Mock => {}
             }
         }
         Ok(())
@@ -645,21 +650,21 @@ impl DatabaseTransaction {
         {
             match self {
                 DatabaseTransaction::SQLite(tx) => {
-                    tx.rollback()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to rollback transaction: {}", e)))?;
+                    tx.rollback().await.map_err(|e| {
+                        Error::database(format!("Failed to rollback transaction: {}", e))
+                    })?;
                 }
                 DatabaseTransaction::PostgreSQL(tx) => {
-                    tx.rollback()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to rollback transaction: {}", e)))?;
+                    tx.rollback().await.map_err(|e| {
+                        Error::database(format!("Failed to rollback transaction: {}", e))
+                    })?;
                 }
                 DatabaseTransaction::MySQL(tx) => {
-                    tx.rollback()
-                        .await
-                        .map_err(|e| Error::database(format!("Failed to rollback transaction: {}", e)))?;
+                    tx.rollback().await.map_err(|e| {
+                        Error::database(format!("Failed to rollback transaction: {}", e))
+                    })?;
                 }
-                DatabaseTransaction::Mock => {},
+                DatabaseTransaction::Mock => {}
             }
         }
         Ok(())
@@ -747,22 +752,22 @@ mod tests {
     fn test_connection_pool() {
         let mut pool = ConnectionPool::new();
         assert!(!pool.contains("test"));
-        
+
         let _config = DatabaseConfig::new(DatabaseType::SQLite, ":memory:");
         // Note: We can't actually create a real connection in tests without tokio runtime
         // So we'll use a mock connection
         let connection = DatabaseConnection::Mock;
-        
+
         pool.add_connection("test".to_string(), connection);
         assert!(pool.contains("test"));
-        
+
         let names = pool.connection_names();
         assert_eq!(names.len(), 1);
         assert_eq!(names[0], "test");
-        
+
         let conn = pool.get_connection("test");
         assert!(conn.is_some());
-        
+
         let removed = pool.remove_connection("test");
         assert!(removed.is_some());
         assert!(!pool.contains("test"));
@@ -771,21 +776,21 @@ mod tests {
     #[tokio::test]
     async fn test_mock_connection_operations() {
         let connection = DatabaseConnection::Mock;
-        
+
         // Test basic operations with mock connection
         let result = connection.execute("CREATE TABLE test (id INTEGER)").await;
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), 0);
-        
+
         let rows = connection.fetch_all("SELECT * FROM test").await;
         assert!(rows.is_ok());
         let rows_data = rows.unwrap();
         assert_eq!(rows_data.len(), 0);
-        
+
         let row = connection.fetch_one("SELECT 1 as test").await;
         assert!(row.is_ok());
         assert!(row.unwrap().is_none());
-        
+
         assert!(connection.is_healthy());
     }
 
@@ -794,7 +799,7 @@ mod tests {
         let connection = DatabaseConnection::Mock;
         let tx = connection.begin_transaction().await;
         assert!(tx.is_ok());
-        
+
         let tx = tx.unwrap();
         let commit_result = tx.commit().await;
         assert!(commit_result.is_ok());

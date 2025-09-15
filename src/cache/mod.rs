@@ -6,9 +6,9 @@
 //! - Thread-safe caching solutions
 //! - Cache statistics and management
 
-pub mod memory_cache;
 pub mod lru_cache;
+pub mod memory_cache;
 
+pub use lru_cache::LruCache;
 /// Re-export commonly used types for convenience
 pub use memory_cache::MemoryCache;
-pub use lru_cache::LruCache;

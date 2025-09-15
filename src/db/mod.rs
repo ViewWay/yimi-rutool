@@ -8,10 +8,10 @@
 //! - Transaction management
 
 pub mod connection;
-pub mod query_builder;
 pub mod migration;
+pub mod query_builder;
 
 /// Re-export commonly used types for convenience
-pub use connection::{DatabaseConnection, ConnectionPool, DatabaseConfig, DatabaseType};
-pub use query_builder::QueryBuilder;
+pub use connection::{ConnectionPool, DatabaseConfig, DatabaseConnection, DatabaseType};
 pub use migration::{Migration, MigrationRunner, MigrationTimestamp};
+pub use query_builder::QueryBuilder;

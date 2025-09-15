@@ -3,9 +3,9 @@
 //! This module provides a comprehensive task scheduler that can execute
 //! jobs based on cron expressions with support for async operations.
 
-use crate::error::{Error, Result};
 use crate::cron::cron_parser::CronExpression;
 use crate::cron::job::Job;
+use crate::error::{Error, Result};
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -152,12 +152,21 @@ impl Scheduler {
     ///     Ok(())
     /// }));
     /// let cron_expr = CronExpression::parse("0 * * * *").unwrap(); // Every hour
-    /// 
+    ///
     /// let handle = scheduler.add_job("my_job", job, cron_expr).unwrap();
     /// ```
-    pub fn add_job(&mut self, name: &str, job: Job, cron_expr: CronExpression) -> Result<TaskHandle> {
-        let job_id = format!("{}_{}", name, self.next_job_id.fetch_add(1, Ordering::SeqCst));
-        
+    pub fn add_job(
+        &mut self,
+        name: &str,
+        job: Job,
+        cron_expr: CronExpression,
+    ) -> Result<TaskHandle> {
+        let job_id = format!(
+            "{}_{}",
+            name,
+            self.next_job_id.fetch_add(1, Ordering::SeqCst)
+        );
+
         // Validate the cron expression
         cron_expr.validate()?;
 
@@ -180,7 +189,9 @@ impl Scheduler {
         if let Ok(mut jobs) = self.jobs.lock() {
             jobs.insert(job_id.clone(), scheduled_job);
         } else {
-            return Err(Error::concurrency("Failed to acquire jobs lock".to_string()));
+            return Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ));
         }
 
         Ok(TaskHandle {
@@ -195,7 +206,9 @@ impl Scheduler {
             jobs.remove(job_id);
             Ok(())
         } else {
-            Err(Error::concurrency("Failed to acquire jobs lock".to_string()))
+            Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ))
         }
     }
 
@@ -221,7 +234,9 @@ impl Scheduler {
     #[allow(clippy::unused_async)]
     pub async fn start(&mut self) -> Result<()> {
         if self.is_running.load(Ordering::SeqCst) {
-            return Err(Error::validation("Scheduler is already running".to_string()));
+            return Err(Error::validation(
+                "Scheduler is already running".to_string(),
+            ));
         }
 
         self.is_running.store(true, Ordering::SeqCst);
@@ -236,7 +251,7 @@ impl Scheduler {
 
         let task_handle = tokio::spawn(async move {
             let mut interval = interval(tick_interval);
-            
+
             loop {
                 tokio::select! {
                     _ = interval.tick() => {
@@ -309,7 +324,7 @@ impl Scheduler {
                         scheduled_job.last_run = Some(now);
                         scheduled_job.execution_count += 1;
                         scheduled_job.next_run = scheduled_job.cron_expr.next_execution(&now);
-                        
+
                         jobs_to_execute.push((job_id.clone(), scheduled_job.job.clone()));
                     }
                 }
@@ -371,7 +386,9 @@ impl Scheduler {
             }
             Ok(job_infos)
         } else {
-            Err(Error::concurrency("Failed to acquire jobs lock".to_string()))
+            Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ))
         }
     }
 
@@ -382,10 +399,15 @@ impl Scheduler {
                 job.enabled = enabled;
                 Ok(())
             } else {
-                Err(Error::not_found(format!("Job with ID {} not found", job_id)))
+                Err(Error::not_found(format!(
+                    "Job with ID {} not found",
+                    job_id
+                )))
             }
         } else {
-            Err(Error::concurrency("Failed to acquire jobs lock".to_string()))
+            Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ))
         }
     }
 
@@ -417,28 +439,35 @@ impl Scheduler {
                     scheduled_job.last_run = Some(Utc::now());
                     scheduled_job.job.clone()
                 } else {
-                    return Err(Error::not_found(format!("Job with ID {} not found", job_id)));
+                    return Err(Error::not_found(format!(
+                        "Job with ID {} not found",
+                        job_id
+                    )));
                 }
             } else {
-                return Err(Error::concurrency("Failed to acquire jobs lock".to_string()));
+                return Err(Error::concurrency(
+                    "Failed to acquire jobs lock".to_string(),
+                ));
             }
         };
 
         let jobs_ref = self.jobs.clone();
         let job_id = job_id.to_string();
-        
+
         tokio::spawn(async move {
             let result = job.execute().await;
-            
+
             // Mark job as not running
             if let Ok(mut jobs_guard) = jobs_ref.lock() {
                 if let Some(scheduled_job) = jobs_guard.get_mut(&job_id) {
                     scheduled_job.is_running = false;
                 }
             }
-            
+
             result
-        }).await.map_err(|e| Error::custom(format!("Failed to execute job: {}", e)))?
+        })
+        .await
+        .map_err(|e| Error::custom(format!("Failed to execute job: {}", e)))?
     }
 
     /// Clear all jobs from the scheduler
@@ -447,7 +476,9 @@ impl Scheduler {
             jobs.clear();
             Ok(())
         } else {
-            Err(Error::concurrency("Failed to acquire jobs lock".to_string()))
+            Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ))
         }
     }
 }
@@ -500,17 +531,25 @@ impl fmt::Display for JobInfo {
         writeln!(f, "  Enabled: {}", self.enabled)?;
         writeln!(f, "  Executions: {}", self.execution_count)?;
         writeln!(f, "  Running: {}", self.is_running)?;
-        
+
         #[cfg(feature = "chrono")]
         {
             if let Some(next_run) = self.next_run {
-                writeln!(f, "  Next run: {}", next_run.format("%Y-%m-%d %H:%M:%S UTC"))?;
+                writeln!(
+                    f,
+                    "  Next run: {}",
+                    next_run.format("%Y-%m-%d %H:%M:%S UTC")
+                )?;
             }
             if let Some(last_run) = self.last_run {
-                writeln!(f, "  Last run: {}", last_run.format("%Y-%m-%d %H:%M:%S UTC"))?;
+                writeln!(
+                    f,
+                    "  Last run: {}",
+                    last_run.format("%Y-%m-%d %H:%M:%S UTC")
+                )?;
             }
         }
-        
+
         Ok(())
     }
 }
@@ -523,10 +562,15 @@ impl TaskHandle {
                 job.enabled = enabled;
                 Ok(())
             } else {
-                Err(Error::not_found(format!("Job with ID {} not found", self.id)))
+                Err(Error::not_found(format!(
+                    "Job with ID {} not found",
+                    self.id
+                )))
             }
         } else {
-            Err(Error::concurrency("Failed to acquire jobs lock".to_string()))
+            Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ))
         }
     }
 
@@ -547,10 +591,15 @@ impl TaskHandle {
                     is_running: scheduled_job.is_running,
                 })
             } else {
-                Err(Error::not_found(format!("Job with ID {} not found", self.id)))
+                Err(Error::not_found(format!(
+                    "Job with ID {} not found",
+                    self.id
+                )))
             }
         } else {
-            Err(Error::concurrency("Failed to acquire jobs lock".to_string()))
+            Err(Error::concurrency(
+                "Failed to acquire jobs lock".to_string(),
+            ))
         }
     }
 
@@ -591,15 +640,18 @@ mod tests {
         let mut scheduler = Scheduler::new();
         let counter = Arc::new(AtomicU32::new(0));
         let counter_clone = counter.clone();
-        
-        let job = Job::new("test_job", Box::new(move || {
-            counter_clone.fetch_add(1, Ordering::SeqCst);
-            Ok(())
-        }));
-        
+
+        let job = Job::new(
+            "test_job",
+            Box::new(move || {
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+                Ok(())
+            }),
+        );
+
         let cron_expr = CronExpression::parse("* * * * *").unwrap();
         let handle = scheduler.add_job("test", job, cron_expr).unwrap();
-        
+
         assert_eq!(scheduler.job_count(), 1);
         assert!(handle.id.starts_with("test_"));
     }
@@ -610,9 +662,9 @@ mod tests {
         let job = Job::new("test_job", Box::new(|| Ok(())));
         let cron_expr = CronExpression::parse("* * * * *").unwrap();
         let handle = scheduler.add_job("test", job, cron_expr).unwrap();
-        
+
         assert_eq!(scheduler.job_count(), 1);
-        
+
         scheduler.remove_job(&handle.id).unwrap();
         assert_eq!(scheduler.job_count(), 0);
     }
@@ -623,10 +675,10 @@ mod tests {
         let job = Job::new("test_job", Box::new(|| Ok(())));
         let cron_expr = CronExpression::parse("* * * * *").unwrap();
         let handle = scheduler.add_job("test", job, cron_expr).unwrap();
-        
+
         let info = handle.get_info().unwrap();
         assert!(info.enabled);
-        
+
         handle.set_enabled(false).unwrap();
         let info = handle.get_info().unwrap();
         assert!(!info.enabled);
@@ -638,7 +690,7 @@ mod tests {
         let job = Job::new("test_job", Box::new(|| Ok(())));
         let cron_expr = CronExpression::parse("0 * * * *").unwrap();
         scheduler.add_job("test", job, cron_expr).unwrap();
-        
+
         let jobs_info = scheduler.get_jobs_info().unwrap();
         assert_eq!(jobs_info.len(), 1);
         assert_eq!(jobs_info[0].name, "test_job");
@@ -648,10 +700,10 @@ mod tests {
     #[tokio::test]
     async fn test_scheduler_start_stop() {
         let mut scheduler = Scheduler::new();
-        
+
         scheduler.start().await.unwrap();
         assert!(scheduler.is_running());
-        
+
         scheduler.stop().await.unwrap();
         assert!(!scheduler.is_running());
     }
@@ -661,20 +713,23 @@ mod tests {
         let mut scheduler = Scheduler::new();
         let counter = Arc::new(AtomicU32::new(0));
         let counter_clone = counter.clone();
-        
-        let job = Job::new("test_job", Box::new(move || {
-            counter_clone.fetch_add(1, Ordering::SeqCst);
-            Ok(())
-        }));
-        
+
+        let job = Job::new(
+            "test_job",
+            Box::new(move || {
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+                Ok(())
+            }),
+        );
+
         let cron_expr = CronExpression::parse("0 0 1 1 0").unwrap(); // Never runs
         let handle = scheduler.add_job("test", job, cron_expr).unwrap();
-        
+
         assert_eq!(counter.load(Ordering::SeqCst), 0);
-        
+
         scheduler.trigger_job(&handle.id).await.unwrap();
         assert_eq!(counter.load(Ordering::SeqCst), 1);
-        
+
         let info = handle.get_info().unwrap();
         assert_eq!(info.execution_count, 1);
     }
@@ -687,7 +742,7 @@ mod tests {
             run_missed_jobs: false,
             timezone: "America/New_York".to_string(),
         };
-        
+
         let scheduler = Scheduler::with_config(config.clone());
         assert_eq!(scheduler.config.tick_interval, Duration::from_millis(500));
         assert_eq!(scheduler.config.max_concurrent_jobs, 50);
@@ -701,11 +756,11 @@ mod tests {
         let job1 = Job::new("job1", Box::new(|| Ok(())));
         let job2 = Job::new("job2", Box::new(|| Ok(())));
         let cron_expr = CronExpression::parse("* * * * *").unwrap();
-        
+
         scheduler.add_job("test1", job1, cron_expr.clone()).unwrap();
         scheduler.add_job("test2", job2, cron_expr).unwrap();
         assert_eq!(scheduler.job_count(), 2);
-        
+
         scheduler.clear_jobs().unwrap();
         assert_eq!(scheduler.job_count(), 0);
     }

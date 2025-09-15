@@ -33,21 +33,21 @@
 //! # }
 //! ```
 
-pub mod jwt_util;
-pub mod claims;
 pub mod algorithms;
+pub mod claims;
 pub mod errors;
+pub mod jwt_util;
 
 // Re-export main types for convenience
-pub use jwt_util::JwtUtil;
-pub use claims::{Claims, ClaimsBuilder};
 pub use algorithms::{Algorithm, SigningKey};
+pub use claims::{Claims, ClaimsBuilder};
 pub use errors::{JwtError, JwtResult};
+pub use jwt_util::JwtUtil;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_module_imports() {
         // Basic test to ensure all imports work

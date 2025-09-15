@@ -155,9 +155,7 @@ impl Convert {
     /// assert_eq!(hex, "48656c6c6f");
     /// ```
     pub fn bytes_to_hex(bytes: &[u8]) -> String {
-        bytes.iter()
-            .map(|b| format!("{:02x}", b))
-            .collect()
+        bytes.iter().map(|b| format!("{:02x}", b)).collect()
     }
 
     /// Convert number to different number types
@@ -272,7 +270,10 @@ impl Convert {
                 let mut chars = word.chars();
                 match chars.next() {
                     None => String::new(),
-                    Some(first) => first.to_uppercase().collect::<String>() + chars.as_str().to_lowercase().as_str(),
+                    Some(first) => {
+                        first.to_uppercase().collect::<String>()
+                            + chars.as_str().to_lowercase().as_str()
+                    }
                 }
             })
             .collect::<Vec<String>>()

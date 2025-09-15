@@ -8,10 +8,10 @@
 //! - Timezone support
 
 pub mod cron_parser;
-pub mod scheduler;
 pub mod job;
+pub mod scheduler;
 
 /// Re-export commonly used types for convenience
 pub use cron_parser::{CronExpression, CronField};
-pub use scheduler::{Scheduler, TaskHandle, SchedulerConfig};
 pub use job::{Job, JobBuilder};
+pub use scheduler::{Scheduler, SchedulerConfig, TaskHandle};

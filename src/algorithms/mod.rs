@@ -36,19 +36,19 @@
 //! # }
 //! ```
 
+pub mod bitmap;
 pub mod bloom_filter;
 pub mod hash_functions;
-pub mod bitmap;
 
 // Re-export main types for convenience
-pub use bloom_filter::{BloomFilter, BloomFilterBuilder, CountingBloomFilter};
 pub use bitmap::BitMap;
+pub use bloom_filter::{BloomFilter, BloomFilterBuilder, CountingBloomFilter};
 pub use hash_functions::{HashFunction, Hasher};
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_module_imports() {
         // Basic test to ensure all imports work

@@ -38,11 +38,11 @@ impl<K, V> Node<K, V> {
 /// use yimi_rutool::cache::LruCache;
 ///
 /// let mut cache = LruCache::new(2);
-/// 
+///
 /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
 /// cache.put("key2".to_string(), "value2".to_string()).unwrap();
 /// cache.put("key3".to_string(), "value3".to_string()).unwrap(); // This will evict "key1"
-/// 
+///
 /// assert_eq!(cache.get(&"key1".to_string()).unwrap(), None); // Evicted
 /// assert_eq!(cache.get(&"key2".to_string()).unwrap(), Some("value2".to_string()));
 /// assert_eq!(cache.get(&"key3".to_string()).unwrap(), Some("value3".to_string()));
@@ -83,7 +83,7 @@ where
     /// ```
     pub fn new(capacity: usize) -> Self {
         assert!(capacity > 0, "Capacity must be greater than 0");
-        
+
         Self {
             inner: Arc::new(Mutex::new(LruCacheInner {
                 capacity,
@@ -106,22 +106,24 @@ where
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
-    /// 
+    ///
     /// assert_eq!(cache.get(&"key".to_string()).unwrap(), Some("value".to_string()));
     /// assert_eq!(cache.get(&"nonexistent".to_string()).unwrap(), None);
     /// ```
     pub fn get(&self, key: &K) -> Result<Option<V>> {
-        let mut inner = self.inner.lock()
+        let mut inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         if let Some(&node_ptr) = inner.map.get(key) {
             unsafe {
                 let node_ref = node_ptr.as_ref();
                 let value = node_ref.value.clone();
-                
+
                 // Move to front
                 inner.move_to_front(node_ptr);
-                
+
                 Ok(Some(value))
             }
         } else {
@@ -144,9 +146,11 @@ where
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// ```
     pub fn put(&self, key: K, value: V) -> Result<()> {
-        let mut inner = self.inner.lock()
+        let mut inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         if let Some(&existing_node) = inner.map.get(&key) {
             // Update existing node
             unsafe {
@@ -159,13 +163,13 @@ where
             // Create new node
             let new_node = Box::new(Node::new(key.clone(), value));
             let new_node_ptr = NonNull::from(Box::leak(new_node));
-            
+
             inner.map.insert(key, new_node_ptr);
             unsafe {
                 inner.add_to_front(new_node_ptr);
             }
             inner.len += 1;
-            
+
             // Check capacity and evict if necessary
             if inner.len > inner.capacity {
                 unsafe {
@@ -173,7 +177,7 @@ where
                 }
             }
         }
-        
+
         Ok(())
     }
 
@@ -186,24 +190,26 @@ where
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
-    /// 
+    ///
     /// let removed = cache.remove(&"key".to_string()).unwrap();
     /// assert_eq!(removed, Some("value".to_string()));
     /// assert_eq!(cache.get(&"key".to_string()).unwrap(), None);
     /// ```
     pub fn remove(&self, key: &K) -> Result<Option<V>> {
-        let mut inner = self.inner.lock()
+        let mut inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         if let Some(node_ptr) = inner.map.remove(key) {
             unsafe {
                 let value = node_ptr.as_ref().value.clone();
                 inner.remove_node(node_ptr);
                 inner.len -= 1;
-                
+
                 // Deallocate the node
                 let _ = Box::from_raw(node_ptr.as_ptr());
-                
+
                 Ok(Some(value))
             }
         } else {
@@ -222,14 +228,16 @@ where
     ///
     /// let mut cache = LruCache::new(2);
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
-    /// 
+    ///
     /// assert!(cache.contains_key(&"key".to_string()).unwrap());
     /// assert!(!cache.contains_key(&"nonexistent".to_string()).unwrap());
     /// ```
     pub fn contains_key(&self, key: &K) -> Result<bool> {
-        let inner = self.inner.lock()
+        let inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         Ok(inner.map.contains_key(key))
     }
 
@@ -242,14 +250,16 @@ where
     ///
     /// let mut cache = LruCache::new(10);
     /// assert_eq!(cache.len().unwrap(), 0);
-    /// 
+    ///
     /// cache.put("key".to_string(), "value".to_string()).unwrap();
     /// assert_eq!(cache.len().unwrap(), 1);
     /// ```
     pub fn len(&self) -> Result<usize> {
-        let inner = self.inner.lock()
+        let inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         Ok(inner.len)
     }
 
@@ -292,14 +302,16 @@ where
     /// let mut cache = LruCache::new(10);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
     /// cache.put("key2".to_string(), "value2".to_string()).unwrap();
-    /// 
+    ///
     /// cache.clear().unwrap();
     /// assert!(cache.is_empty().unwrap());
     /// ```
     pub fn clear(&self) -> Result<()> {
-        let mut inner = self.inner.lock()
+        let mut inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         // Deallocate all nodes
         unsafe {
             let mut current = inner.head;
@@ -309,12 +321,12 @@ where
                 let _ = Box::from_raw(node_ptr.as_ptr());
             }
         }
-        
+
         inner.map.clear();
         inner.head = None;
         inner.tail = None;
         inner.len = 0;
-        
+
         Ok(())
     }
 
@@ -329,17 +341,19 @@ where
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
     /// cache.put("key2".to_string(), "value2".to_string()).unwrap();
     /// cache.put("key3".to_string(), "value3".to_string()).unwrap();
-    /// 
+    ///
     /// let keys = cache.keys().unwrap();
     /// assert_eq!(keys, vec!["key3".to_string(), "key2".to_string(), "key1".to_string()]);
     /// ```
     pub fn keys(&self) -> Result<Vec<K>> {
-        let inner = self.inner.lock()
+        let inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         let mut keys = Vec::new();
         let mut current = inner.head;
-        
+
         unsafe {
             while let Some(node_ptr) = current {
                 let node_ref = node_ptr.as_ref();
@@ -347,7 +361,7 @@ where
                 current = node_ref.next;
             }
         }
-        
+
         Ok(keys)
     }
 
@@ -361,15 +375,17 @@ where
     /// let mut cache = LruCache::new(3);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
     /// cache.put("key2".to_string(), "value2".to_string()).unwrap();
-    /// 
+    ///
     /// let (key, value) = cache.peek_lru().unwrap().unwrap();
     /// assert_eq!(key, "key1");
     /// assert_eq!(value, "value1");
     /// ```
     pub fn peek_lru(&self) -> Result<Option<(K, V)>> {
-        let inner = self.inner.lock()
+        let inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         if let Some(tail_ptr) = inner.tail {
             unsafe {
                 let tail_ref = tail_ptr.as_ref();
@@ -390,15 +406,17 @@ where
     /// let mut cache = LruCache::new(3);
     /// cache.put("key1".to_string(), "value1".to_string()).unwrap();
     /// cache.put("key2".to_string(), "value2".to_string()).unwrap();
-    /// 
+    ///
     /// let (key, value) = cache.peek_mru().unwrap().unwrap();
     /// assert_eq!(key, "key2");
     /// assert_eq!(value, "value2");
     /// ```
     pub fn peek_mru(&self) -> Result<Option<(K, V)>> {
-        let inner = self.inner.lock()
+        let inner = self
+            .inner
+            .lock()
             .map_err(|_| Error::concurrency("Failed to acquire lock".to_string()))?;
-        
+
         if let Some(head_ptr) = inner.head {
             unsafe {
                 let head_ref = head_ptr.as_ref();
@@ -417,10 +435,10 @@ where
     /// use yimi_rutool::cache::LruCache;
     ///
     /// let mut cache = LruCache::new(10);
-    /// 
+    ///
     /// let value = cache.get_or_insert("key", || "computed_value".to_string()).unwrap();
     /// assert_eq!(value, "computed_value");
-    /// 
+    ///
     /// // Second call should return cached value
     /// let cached_value = cache.get_or_insert("key", || "new_value".to_string()).unwrap();
     /// assert_eq!(cached_value, "computed_value");
@@ -472,7 +490,7 @@ where
 
     unsafe fn remove_node(&mut self, node_ptr: NonNull<Node<K, V>>) {
         let node_ref = unsafe { node_ptr.as_ref() };
-        
+
         if let Some(mut prev) = node_ref.prev {
             unsafe { prev.as_mut() }.next = node_ref.next;
         } else {
@@ -492,11 +510,11 @@ where
         if let Some(tail_ptr) = self.tail {
             let tail_ref = unsafe { tail_ptr.as_ref() };
             let key = tail_ref.key.clone();
-            
+
             self.map.remove(&key);
             unsafe { self.remove_node(tail_ptr) };
             self.len -= 1;
-            
+
             // Deallocate the node
             let _ = unsafe { Box::from_raw(tail_ptr.as_ptr()) };
         }
@@ -540,19 +558,22 @@ mod tests {
     #[test]
     fn test_basic_operations() {
         let cache: LruCache<String, String> = LruCache::new(2);
-        
+
         // Test put and get
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
-        assert_eq!(cache.get(&"key1".to_string()).unwrap(), Some("value1".to_string()));
-        
+        assert_eq!(
+            cache.get(&"key1".to_string()).unwrap(),
+            Some("value1".to_string())
+        );
+
         // Test contains_key
         assert!(cache.contains_key(&"key1".to_string()).unwrap());
         assert!(!cache.contains_key(&"nonexistent".to_string()).unwrap());
-        
+
         // Test len
         assert_eq!(cache.len().unwrap(), 1);
         assert!(!cache.is_empty().unwrap());
-        
+
         // Test capacity
         assert_eq!(cache.capacity(), 2);
     }
@@ -560,65 +581,91 @@ mod tests {
     #[test]
     fn test_lru_eviction() {
         let cache: LruCache<String, String> = LruCache::new(2);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
         cache.put("key3".to_string(), "value3".to_string()).unwrap(); // Should evict key1
-        
+
         assert_eq!(cache.len().unwrap(), 2);
         assert_eq!(cache.get(&"key1".to_string()).unwrap(), None); // Evicted
-        assert_eq!(cache.get(&"key2".to_string()).unwrap(), Some("value2".to_string()));
-        assert_eq!(cache.get(&"key3".to_string()).unwrap(), Some("value3".to_string()));
+        assert_eq!(
+            cache.get(&"key2".to_string()).unwrap(),
+            Some("value2".to_string())
+        );
+        assert_eq!(
+            cache.get(&"key3".to_string()).unwrap(),
+            Some("value3".to_string())
+        );
     }
 
     #[test]
     fn test_lru_order() {
         let cache: LruCache<String, String> = LruCache::new(3);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
         cache.put("key3".to_string(), "value3".to_string()).unwrap();
-        
+
         // Access key1 to make it most recent
         cache.get(&"key1".to_string()).unwrap();
-        
+
         // Add key4, should evict key2 (least recent)
         cache.put("key4".to_string(), "value4".to_string()).unwrap();
-        
+
         assert_eq!(cache.get(&"key2".to_string()).unwrap(), None); // Evicted
-        assert_eq!(cache.get(&"key1".to_string()).unwrap(), Some("value1".to_string())); // Still there
-        assert_eq!(cache.get(&"key3".to_string()).unwrap(), Some("value3".to_string()));
-        assert_eq!(cache.get(&"key4".to_string()).unwrap(), Some("value4".to_string()));
+        assert_eq!(
+            cache.get(&"key1".to_string()).unwrap(),
+            Some("value1".to_string())
+        ); // Still there
+        assert_eq!(
+            cache.get(&"key3".to_string()).unwrap(),
+            Some("value3".to_string())
+        );
+        assert_eq!(
+            cache.get(&"key4".to_string()).unwrap(),
+            Some("value4".to_string())
+        );
     }
 
     #[test]
     fn test_update_existing_key() {
         let cache: LruCache<String, String> = LruCache::new(2);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
-        
+
         // Update existing key
-        cache.put("key1".to_string(), "updated_value1".to_string()).unwrap();
-        
+        cache
+            .put("key1".to_string(), "updated_value1".to_string())
+            .unwrap();
+
         assert_eq!(cache.len().unwrap(), 2);
-        assert_eq!(cache.get(&"key1".to_string()).unwrap(), Some("updated_value1".to_string()));
-        assert_eq!(cache.get(&"key2".to_string()).unwrap(), Some("value2".to_string()));
+        assert_eq!(
+            cache.get(&"key1".to_string()).unwrap(),
+            Some("updated_value1".to_string())
+        );
+        assert_eq!(
+            cache.get(&"key2".to_string()).unwrap(),
+            Some("value2".to_string())
+        );
     }
 
     #[test]
     fn test_remove() {
         let cache: LruCache<String, String> = LruCache::new(3);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
-        
+
         let removed = cache.remove(&"key1".to_string()).unwrap();
         assert_eq!(removed, Some("value1".to_string()));
         assert_eq!(cache.len().unwrap(), 1);
         assert_eq!(cache.get(&"key1".to_string()).unwrap(), None);
-        assert_eq!(cache.get(&"key2".to_string()).unwrap(), Some("value2".to_string()));
-        
+        assert_eq!(
+            cache.get(&"key2".to_string()).unwrap(),
+            Some("value2".to_string())
+        );
+
         // Remove non-existent key
         let removed = cache.remove(&"nonexistent".to_string()).unwrap();
         assert_eq!(removed, None);
@@ -627,11 +674,11 @@ mod tests {
     #[test]
     fn test_clear() {
         let cache: LruCache<String, String> = LruCache::new(3);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
         cache.put("key3".to_string(), "value3".to_string()).unwrap();
-        
+
         cache.clear().unwrap();
         assert!(cache.is_empty().unwrap());
         assert_eq!(cache.len().unwrap(), 0);
@@ -641,44 +688,50 @@ mod tests {
     #[test]
     fn test_keys() {
         let cache: LruCache<String, String> = LruCache::new(3);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
         cache.put("key3".to_string(), "value3".to_string()).unwrap();
-        
+
         let keys = cache.keys().unwrap();
         // Most recent first
-        assert_eq!(keys, vec!["key3".to_string(), "key2".to_string(), "key1".to_string()]);
-        
+        assert_eq!(
+            keys,
+            vec!["key3".to_string(), "key2".to_string(), "key1".to_string()]
+        );
+
         // Access key1 to make it most recent
         cache.get(&"key1".to_string()).unwrap();
-        
+
         let keys = cache.keys().unwrap();
-        assert_eq!(keys, vec!["key1".to_string(), "key3".to_string(), "key2".to_string()]);
+        assert_eq!(
+            keys,
+            vec!["key1".to_string(), "key3".to_string(), "key2".to_string()]
+        );
     }
 
     #[test]
     fn test_peek_lru_mru() {
         let cache: LruCache<String, String> = LruCache::new(3);
-        
+
         cache.put("key1".to_string(), "value1".to_string()).unwrap();
         cache.put("key2".to_string(), "value2".to_string()).unwrap();
         cache.put("key3".to_string(), "value3".to_string()).unwrap();
-        
+
         let (lru_key, lru_value) = cache.peek_lru().unwrap().unwrap();
         assert_eq!(lru_key, "key1".to_string());
         assert_eq!(lru_value, "value1".to_string());
-        
+
         let (mru_key, mru_value) = cache.peek_mru().unwrap().unwrap();
         assert_eq!(mru_key, "key3".to_string());
         assert_eq!(mru_value, "value3".to_string());
-        
+
         // Access key1 to change order
         cache.get(&"key1".to_string()).unwrap();
-        
+
         let (lru_key, _) = cache.peek_lru().unwrap().unwrap();
         assert_eq!(lru_key, "key2".to_string());
-        
+
         let (mru_key, _) = cache.peek_mru().unwrap().unwrap();
         assert_eq!(mru_key, "key1".to_string());
     }
@@ -686,15 +739,19 @@ mod tests {
     #[test]
     fn test_get_or_insert() {
         let cache: LruCache<String, String> = LruCache::new(2);
-        
+
         // First call should compute
-        let value = cache.get_or_insert("key".to_string(), || "computed".to_string()).unwrap();
+        let value = cache
+            .get_or_insert("key".to_string(), || "computed".to_string())
+            .unwrap();
         assert_eq!(value, "computed".to_string());
-        
+
         // Second call should return cached value
-        let cached = cache.get_or_insert("key".to_string(), || "new_computed".to_string()).unwrap();
+        let cached = cache
+            .get_or_insert("key".to_string(), || "new_computed".to_string())
+            .unwrap();
         assert_eq!(cached, "computed".to_string());
-        
+
         assert_eq!(cache.len().unwrap(), 1);
     }
 
@@ -702,19 +759,27 @@ mod tests {
     fn test_clone() {
         let cache1 = LruCache::new(2);
         cache1.put("key".to_string(), "value".to_string()).unwrap();
-        
+
         let cache2 = cache1.clone();
-        assert_eq!(cache2.get(&"key".to_string()).unwrap(), Some("value".to_string()));
-        
+        assert_eq!(
+            cache2.get(&"key".to_string()).unwrap(),
+            Some("value".to_string())
+        );
+
         // They should share the same underlying data
-        cache2.put("key2".to_string(), "value2".to_string()).unwrap();
-        assert_eq!(cache1.get(&"key2".to_string()).unwrap(), Some("value2".to_string()));
+        cache2
+            .put("key2".to_string(), "value2".to_string())
+            .unwrap();
+        assert_eq!(
+            cache1.get(&"key2".to_string()).unwrap(),
+            Some("value2".to_string())
+        );
     }
 
     #[test]
     fn test_empty_cache() {
         let cache: LruCache<String, String> = LruCache::new(1);
-        
+
         assert!(cache.is_empty().unwrap());
         assert_eq!(cache.peek_lru().unwrap(), None);
         assert_eq!(cache.peek_mru().unwrap(), None);

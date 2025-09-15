@@ -4,7 +4,11 @@
 //! secure random number generation, password generation, and key generation.
 
 use base64::Engine;
-use rand::{RngCore, thread_rng, distributions::{Alphanumeric, Distribution}};
+use rand::{
+    RngCore,
+    distributions::{Alphanumeric, Distribution},
+    thread_rng,
+};
 
 /// Security utility functions
 pub struct SecureUtil;
@@ -40,7 +44,7 @@ impl SecureUtil {
         use rand::Rng;
         let mut rng = thread_rng();
         let chars: Vec<char> = charset.chars().collect();
-        
+
         (0..len)
             .map(|_| chars[rng.gen_range(0..chars.len())])
             .collect()
@@ -58,7 +62,9 @@ impl SecureUtil {
     /// assert!(random_str.chars().all(|c| c.is_alphanumeric()));
     /// ```
     pub fn random_alphanumeric(len: usize) -> String {
-        (0..len).map(|_| Alphanumeric.sample(&mut thread_rng()) as char).collect()
+        (0..len)
+            .map(|_| Alphanumeric.sample(&mut thread_rng()) as char)
+            .collect()
     }
 
     /// Generate secure numeric string
@@ -109,7 +115,7 @@ impl SecureUtil {
         include_symbols: bool,
     ) -> String {
         let mut charset = String::new();
-        
+
         if include_lowercase {
             charset.push_str("abcdefghijklmnopqrstuvwxyz");
         }
@@ -122,12 +128,12 @@ impl SecureUtil {
         if include_symbols {
             charset.push_str("!@#$%^&*()_+-=[]{}|;:,.<>?");
         }
-        
+
         if charset.is_empty() {
             // Default to alphanumeric if no options selected
             charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".to_string();
         }
-        
+
         Self::random_string(len, &charset)
     }
 
@@ -143,19 +149,30 @@ impl SecureUtil {
     /// ```
     pub fn generate_uuid() -> String {
         let bytes = Self::random_bytes(16);
-        
+
         // Set version (4) and variant bits according to RFC 4122
         let mut uuid_bytes = bytes;
         uuid_bytes[6] = (uuid_bytes[6] & 0x0f) | 0x40; // Version 4
         uuid_bytes[8] = (uuid_bytes[8] & 0x3f) | 0x80; // Variant 10
-        
+
         format!(
             "{:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}",
-            uuid_bytes[0], uuid_bytes[1], uuid_bytes[2], uuid_bytes[3],
-            uuid_bytes[4], uuid_bytes[5],
-            uuid_bytes[6], uuid_bytes[7],
-            uuid_bytes[8], uuid_bytes[9],
-            uuid_bytes[10], uuid_bytes[11], uuid_bytes[12], uuid_bytes[13], uuid_bytes[14], uuid_bytes[15]
+            uuid_bytes[0],
+            uuid_bytes[1],
+            uuid_bytes[2],
+            uuid_bytes[3],
+            uuid_bytes[4],
+            uuid_bytes[5],
+            uuid_bytes[6],
+            uuid_bytes[7],
+            uuid_bytes[8],
+            uuid_bytes[9],
+            uuid_bytes[10],
+            uuid_bytes[11],
+            uuid_bytes[12],
+            uuid_bytes[13],
+            uuid_bytes[14],
+            uuid_bytes[15]
         )
     }
 
@@ -207,7 +224,7 @@ impl SecureUtil {
         if a.len() != b.len() {
             return false;
         }
-        
+
         let mut result = 0u8;
         for (x, y) in a.iter().zip(b.iter()) {
             result |= x ^ y;
@@ -246,8 +263,9 @@ impl SecureUtil {
     /// ```
     pub fn is_valid_uuid(uuid: &str) -> bool {
         let uuid_regex = regex::Regex::new(
-            r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        ).unwrap();
+            r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        )
+        .unwrap();
         uuid_regex.is_match(uuid)
     }
 
@@ -290,7 +308,7 @@ mod tests {
     fn test_random_bytes() {
         let bytes1 = SecureUtil::random_bytes(32);
         let bytes2 = SecureUtil::random_bytes(32);
-        
+
         assert_eq!(bytes1.len(), 32);
         assert_eq!(bytes2.len(), 32);
         assert_ne!(bytes1, bytes2); // Should be different
@@ -300,7 +318,7 @@ mod tests {
     fn test_random_string() {
         let charset = "abc123";
         let random_str = SecureUtil::random_string(10, charset);
-        
+
         assert_eq!(random_str.len(), 10);
         assert!(random_str.chars().all(|c| charset.contains(c)));
     }
@@ -330,7 +348,7 @@ mod tests {
     fn test_generate_password() {
         let password = SecureUtil::generate_password(12, true, true, true, false);
         assert_eq!(password.len(), 12);
-        
+
         // Test with symbols
         let password_with_symbols = SecureUtil::generate_password(12, true, true, true, true);
         assert_eq!(password_with_symbols.len(), 12);
@@ -340,11 +358,11 @@ mod tests {
     fn test_generate_uuid() {
         let uuid1 = SecureUtil::generate_uuid();
         let uuid2 = SecureUtil::generate_uuid();
-        
+
         assert_eq!(uuid1.len(), 36);
         assert_eq!(uuid2.len(), 36);
         assert_ne!(uuid1, uuid2);
-        
+
         // Check format: 8-4-4-4-12
         let parts: Vec<&str> = uuid1.split('-').collect();
         assert_eq!(parts.len(), 5);
@@ -359,7 +377,7 @@ mod tests {
     fn test_generate_salt() {
         let salt1 = SecureUtil::generate_salt(16);
         let salt2 = SecureUtil::generate_salt(16);
-        
+
         assert_eq!(salt1.len(), 16);
         assert_eq!(salt2.len(), 16);
         assert_ne!(salt1, salt2);
@@ -369,7 +387,7 @@ mod tests {
     fn test_generate_token() {
         let token1 = SecureUtil::generate_token(32);
         let token2 = SecureUtil::generate_token(32);
-        
+
         assert!(!token1.is_empty());
         assert!(!token2.is_empty());
         assert_ne!(token1, token2);
@@ -381,7 +399,7 @@ mod tests {
         let b = b"secret";
         let c = b"public";
         let d = b"secrets"; // Different length
-        
+
         assert!(SecureUtil::constant_time_eq(a, b));
         assert!(!SecureUtil::constant_time_eq(a, c));
         assert!(!SecureUtil::constant_time_eq(a, d));
@@ -391,7 +409,7 @@ mod tests {
     fn test_random_int() {
         let random_int = SecureUtil::random_int(1, 100);
         assert!(random_int >= 1 && random_int < 100);
-        
+
         // Test edge case
         let edge = SecureUtil::random_int(5, 5);
         assert_eq!(edge, 5);
@@ -401,21 +419,25 @@ mod tests {
     fn test_is_valid_uuid() {
         let valid_uuid = SecureUtil::generate_uuid();
         assert!(SecureUtil::is_valid_uuid(&valid_uuid));
-        
+
         assert!(!SecureUtil::is_valid_uuid("not-a-uuid"));
-        assert!(!SecureUtil::is_valid_uuid("123e4567-e89b-12d3-a456-42661417400")); // Too short
-        assert!(!SecureUtil::is_valid_uuid("123e4567-e89b-12d3-a456-4266141740000")); // Too long
+        assert!(!SecureUtil::is_valid_uuid(
+            "123e4567-e89b-12d3-a456-42661417400"
+        )); // Too short
+        assert!(!SecureUtil::is_valid_uuid(
+            "123e4567-e89b-12d3-a456-4266141740000"
+        )); // Too long
     }
 
     #[test]
     fn test_generate_session_id() {
         let session_id1 = SecureUtil::generate_session_id();
         let session_id2 = SecureUtil::generate_session_id();
-        
+
         assert_eq!(session_id1.len(), 64);
         assert_eq!(session_id2.len(), 64);
         assert_ne!(session_id1, session_id2);
-        
+
         // Should be valid hex
         assert!(session_id1.chars().all(|c| c.is_ascii_hexdigit()));
     }
@@ -424,7 +446,7 @@ mod tests {
     fn test_generate_api_key() {
         let api_key1 = SecureUtil::generate_api_key(32);
         let api_key2 = SecureUtil::generate_api_key(32);
-        
+
         assert!(!api_key1.is_empty());
         assert!(!api_key2.is_empty());
         assert_ne!(api_key1, api_key2);

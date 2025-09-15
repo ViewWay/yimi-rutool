@@ -112,15 +112,15 @@ impl HashFunction {
             HashAlgorithm::Murmur3,
             HashAlgorithm::Fnv1a,
         ];
-        
+
         let mut functions = Vec::with_capacity(count);
-        
+
         for i in 0..count {
             let algorithm = algorithms[i % algorithms.len()];
             let seed = (i as u64).wrapping_mul(0x9e3779b97f4a7c15_u64); // Golden ratio multiplier
             functions.push(HashFunction::with_seed(algorithm, seed));
         }
-        
+
         functions
     }
 
@@ -150,12 +150,8 @@ impl Hasher for HashFunction {
                 item.hash(&mut hasher);
                 hasher.finish() as usize
             }
-            HashAlgorithm::Murmur3 => {
-                murmur3_hash(item, self.seed as u32)
-            }
-            HashAlgorithm::Fnv1a => {
-                fnv1a_hash(item, self.seed)
-            }
+            HashAlgorithm::Murmur3 => murmur3_hash(item, self.seed as u32),
+            HashAlgorithm::Fnv1a => fnv1a_hash(item, self.seed),
             HashAlgorithm::Seeded(base_seed) => {
                 let mut hasher = DefaultHasher::new();
                 (base_seed ^ self.seed).hash(&mut hasher);
@@ -175,7 +171,7 @@ fn murmur3_hash<T: Hash + ?Sized>(item: &T, seed: u32) -> usize {
     seed.hash(&mut hasher);
     item.hash(&mut hasher);
     let hash64 = hasher.finish();
-    
+
     // Apply Murmur3 finalizer to improve distribution
     let mut h = hash64 as u32;
     h ^= h >> 16;
@@ -183,7 +179,7 @@ fn murmur3_hash<T: Hash + ?Sized>(item: &T, seed: u32) -> usize {
     h ^= h >> 13;
     h = h.wrapping_mul(0xc2b2ae35);
     h ^= h >> 16;
-    
+
     h as usize
 }
 
@@ -193,22 +189,22 @@ fn murmur3_hash<T: Hash + ?Sized>(item: &T, seed: u32) -> usize {
 fn fnv1a_hash<T: Hash + ?Sized>(item: &T, seed: u64) -> usize {
     const FNV_OFFSET_BASIS: u64 = 0xcbf29ce484222325;
     const FNV_PRIME: u64 = 0x100000001b3;
-    
+
     // Start with offset basis XORed with seed
     let mut hash = FNV_OFFSET_BASIS ^ seed;
-    
+
     // Hash the item to get bytes
     let mut hasher = DefaultHasher::new();
     item.hash(&mut hasher);
     let item_hash = hasher.finish();
-    
+
     // Apply FNV-1a algorithm to the item hash bytes
     let bytes = item_hash.to_le_bytes();
     for &byte in &bytes {
         hash ^= byte as u64;
         hash = hash.wrapping_mul(FNV_PRIME);
     }
-    
+
     hash as usize
 }
 
@@ -273,23 +269,32 @@ impl DoubleHasher {
     ///     assert!(hash < 100);
     /// }
     /// ```
-    pub fn hash_multiple<T: Hash + ?Sized>(&self, item: &T, count: usize, max_value: usize) -> Vec<usize> {
+    pub fn hash_multiple<T: Hash + ?Sized>(
+        &self,
+        item: &T,
+        count: usize,
+        max_value: usize,
+    ) -> Vec<usize> {
         if max_value == 0 {
             return vec![0; count];
         }
-        
+
         let h1 = self.hasher1.hash(item) % max_value;
         let h2 = self.hasher2.hash(item) % max_value;
-        
+
         // Ensure h2 is odd to avoid cycles
-        let h2 = if h2 % 2 == 0 { (h2 + 1) % max_value } else { h2 };
-        
+        let h2 = if h2 % 2 == 0 {
+            (h2 + 1) % max_value
+        } else {
+            h2
+        };
+
         let mut hashes = Vec::with_capacity(count);
         for i in 0..count {
             let hash = (h1 + i * h2) % max_value;
             hashes.push(hash);
         }
-        
+
         hashes
     }
 }
@@ -344,7 +349,7 @@ pub fn evaluate_hash_quality<T: Hash + ?Sized + Clone>(
     // Test distribution uniformity
     let mut buckets = vec![0; bucket_count];
     let mut hash_values = Vec::new();
-    
+
     for item in test_data {
         let hash = hasher.hash(item);
         hash_values.push(hash);
@@ -360,7 +365,7 @@ pub fn evaluate_hash_quality<T: Hash + ?Sized + Clone>(
             diff * diff / expected
         })
         .sum();
-    
+
     // Normalize chi-square to get uniformity score (inverse relationship)
     let uniformity = 1.0 / (1.0 + chi_square / bucket_count as f64);
 
@@ -398,7 +403,7 @@ fn calculate_avalanche_score<T: Hash + ?Sized + Clone>(
 
     for i in 0..sample_size {
         let hash1 = hasher.hash(&test_data[i]);
-        
+
         // For avalanche test, we'd need to flip bits in the input,
         // but since we can't easily do that with generic Hash types,
         // we'll use a simplified approach by comparing consecutive items
@@ -448,7 +453,7 @@ mod tests {
     fn test_generate_functions() {
         let functions = HashFunction::generate_functions(5);
         assert_eq!(functions.len(), 5);
-        
+
         // Each function should have a different seed
         for i in 0..functions.len() {
             for j in (i + 1)..functions.len() {
@@ -461,21 +466,21 @@ mod tests {
     fn test_hash_consistency() {
         let hash_fn = HashFunction::new();
         let item = "test_string";
-        
+
         let hash1 = hash_fn.hash(item);
         let hash2 = hash_fn.hash(item);
-        
+
         assert_eq!(hash1, hash2); // Same input should produce same hash
     }
 
     #[test]
     fn test_different_algorithms_produce_different_hashes() {
         let item = "test_string";
-        
+
         let default_hash = HashFunction::with_algorithm(HashAlgorithm::Default).hash(item);
         let murmur3_hash = HashFunction::with_algorithm(HashAlgorithm::Murmur3).hash(item);
         let fnv1a_hash = HashFunction::with_algorithm(HashAlgorithm::Fnv1a).hash(item);
-        
+
         // Different algorithms should generally produce different hashes
         assert_ne!(default_hash, murmur3_hash);
         assert_ne!(default_hash, fnv1a_hash);
@@ -486,10 +491,10 @@ mod tests {
     fn test_different_seeds_produce_different_hashes() {
         let item = "test_string";
         let algorithm = HashAlgorithm::Default;
-        
+
         let hash1 = HashFunction::with_seed(algorithm, 123).hash(item);
         let hash2 = HashFunction::with_seed(algorithm, 456).hash(item);
-        
+
         assert_ne!(hash1, hash2); // Different seeds should produce different hashes
     }
 
@@ -498,19 +503,19 @@ mod tests {
         let hash_fn = HashFunction::new();
         let bucket_count = 100;
         let item_count = 1000;
-        
+
         let mut buckets = vec![0; bucket_count];
-        
+
         for i in 0..item_count {
             let item = format!("item_{}", i);
             let hash = hash_fn.hash(&item);
             buckets[hash % bucket_count] += 1;
         }
-        
+
         // Check that no bucket is empty and none is overly full
         let min_count = buckets.iter().min().unwrap();
         let max_count = buckets.iter().max().unwrap();
-        
+
         assert!(*min_count > 0); // No bucket should be empty
         assert!(*max_count < item_count / 5); // No bucket should have more than 20% of items
     }
@@ -519,14 +524,14 @@ mod tests {
     fn test_double_hasher() {
         let double_hasher = DoubleHasher::new();
         let hashes = double_hasher.hash_multiple("test", 5, 100);
-        
+
         assert_eq!(hashes.len(), 5);
-        
+
         // All hashes should be within bounds
         for &hash in &hashes {
             assert!(hash < 100);
         }
-        
+
         // Hashes should be different (with high probability)
         let unique_hashes: std::collections::HashSet<_> = hashes.iter().collect();
         assert!(unique_hashes.len() > 1); // Should have at least some different values
@@ -536,7 +541,7 @@ mod tests {
     fn test_double_hasher_zero_max_value() {
         let double_hasher = DoubleHasher::new();
         let hashes = double_hasher.hash_multiple("test", 5, 0);
-        
+
         assert_eq!(hashes.len(), 5);
         assert!(hashes.iter().all(|&h| h == 0));
     }
@@ -545,9 +550,9 @@ mod tests {
     fn test_hash_quality_evaluation() {
         let hash_fn = HashFunction::new();
         let test_data: Vec<String> = (0..1000).map(|i| format!("item_{}", i)).collect();
-        
+
         let quality = evaluate_hash_quality(&hash_fn, &test_data, 100);
-        
+
         assert!(quality.uniformity >= 0.0 && quality.uniformity <= 1.0);
         assert!(quality.collision_rate >= 0.0 && quality.collision_rate <= 1.0);
         assert!(quality.avalanche_score >= 0.0 && quality.avalanche_score <= 1.0);
@@ -557,9 +562,9 @@ mod tests {
     fn test_hash_quality_empty_data() {
         let hash_fn = HashFunction::new();
         let test_data: Vec<String> = vec![];
-        
+
         let quality = evaluate_hash_quality(&hash_fn, &test_data, 100);
-        
+
         assert_eq!(quality.uniformity, 0.0);
         assert_eq!(quality.collision_rate, 0.0);
         assert_eq!(quality.avalanche_score, 0.0);
@@ -571,7 +576,7 @@ mod tests {
         let hash1 = murmur3_hash(&item, 123);
         let hash2 = murmur3_hash(&item, 123);
         let hash3 = murmur3_hash(&item, 456);
-        
+
         assert_eq!(hash1, hash2); // Same input and seed should produce same hash
         assert_ne!(hash1, hash3); // Different seed should produce different hash
     }
@@ -582,7 +587,7 @@ mod tests {
         let hash1 = fnv1a_hash(&item, 123);
         let hash2 = fnv1a_hash(&item, 123);
         let hash3 = fnv1a_hash(&item, 456);
-        
+
         assert_eq!(hash1, hash2); // Same input and seed should produce same hash
         assert_ne!(hash1, hash3); // Different seed should produce different hash
     }
@@ -592,10 +597,10 @@ mod tests {
         let item = "test";
         let hash_fn1 = HashFunction::with_seed(HashAlgorithm::Seeded(999), 123);
         let hash_fn2 = HashFunction::with_seed(HashAlgorithm::Seeded(999), 456);
-        
+
         let hash1 = hash_fn1.hash(&item);
         let hash2 = hash_fn2.hash(&item);
-        
+
         assert_ne!(hash1, hash2); // Different seeds should produce different hashes
     }
 }

@@ -3,7 +3,7 @@
 //! This module provides comprehensive collection manipulation utilities,
 //! including lists, sets, maps, and various collection operations.
 
-use std::collections::{HashMap, HashSet, BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::hash::Hash;
 
 /// Collection utility functions
@@ -226,7 +226,8 @@ impl CollUtil {
     /// assert_eq!(new_vec, vec![1, 2, 4, 5]);
     /// ```
     pub fn remove_element<T: Clone + PartialEq>(collection: &[T], element: &T) -> Vec<T> {
-        collection.iter()
+        collection
+            .iter()
             .filter(|&item| item != element)
             .cloned()
             .collect()
@@ -247,7 +248,8 @@ impl CollUtil {
     where
         F: Fn(&T) -> bool,
     {
-        collection.iter()
+        collection
+            .iter()
             .filter(|&item| !predicate(item))
             .cloned()
             .collect()
@@ -268,7 +270,8 @@ impl CollUtil {
     where
         F: Fn(&T) -> bool,
     {
-        collection.iter()
+        collection
+            .iter()
             .filter(|&item| predicate(item))
             .cloned()
             .collect()
@@ -398,7 +401,8 @@ impl CollUtil {
     /// ```
     pub fn distinct<T: Clone + Hash + Eq>(collection: &[T]) -> Vec<T> {
         let mut set = HashSet::new();
-        collection.iter()
+        collection
+            .iter()
             .filter(|&item| set.insert(item.clone()))
             .cloned()
             .collect()
@@ -456,7 +460,10 @@ impl CollUtil {
     /// assert_eq!(CollUtil::max(&empty_vec), None);
     /// ```
     pub fn max<T: Clone + PartialOrd>(collection: &[T]) -> Option<T> {
-        collection.iter().max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).cloned()
+        collection
+            .iter()
+            .max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .cloned()
     }
 
     /// Get minimum element
@@ -473,7 +480,10 @@ impl CollUtil {
     /// assert_eq!(CollUtil::min(&empty_vec), None);
     /// ```
     pub fn min<T: Clone + PartialOrd>(collection: &[T]) -> Option<T> {
-        collection.iter().min_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)).cloned()
+        collection
+            .iter()
+            .min_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+            .cloned()
     }
 
     /// Calculate sum of numeric collection
@@ -486,8 +496,7 @@ impl CollUtil {
     /// let vec = vec![1, 2, 3, 4, 5];
     /// assert_eq!(CollUtil::sum(&vec), 15);
     /// ```
-    pub fn sum<T: Clone + std::iter::Sum + Default>(collection: &[T]) -> T
-    {
+    pub fn sum<T: Clone + std::iter::Sum + Default>(collection: &[T]) -> T {
         if collection.is_empty() {
             T::default()
         } else {
@@ -541,7 +550,10 @@ impl CollUtil {
         let mut result = HashMap::new();
         for item in collection {
             let key = key_fn(item);
-            result.entry(key).or_insert_with(Vec::new).push(item.clone());
+            result
+                .entry(key)
+                .or_insert_with(Vec::new)
+                .push(item.clone());
         }
         result
     }
@@ -562,9 +574,7 @@ impl CollUtil {
             return vec![collection.to_vec()];
         }
 
-        collection.chunks(size)
-            .map(<[T]>::to_vec)
-            .collect()
+        collection.chunks(size).map(<[T]>::to_vec).collect()
     }
 
     /// Zip two collections together
@@ -580,7 +590,8 @@ impl CollUtil {
     /// assert_eq!(zipped, vec![(1, "a"), (2, "b"), (3, "c")]);
     /// ```
     pub fn zip<T: Clone, U: Clone>(collection1: &[T], collection2: &[U]) -> Vec<(T, U)> {
-        collection1.iter()
+        collection1
+            .iter()
             .zip(collection2.iter())
             .map(|(a, b)| (a.clone(), b.clone()))
             .collect()

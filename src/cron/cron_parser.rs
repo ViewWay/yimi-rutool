@@ -81,7 +81,7 @@ impl CronExpression {
     /// ```
     pub fn parse(expression: &str) -> Result<Self> {
         let fields: Vec<&str> = expression.trim().split_whitespace().collect();
-        
+
         match fields.len() {
             5 => {
                 // Standard format: minute hour day month weekday
@@ -199,14 +199,15 @@ impl CronExpression {
         // This is a simplified implementation
         // A full implementation would need to handle all edge cases
         let mut next = *after + chrono::Duration::minutes(1);
-        
+
         // Truncate to minute precision if seconds are not specified
         if self.seconds.is_none() {
             next = next.with_second(0).unwrap().with_nanosecond(0).unwrap();
         }
 
         // Look for the next matching time within a reasonable window
-        for _ in 0..366 * 24 * 60 { // Max one year
+        for _ in 0..366 * 24 * 60 {
+            // Max one year
             if self.matches(&next) {
                 return Some(next);
             }
@@ -248,7 +249,8 @@ impl CronField {
                 return Err(Error::validation(format!("Invalid step format: {}", field)));
             }
 
-            let step: u32 = parts[1].parse()
+            let step: u32 = parts[1]
+                .parse()
                 .map_err(|_| Error::validation(format!("Invalid step value: {}", parts[1])))?;
 
             if step == 0 {
@@ -268,16 +270,24 @@ impl CronField {
         if field.contains('-') {
             let parts: Vec<&str> = field.split('-').collect();
             if parts.len() != 2 {
-                return Err(Error::validation(format!("Invalid range format: {}", field)));
+                return Err(Error::validation(format!(
+                    "Invalid range format: {}",
+                    field
+                )));
             }
 
-            let start: u32 = parts[0].parse()
+            let start: u32 = parts[0]
+                .parse()
                 .map_err(|_| Error::validation(format!("Invalid range start: {}", parts[0])))?;
-            let end: u32 = parts[1].parse()
+            let end: u32 = parts[1]
+                .parse()
                 .map_err(|_| Error::validation(format!("Invalid range end: {}", parts[1])))?;
 
             if start > end {
-                return Err(Error::validation(format!("Range start {} is greater than end {}", start, end)));
+                return Err(Error::validation(format!(
+                    "Range start {} is greater than end {}",
+                    start, end
+                )));
             }
 
             // Validate range bounds
@@ -297,9 +307,11 @@ impl CronField {
             let mut values = Vec::new();
 
             for part in parts {
-                let value: u32 = part.trim().parse()
+                let value: u32 = part
+                    .trim()
+                    .parse()
                     .map_err(|_| Error::validation(format!("Invalid list value: {}", part)))?;
-                
+
                 // Validate each value in the list
                 if value < min || value > max {
                     return Err(Error::validation(format!(
@@ -307,7 +319,7 @@ impl CronField {
                         value, min, max
                     )));
                 }
-                
+
                 values.push(value);
             }
 
@@ -319,7 +331,8 @@ impl CronField {
         // Handle special day-of-month expressions
         if field.ends_with('W') {
             let day_str = &field[..field.len() - 1];
-            let day: u32 = day_str.parse()
+            let day: u32 = day_str
+                .parse()
                 .map_err(|_| Error::validation(format!("Invalid weekday expression: {}", field)))?;
             return Ok(CronField::Weekday(day));
         }
@@ -327,8 +340,9 @@ impl CronField {
         // Handle last weekday (nL)
         if field.ends_with('L') && field.len() > 1 {
             let weekday_str = &field[..field.len() - 1];
-            let weekday: u32 = weekday_str.parse()
-                .map_err(|_| Error::validation(format!("Invalid last weekday expression: {}", field)))?;
+            let weekday: u32 = weekday_str.parse().map_err(|_| {
+                Error::validation(format!("Invalid last weekday expression: {}", field))
+            })?;
             return Ok(CronField::LastWeekday(weekday));
         }
 
@@ -336,19 +350,25 @@ impl CronField {
         if field.contains('#') {
             let parts: Vec<&str> = field.split('#').collect();
             if parts.len() != 2 {
-                return Err(Error::validation(format!("Invalid nth weekday format: {}", field)));
+                return Err(Error::validation(format!(
+                    "Invalid nth weekday format: {}",
+                    field
+                )));
             }
 
-            let weekday: u32 = parts[0].parse()
-                .map_err(|_| Error::validation(format!("Invalid weekday in nth expression: {}", parts[0])))?;
-            let nth: u32 = parts[1].parse()
+            let weekday: u32 = parts[0].parse().map_err(|_| {
+                Error::validation(format!("Invalid weekday in nth expression: {}", parts[0]))
+            })?;
+            let nth: u32 = parts[1]
+                .parse()
                 .map_err(|_| Error::validation(format!("Invalid nth value: {}", parts[1])))?;
 
             return Ok(CronField::NthWeekday(weekday, nth));
         }
 
         // Handle single value
-        let value: u32 = field.parse()
+        let value: u32 = field
+            .parse()
             .map_err(|_| Error::validation(format!("Invalid numeric value: {}", field)))?;
 
         // Validate range immediately
@@ -423,30 +443,45 @@ impl CronField {
             }
             CronField::Step(base, step) => {
                 if *step == 0 {
-                    return Err(Error::validation(format!("{} step cannot be zero", field_name)));
+                    return Err(Error::validation(format!(
+                        "{} step cannot be zero",
+                        field_name
+                    )));
                 }
                 base.validate(min, max, field_name)
             }
             CronField::Last => Ok(()), // Context-dependent validation
             CronField::Weekday(day) => {
                 if field_name == "day_of_month" && (*day < 1 || *day > 31) {
-                    Err(Error::validation(format!("Weekday day {} is out of range [1, 31]", day)))
+                    Err(Error::validation(format!(
+                        "Weekday day {} is out of range [1, 31]",
+                        day
+                    )))
                 } else {
                     Ok(())
                 }
             }
             CronField::LastWeekday(weekday) => {
                 if *weekday > 7 {
-                    Err(Error::validation(format!("Last weekday {} is out of range [0, 7]", weekday)))
+                    Err(Error::validation(format!(
+                        "Last weekday {} is out of range [0, 7]",
+                        weekday
+                    )))
                 } else {
                     Ok(())
                 }
             }
             CronField::NthWeekday(weekday, nth) => {
                 if *weekday > 7 {
-                    Err(Error::validation(format!("Nth weekday {} is out of range [0, 7]", weekday)))
+                    Err(Error::validation(format!(
+                        "Nth weekday {} is out of range [0, 7]",
+                        weekday
+                    )))
                 } else if *nth < 1 || *nth > 5 {
-                    Err(Error::validation(format!("Nth occurrence {} is out of range [1, 5]", nth)))
+                    Err(Error::validation(format!(
+                        "Nth occurrence {} is out of range [1, 5]",
+                        nth
+                    )))
                 } else {
                     Ok(())
                 }
@@ -457,7 +492,7 @@ impl CronField {
     /// Get all possible values this field can match
     pub fn get_values(&self, min: u32, max: u32) -> HashSet<u32> {
         let mut values = HashSet::new();
-        
+
         match self {
             CronField::All => {
                 for i in min..=max {
@@ -494,7 +529,7 @@ impl CronField {
             // Special cases would need context-aware implementation
             _ => {}
         }
-        
+
         values
     }
 }
@@ -605,7 +640,8 @@ impl CronBuilder {
                 return Err(Error::validation(format!("Invalid weekday: {}", day)));
             }
         }
-        let weekday_str = weekdays.iter()
+        let weekday_str = weekdays
+            .iter()
             .map(|d| d.to_string())
             .collect::<Vec<_>>()
             .join(",");
@@ -707,7 +743,7 @@ mod tests {
         use chrono::{TimeZone, Utc};
 
         let expr = CronExpression::parse("0 9 * * 1").unwrap(); // Every Monday at 9 AM
-        
+
         // Create a Monday at 9:00 AM
         let monday_9am = Utc.with_ymd_and_hms(2023, 10, 2, 9, 0, 0).unwrap(); // October 2, 2023 was a Monday
         assert!(expr.matches(&monday_9am));

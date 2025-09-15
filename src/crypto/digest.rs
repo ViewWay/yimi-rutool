@@ -6,7 +6,7 @@
 use crate::error::{Error, Result};
 use hmac::{Hmac, Mac};
 use md5::Md5;
-use sha2::{Sha256, Sha512, Digest};
+use sha2::{Digest, Sha256, Sha512};
 
 /// MD5 digest utility
 pub struct Md5Util;
@@ -171,7 +171,7 @@ impl HmacUtil {
     /// ```
     pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<Vec<u8>> {
         type HmacSha256 = Hmac<Sha256>;
-        
+
         let mut mac = HmacSha256::new_from_slice(key)
             .map_err(|e| Error::crypto(format!("Invalid key length: {}", e)))?;
         mac.update(message);
@@ -220,16 +220,16 @@ impl HmacUtil {
     /// let key = b"my-secret-key";
     /// let message = b"hello world";
     /// let hmac = HmacUtil::hmac_sha256(key, message).unwrap();
-    /// 
+    ///
     /// assert!(HmacUtil::verify_hmac_sha256(key, message, &hmac).unwrap());
     /// ```
     pub fn verify_hmac_sha256(key: &[u8], message: &[u8], expected_hmac: &[u8]) -> Result<bool> {
         type HmacSha256 = Hmac<Sha256>;
-        
+
         let mut mac = HmacSha256::new_from_slice(key)
             .map_err(|e| Error::crypto(format!("Invalid key length: {}", e)))?;
         mac.update(message);
-        
+
         match mac.verify_slice(expected_hmac) {
             Ok(()) => Ok(true),
             Err(_) => Ok(false),
@@ -246,10 +246,14 @@ impl HmacUtil {
     /// let key = b"my-secret-key";
     /// let message = b"hello world";
     /// let hmac_hex = HmacUtil::hmac_sha256_hex(key, message).unwrap();
-    /// 
+    ///
     /// assert!(HmacUtil::verify_hmac_sha256_hex(key, message, &hmac_hex).unwrap());
     /// ```
-    pub fn verify_hmac_sha256_hex(key: &[u8], message: &[u8], expected_hmac_hex: &str) -> Result<bool> {
+    pub fn verify_hmac_sha256_hex(
+        key: &[u8],
+        message: &[u8],
+        expected_hmac_hex: &str,
+    ) -> Result<bool> {
         let expected_hmac = hex::decode(expected_hmac_hex)
             .map_err(|e| Error::crypto(format!("Invalid hex string: {}", e)))?;
         Self::verify_hmac_sha256(key, message, &expected_hmac)
@@ -264,7 +268,7 @@ mod tests {
     fn test_md5_digest() {
         let hash = Md5Util::digest(b"hello world");
         assert_eq!(hash.len(), 16);
-        
+
         let hash_hex = Md5Util::digest_hex(b"hello world");
         assert_eq!(hash_hex, "5eb63bbbe01eeed093cb22bb8f5acdc3");
     }
@@ -279,22 +283,28 @@ mod tests {
     fn test_sha256_digest() {
         let hash = ShaUtil::sha256(b"hello world");
         assert_eq!(hash.len(), 32);
-        
+
         let hash_hex = ShaUtil::sha256_hex(b"hello world");
-        assert_eq!(hash_hex, "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
+        assert_eq!(
+            hash_hex,
+            "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        );
     }
 
     #[test]
     fn test_sha256_string() {
         let hash_hex = ShaUtil::sha256_str("hello world");
-        assert_eq!(hash_hex, "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9");
+        assert_eq!(
+            hash_hex,
+            "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        );
     }
 
     #[test]
     fn test_sha512_digest() {
         let hash = ShaUtil::sha512(b"hello world");
         assert_eq!(hash.len(), 64);
-        
+
         let hash_hex = ShaUtil::sha512_hex(b"hello world");
         assert_eq!(hash_hex.len(), 128);
     }
@@ -303,17 +313,17 @@ mod tests {
     fn test_hmac_sha256() {
         let key = b"my-secret-key";
         let message = b"hello world";
-        
+
         let hmac = HmacUtil::hmac_sha256(key, message).unwrap();
         assert_eq!(hmac.len(), 32);
-        
+
         let hmac_hex = HmacUtil::hmac_sha256_hex(key, message).unwrap();
         assert_eq!(hmac_hex.len(), 64);
-        
+
         // Test verification
         assert!(HmacUtil::verify_hmac_sha256(key, message, &hmac).unwrap());
         assert!(HmacUtil::verify_hmac_sha256_hex(key, message, &hmac_hex).unwrap());
-        
+
         // Test with wrong message
         assert!(!HmacUtil::verify_hmac_sha256(key, b"wrong message", &hmac).unwrap());
     }

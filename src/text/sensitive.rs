@@ -43,8 +43,11 @@ impl WordMatch {
 
 impl fmt::Display for WordMatch {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "WordMatch {{ word: '{}', start: {}, end: {}, matched: '{}' }}", 
-               self.word, self.start, self.end, self.matched_text)
+        write!(
+            f,
+            "WordMatch {{ word: '{}', start: {}, end: {}, matched: '{}' }}",
+            self.word, self.start, self.end, self.matched_text
+        )
     }
 }
 
@@ -139,8 +142,12 @@ impl FilterResult {
 
 impl fmt::Display for FilterResult {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "FilterResult {{ matches: {}, filter_rate: {:.1}% }}", 
-               self.match_count(), self.filter_percentage())
+        write!(
+            f,
+            "FilterResult {{ matches: {}, filter_rate: {:.1}% }}",
+            self.match_count(),
+            self.filter_percentage()
+        )
     }
 }
 
@@ -177,8 +184,14 @@ impl ProcessingStats {
 
 impl fmt::Display for ProcessingStats {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "ProcessingStats {{ texts: {}, chars: {}, matches: {}, speed: {:.0} chars/sec }}", 
-               self.texts_processed, self.chars_processed, self.total_matches, self.chars_per_second())
+        write!(
+            f,
+            "ProcessingStats {{ texts: {}, chars: {}, matches: {}, speed: {:.0} chars/sec }}",
+            self.texts_processed,
+            self.chars_processed,
+            self.total_matches,
+            self.chars_per_second()
+        )
     }
 }
 
@@ -252,7 +265,7 @@ impl SensitiveWordFilter {
             case_sensitive: false,
             stats: ProcessingStats::default(),
         };
-        
+
         // Add root node
         filter.nodes.push(DfaNode::new());
         filter
@@ -296,13 +309,13 @@ impl SensitiveWordFilter {
         if word.is_empty() {
             return;
         }
-        
+
         let processed_word = if self.case_sensitive {
             word.to_string()
         } else {
             word.to_lowercase()
         };
-        
+
         self.word_set.insert(processed_word);
         self.built = false; // Need to rebuild automaton
     }
@@ -352,7 +365,7 @@ impl SensitiveWordFilter {
         } else {
             word.to_lowercase()
         };
-        
+
         if self.word_set.remove(&processed_word) {
             self.built = false; // Need to rebuild
         }
@@ -457,7 +470,7 @@ impl SensitiveWordFilter {
         // Build trie
         for word in &self.word_set {
             let mut current = 0;
-            
+
             for ch in word.chars() {
                 if let Some(&next) = self.nodes[current].children.get(&ch) {
                     current = next;
@@ -468,7 +481,7 @@ impl SensitiveWordFilter {
                     current = new_node;
                 }
             }
-            
+
             // Mark end of word
             self.nodes[current].output.push(word.clone());
         }
@@ -481,32 +494,33 @@ impl SensitiveWordFilter {
     /// Build failure links for AC automaton
     fn build_failure_links(&mut self) {
         use std::collections::VecDeque;
-        
+
         let mut queue = VecDeque::new();
-        
+
         // Initialize level 1 nodes
         for &child in self.nodes[0].children.values() {
             queue.push_back(child);
         }
-        
+
         while let Some(current) = queue.pop_front() {
             for (&ch, &child) in &self.nodes[current].children.clone() {
                 queue.push_back(child);
-                
+
                 // Find failure link for child
                 let mut temp = self.nodes[current].failure;
-                
+
                 while temp != 0 && !self.nodes[temp].children.contains_key(&ch) {
                     temp = self.nodes[temp].failure;
                 }
-                
-                if self.nodes[temp].children.contains_key(&ch) && 
-                   self.nodes[temp].children[&ch] != child {
+
+                if self.nodes[temp].children.contains_key(&ch)
+                    && self.nodes[temp].children[&ch] != child
+                {
                     self.nodes[child].failure = self.nodes[temp].children[&ch];
                 } else {
                     self.nodes[child].failure = 0;
                 }
-                
+
                 // Add failure node's output to current node
                 let failure_output = self.nodes[self.nodes[child].failure].output.clone();
                 self.nodes[child].output.extend(failure_output);
@@ -532,7 +546,7 @@ impl SensitiveWordFilter {
     /// let mut filter = SensitiveWordFilter::new();
     /// filter.add_word("bad");
     /// filter.build();
-    /// 
+    ///
     /// let matches = filter.find_matches("This bad text has bad words");
     /// assert_eq!(matches.len(), 2);
     /// ```
@@ -544,35 +558,35 @@ impl SensitiveWordFilter {
         let start_time = std::time::Instant::now();
         let mut matches = Vec::new();
         let mut current = 0;
-        
+
         let processed_text = if self.case_sensitive {
             text.to_string()
         } else {
             text.to_lowercase()
         };
-        
+
         let chars: Vec<char> = processed_text.chars().collect();
-        
+
         for (i, &ch) in chars.iter().enumerate() {
             // Follow failure links until we find a match or reach root
             while current != 0 && !self.nodes[current].children.contains_key(&ch) {
                 current = self.nodes[current].failure;
             }
-            
+
             if let Some(&next) = self.nodes[current].children.get(&ch) {
                 current = next;
             }
-            
+
             // Check for matches at current position
             for word in &self.nodes[current].output {
                 let word_len = word.chars().count();
                 let start_pos = i + 1 - word_len;
                 let end_pos = i + 1;
-                
+
                 // Get original text for the match
                 let original_chars: Vec<char> = text.chars().collect();
                 let matched_text: String = original_chars[start_pos..end_pos].iter().collect();
-                
+
                 matches.push(WordMatch::new(
                     word.clone(),
                     start_pos,
@@ -610,7 +624,7 @@ impl SensitiveWordFilter {
     /// let mut filter = SensitiveWordFilter::new();
     /// filter.add_word("bad");
     /// filter.build();
-    /// 
+    ///
     /// assert!(filter.contains_sensitive_words("This is bad"));
     /// assert!(!filter.contains_sensitive_words("This is good"));
     /// ```
@@ -636,12 +650,13 @@ impl SensitiveWordFilter {
     /// let mut filter = SensitiveWordFilter::new();
     /// filter.add_word("bad");
     /// filter.build();
-    /// 
+    ///
     /// let filtered = filter.filter("This bad text");
     /// println!("Filtered: {}", filtered); // "This *** text"
     /// ```
     pub fn filter(&mut self, text: &str) -> String {
-        self.filter_with_strategy(text, &FilterStrategy::Mask).filtered_text
+        self.filter_with_strategy(text, &FilterStrategy::Mask)
+            .filtered_text
     }
 
     /// Filter text with a specific strategy
@@ -663,14 +678,14 @@ impl SensitiveWordFilter {
     /// let mut filter = SensitiveWordFilter::new();
     /// filter.add_word("bad");
     /// filter.build();
-    /// 
+    ///
     /// let result = filter.filter_with_strategy("This bad text", &FilterStrategy::Replace("good".to_string()));
     /// assert_eq!(result.filtered_text, "This good text");
     /// ```
     pub fn filter_with_strategy(&mut self, text: &str, strategy: &FilterStrategy) -> FilterResult {
         let matches = self.find_matches(text);
         let original_length = text.len();
-        
+
         if matches.is_empty() {
             return FilterResult::new(text.to_string(), matches, original_length);
         }
@@ -681,14 +696,14 @@ impl SensitiveWordFilter {
 
         let mut result = text.to_string();
         let chars: Vec<char> = text.chars().collect();
-        
+
         for word_match in &sorted_matches {
             let replacement = strategy.apply(word_match);
-            
+
             // Convert character positions to byte positions
             let start_byte: usize = chars[..word_match.start].iter().map(|c| c.len_utf8()).sum();
             let end_byte: usize = chars[..word_match.end].iter().map(|c| c.len_utf8()).sum();
-            
+
             result.replace_range(start_byte..end_byte, &replacement);
         }
 
@@ -706,7 +721,7 @@ impl SensitiveWordFilter {
     /// filter.add_word("bad");
     /// filter.build();
     /// filter.filter("Some bad text");
-    /// 
+    ///
     /// let stats = filter.get_stats();
     /// println!("Processed {} texts", stats.texts_processed);
     /// ```
@@ -788,9 +803,13 @@ impl FilterBuilder {
     }
 
     /// Load words from a file (one word per line)
-    pub fn load_from_file<P: AsRef<std::path::Path>>(mut self, path: P) -> Result<Self, std::io::Error> {
+    pub fn load_from_file<P: AsRef<std::path::Path>>(
+        mut self,
+        path: P,
+    ) -> Result<Self, std::io::Error> {
         let content = std::fs::read_to_string(path)?;
-        let words: Vec<&str> = content.lines()
+        let words: Vec<&str> = content
+            .lines()
             .map(|line| line.trim())
             .filter(|line| !line.is_empty())
             .collect();
@@ -869,7 +888,7 @@ mod tests {
 
         let text = "This is bad and evil text";
         let matches = filter.find_matches(text);
-        
+
         assert_eq!(matches.len(), 2);
         assert_eq!(matches[0].word, "bad");
         assert_eq!(matches[1].word, "evil");
@@ -884,7 +903,7 @@ mod tests {
 
         let text = "This is BAD and Bad text";
         let matches = filter.find_matches(text);
-        
+
         assert_eq!(matches.len(), 2);
     }
 
@@ -897,7 +916,7 @@ mod tests {
 
         let text = "This is BAD and bad text";
         let matches = filter.find_matches(text);
-        
+
         assert_eq!(matches.len(), 1);
         assert_eq!(matches[0].word, "bad");
     }
@@ -912,7 +931,7 @@ mod tests {
 
         let text = "she sells seashells";
         let matches = filter.find_matches(text);
-        
+
         // Should find "she" and "he" within "she"
         assert!(matches.len() >= 1);
     }
@@ -925,7 +944,7 @@ mod tests {
 
         let text = "This is bad text";
         let filtered = filter.filter(text);
-        
+
         assert_eq!(filtered, "This is *** text");
     }
 
@@ -938,7 +957,7 @@ mod tests {
         let text = "This is bad text";
         let strategy = FilterStrategy::Replace("good".to_string());
         let result = filter.filter_with_strategy(text, &strategy);
-        
+
         assert_eq!(result.filtered_text, "This is good text");
         assert_eq!(result.matches.len(), 1);
         assert!(result.has_matches());
@@ -957,16 +976,16 @@ mod tests {
     #[test]
     fn test_word_management() {
         let mut filter = SensitiveWordFilter::new();
-        
+
         filter.add_word("bad");
         filter.add_word("evil");
         assert_eq!(filter.word_count(), 2);
         assert!(filter.contains_word("bad"));
-        
+
         filter.remove_word("bad");
         assert_eq!(filter.word_count(), 1);
         assert!(!filter.contains_word("bad"));
-        
+
         filter.clear();
         assert_eq!(filter.word_count(), 0);
     }
@@ -975,7 +994,7 @@ mod tests {
     fn test_add_words() {
         let mut filter = SensitiveWordFilter::new();
         filter.add_words(vec!["bad", "evil", "wrong"]);
-        
+
         assert_eq!(filter.word_count(), 3);
         assert!(filter.contains_word("bad"));
         assert!(filter.contains_word("evil"));
@@ -992,7 +1011,7 @@ mod tests {
 
         let text = "This BAD text is EVIL and wrong";
         let result = filter.filter_with_strategy(text, &FilterStrategy::Mask);
-        
+
         assert_eq!(result.matches.len(), 3);
     }
 
@@ -1012,7 +1031,7 @@ mod tests {
         // In release mode, processing might be too fast to measure, so we allow 0
         // Note: u128 values are always >= 0, so this comparison is not needed
         assert!(stats.processing_time_us == stats.processing_time_us);
-        
+
         // Test statistics calculation methods
         assert!(stats.chars_per_second() >= 0.0);
         assert!(stats.match_rate() >= 0.0);
@@ -1026,11 +1045,11 @@ mod tests {
 
         let text = "This bad text has bad words";
         let result = filter.filter_with_strategy(text, &FilterStrategy::Mask);
-        
+
         assert!(result.has_matches());
         assert_eq!(result.match_count(), 2);
         assert!(result.filter_percentage() > 0.0);
-        
+
         let unique_words = result.unique_words();
         assert_eq!(unique_words.len(), 1);
         assert!(unique_words.contains("bad"));
@@ -1044,7 +1063,7 @@ mod tests {
 
         let matches = filter.find_matches("");
         assert_eq!(matches.len(), 0);
-        
+
         let filtered = filter.filter("");
         assert_eq!(filtered, "");
     }
@@ -1057,7 +1076,7 @@ mod tests {
 
         let text = "This is good text";
         let result = filter.filter_with_strategy(text, &FilterStrategy::Mask);
-        
+
         assert!(!result.has_matches());
         assert_eq!(result.match_count(), 0);
         assert_eq!(result.filtered_text, text);
@@ -1072,7 +1091,7 @@ mod tests {
 
         let text = "这是坏文本";
         let matches = filter.find_matches(text);
-        
+
         assert_eq!(matches.len(), 1);
         assert_eq!(matches[0].word, "坏");
     }
@@ -1084,23 +1103,27 @@ mod tests {
         filter.build();
 
         let text = "This is bad text";
-        
+
         // Test different strategies
         let mask_result = filter.filter_with_strategy(text, &FilterStrategy::Mask);
         assert_eq!(mask_result.filtered_text, "This is *** text");
-        
-        let replace_result = filter.filter_with_strategy(text, &FilterStrategy::Replace("good".to_string()));
+
+        let replace_result =
+            filter.filter_with_strategy(text, &FilterStrategy::Replace("good".to_string()));
         assert_eq!(replace_result.filtered_text, "This is good text");
-        
+
         let char_result = filter.filter_with_strategy(text, &FilterStrategy::Char('X'));
         assert_eq!(char_result.filtered_text, "This is XXX text");
-        
-        let highlight_result = filter.filter_with_strategy(text, &FilterStrategy::Highlight("[".to_string(), "]".to_string()));
+
+        let highlight_result = filter.filter_with_strategy(
+            text,
+            &FilterStrategy::Highlight("[".to_string(), "]".to_string()),
+        );
         assert_eq!(highlight_result.filtered_text, "This is [bad] text");
-        
+
         let remove_result = filter.filter_with_strategy(text, &FilterStrategy::Remove);
         assert_eq!(remove_result.filtered_text, "This is  text");
-        
+
         let keep_result = filter.filter_with_strategy(text, &FilterStrategy::KeepOriginal);
         assert_eq!(keep_result.filtered_text, "This is bad text");
     }

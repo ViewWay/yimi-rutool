@@ -37,14 +37,13 @@ pub mod sensitive;
 
 // Re-export main types for convenience
 pub use sensitive::{
-    SensitiveWordFilter, FilterBuilder, FilterStrategy, FilterResult,
-    WordMatch, ProcessingStats
+    FilterBuilder, FilterResult, FilterStrategy, ProcessingStats, SensitiveWordFilter, WordMatch,
 };
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_module_imports() {
         // Basic test to ensure all imports work

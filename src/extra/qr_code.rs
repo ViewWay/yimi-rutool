@@ -8,10 +8,10 @@ use std::fmt;
 use std::path::Path;
 
 #[cfg(feature = "qrcode")]
-use qrcode::{QrCode as LibQrCode, Version, EcLevel};
+use qrcode::{EcLevel, QrCode as LibQrCode, Version};
 
 #[cfg(feature = "image")]
-use image::{Luma, DynamicImage, ImageFormat as ImgFormat};
+use image::{DynamicImage, ImageFormat as ImgFormat, Luma};
 
 /// QR code generator and parser
 pub struct QrCode {
@@ -83,7 +83,10 @@ impl QrCode {
     ///
     /// let qr = QrCode::with_error_correction("Hello, World!", ErrorCorrectionLevel::High).unwrap();
     /// ```
-    pub fn with_error_correction(data: &str, error_correction: ErrorCorrectionLevel) -> Result<Self> {
+    pub fn with_error_correction(
+        data: &str,
+        error_correction: ErrorCorrectionLevel,
+    ) -> Result<Self> {
         #[cfg(feature = "qrcode")]
         {
             let ec_level = match error_correction {
@@ -116,7 +119,10 @@ impl QrCode {
         #[cfg(feature = "qrcode")]
         {
             if !(1..=40).contains(&version) {
-                return Err(Error::validation(format!("Invalid QR code version: {}", version)));
+                return Err(Error::validation(format!(
+                    "Invalid QR code version: {}",
+                    version
+                )));
             }
 
             let qr_version = Version::Normal(version as i16);
@@ -214,10 +220,11 @@ impl QrCode {
         let image = self.to_image(size)?;
         let mut bytes = Vec::new();
         let mut cursor = std::io::Cursor::new(&mut bytes);
-        
-        image.write_to(&mut cursor, ImgFormat::Png)
+
+        image
+            .write_to(&mut cursor, ImgFormat::Png)
             .map_err(|e| Error::validation(format!("Failed to encode PNG: {}", e)))?;
-        
+
         Ok(bytes)
     }
 
@@ -227,14 +234,15 @@ impl QrCode {
         let image = self.to_image(size)?;
         let mut bytes = Vec::new();
         let mut cursor = std::io::Cursor::new(&mut bytes);
-        
+
         // Convert to RGB for JPEG
         let rgb_image = image.to_rgb8();
         let dynamic = DynamicImage::ImageRgb8(rgb_image);
-        
-        dynamic.write_to(&mut cursor, ImgFormat::Jpeg)
+
+        dynamic
+            .write_to(&mut cursor, ImgFormat::Jpeg)
             .map_err(|e| Error::validation(format!("Failed to encode JPEG: {}", e)))?;
-        
+
         Ok(bytes)
     }
 
@@ -242,7 +250,9 @@ impl QrCode {
     #[cfg(all(feature = "qrcode", feature = "image"))]
     pub fn to_image(&self, size: u32) -> Result<DynamicImage> {
         if size == 0 {
-            return Err(Error::validation("Image size must be greater than 0".to_string()));
+            return Err(Error::validation(
+                "Image size must be greater than 0".to_string(),
+            ));
         }
 
         let qr_size = self.qr_code.width();
@@ -254,7 +264,8 @@ impl QrCode {
             )));
         }
 
-        let image = self.qr_code
+        let image = self
+            .qr_code
             .render::<Luma<u8>>()
             .min_dimensions(size, size)
             .max_dimensions(size, size)
@@ -267,7 +278,8 @@ impl QrCode {
     #[cfg(all(feature = "qrcode", feature = "image"))]
     pub fn save_image<P: AsRef<Path>>(&self, path: P, size: u32) -> Result<()> {
         let image = self.to_image(size)?;
-        image.save(&path)
+        image
+            .save(&path)
             .map_err(|e| Error::validation(format!("Failed to save image: {}", e)))?;
         Ok(())
     }
@@ -279,7 +291,10 @@ impl QrCode {
         let qr_size = self.qr_code.width();
         let scale = size / qr_size as u32;
         if scale == 0 {
-            return format!("<svg width='{}' height='{}' xmlns='http://www.w3.org/2000/svg'></svg>", size, size);
+            return format!(
+                "<svg width='{}' height='{}' xmlns='http://www.w3.org/2000/svg'></svg>",
+                size, size
+            );
         }
 
         let mut svg = format!(
@@ -323,7 +338,7 @@ impl QrCode {
     pub fn capacity_info(&self) -> QrCodeCapacity {
         let version = self.actual_version();
         let ec_level = self.error_correction;
-        
+
         // These are approximate capacities based on QR code specifications
         let (numeric, alphanumeric, binary) = match (version, ec_level) {
             (1, ErrorCorrectionLevel::Low) => (41, 25, 17),
@@ -385,9 +400,17 @@ pub struct QrCodeCapacity {
 
 impl fmt::Display for QrCodeCapacity {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "QR Code Capacity (Version {}, {:?}):", self.version, self.error_correction)?;
+        writeln!(
+            f,
+            "QR Code Capacity (Version {}, {:?}):",
+            self.version, self.error_correction
+        )?;
         writeln!(f, "  Numeric: {} characters", self.numeric_capacity)?;
-        writeln!(f, "  Alphanumeric: {} characters", self.alphanumeric_capacity)?;
+        writeln!(
+            f,
+            "  Alphanumeric: {} characters",
+            self.alphanumeric_capacity
+        )?;
         writeln!(f, "  Binary: {} bytes", self.binary_capacity)?;
         Ok(())
     }
@@ -459,7 +482,9 @@ impl QrCodeUtil {
     /// ```
     pub fn url(url: &str) -> Result<QrCode> {
         if !url.starts_with("http://") && !url.starts_with("https://") {
-            return Err(Error::validation("URL must start with http:// or https://".to_string()));
+            return Err(Error::validation(
+                "URL must start with http:// or https://".to_string(),
+            ));
         }
         QrCode::new(url)
     }
@@ -488,9 +513,10 @@ impl QrCodeUtil {
     /// let qr = QrCodeUtil::email("test@example.com", "Subject", "Body").unwrap();
     /// ```
     pub fn email(to: &str, subject: &str, body: &str) -> Result<QrCode> {
-        let email_string = format!("mailto:{}?subject={}&body={}", 
-            to, 
-            urlencoding::encode(subject), 
+        let email_string = format!(
+            "mailto:{}?subject={}&body={}",
+            to,
+            urlencoding::encode(subject),
             urlencoding::encode(body)
         );
         QrCode::new(&email_string)
@@ -526,7 +552,7 @@ impl QrCodeUtil {
     /// Get optimal QR code version for given data
     pub fn optimal_version(data: &str, error_correction: ErrorCorrectionLevel) -> u8 {
         let data_len = data.len();
-        
+
         // Simple heuristic based on data length and error correction
         let base_version = match data_len {
             0..=25 => 1,
@@ -589,7 +615,7 @@ mod tests {
     fn test_qr_code_creation() {
         let qr = QrCode::new("Hello, World!");
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert_eq!(qr.data(), "Hello, World!");
         assert_eq!(qr.error_correction_level(), ErrorCorrectionLevel::Medium);
@@ -599,7 +625,7 @@ mod tests {
     fn test_qr_code_with_error_correction() {
         let qr = QrCode::with_error_correction("Test", ErrorCorrectionLevel::High);
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert_eq!(qr.error_correction_level(), ErrorCorrectionLevel::High);
     }
@@ -608,7 +634,7 @@ mod tests {
     fn test_qr_code_with_version() {
         let qr = QrCode::with_version("Test", 5);
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert_eq!(qr.version(), Some(5));
     }
@@ -617,7 +643,7 @@ mod tests {
     fn test_invalid_version() {
         let qr = QrCode::with_version("Test", 0);
         assert!(qr.is_err());
-        
+
         let qr = QrCode::with_version("Test", 41);
         assert!(qr.is_err());
     }
@@ -628,7 +654,7 @@ mod tests {
             .error_correction(ErrorCorrectionLevel::High)
             .version(3)
             .build();
-        
+
         assert!(qr.is_ok());
         let qr = qr.unwrap();
         assert_eq!(qr.data(), "Builder test");
@@ -663,7 +689,7 @@ mod tests {
     fn test_qr_util_url() {
         let qr = QrCodeUtil::url("https://example.com");
         assert!(qr.is_ok());
-        
+
         let qr = QrCodeUtil::url("invalid-url");
         assert!(qr.is_err());
     }
@@ -672,7 +698,7 @@ mod tests {
     fn test_qr_util_wifi() {
         let qr = QrCodeUtil::wifi("MyNetwork", "password123", "WPA");
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert!(qr.data().contains("WIFI:"));
         assert!(qr.data().contains("MyNetwork"));
@@ -683,7 +709,7 @@ mod tests {
     fn test_qr_util_email() {
         let qr = QrCodeUtil::email("test@example.com", "Hello", "Test message");
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert!(qr.data().contains("mailto:"));
         assert!(qr.data().contains("test@example.com"));
@@ -693,7 +719,7 @@ mod tests {
     fn test_qr_util_phone() {
         let qr = QrCodeUtil::phone("+1234567890");
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert!(qr.data().contains("tel:"));
         assert!(qr.data().contains("+1234567890"));
@@ -703,7 +729,7 @@ mod tests {
     fn test_qr_util_geo() {
         let qr = QrCodeUtil::geo_location(37.7749, -122.4194);
         assert!(qr.is_ok());
-        
+
         let qr = qr.unwrap();
         assert!(qr.data().contains("geo:"));
         assert!(qr.data().contains("37.7749"));
@@ -714,7 +740,7 @@ mod tests {
     fn test_optimal_version() {
         let version = QrCodeUtil::optimal_version("Short", ErrorCorrectionLevel::Low);
         assert_eq!(version, 1);
-        
+
         let long_text = "A".repeat(200);
         let version = QrCodeUtil::optimal_version(&long_text, ErrorCorrectionLevel::High);
         assert!(version > 5);
@@ -754,7 +780,7 @@ mod tests {
         let qr = QrCode::new("Image test").unwrap();
         let image = qr.to_image(200);
         assert!(image.is_ok());
-        
+
         let image = image.unwrap();
         // The actual image size depends on QR code size and scaling
         // Just check that we got a reasonable size
@@ -770,7 +796,7 @@ mod tests {
         let qr = QrCode::new("PNG test").unwrap();
         let png_bytes = qr.to_png(100);
         assert!(png_bytes.is_ok());
-        
+
         let bytes = png_bytes.unwrap();
         assert!(!bytes.is_empty());
         // PNG signature
@@ -780,7 +806,7 @@ mod tests {
     #[test]
     fn test_invalid_image_size() {
         let qr = QrCode::new("Size test").unwrap();
-        
+
         #[cfg(all(feature = "qrcode", feature = "image"))]
         {
             let result = qr.to_image(0);

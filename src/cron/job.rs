@@ -17,7 +17,8 @@ use tokio::sync::RwLock;
 pub type SyncJobFn = dyn Fn() -> Result<()> + Send + Sync + 'static;
 
 /// Type alias for async job functions
-pub type AsyncJobFn = dyn Fn() -> Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>> + Send + Sync + 'static;
+pub type AsyncJobFn =
+    dyn Fn() -> Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>> + Send + Sync + 'static;
 
 /// A job that can be scheduled and executed by the scheduler
 #[derive(Clone)]
@@ -134,9 +135,11 @@ impl Job {
         F: Fn() -> Fut + Send + Sync + 'static,
         Fut: Future<Output = Result<()>> + Send + 'static,
     {
-        let async_fn = Arc::new(move || -> Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>> {
-            Box::pin(job_fn())
-        });
+        let async_fn = Arc::new(
+            move || -> Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>> {
+                Box::pin(job_fn())
+            },
+        );
 
         Self {
             name: name.to_string(),
@@ -193,12 +196,13 @@ impl Job {
     #[cfg(feature = "tokio")]
     pub async fn execute(&self) -> Result<()> {
         let start_time = Instant::now();
-        
+
         let result = match &self.job_fn {
             JobFunction::Sync(job_fn) => {
                 // Execute sync job in a blocking task
                 let job_fn = job_fn.clone();
-                tokio::task::spawn_blocking(move || job_fn()).await
+                tokio::task::spawn_blocking(move || job_fn())
+                    .await
                     .map_err(|e| Error::custom(format!("Job execution failed: {}", e)))?
             }
             JobFunction::Async(job_fn) => {
@@ -225,10 +229,10 @@ impl Job {
     pub async fn execute_with_retries(&self) -> JobResult {
         let started_at = Instant::now();
         let mut last_error = None;
-        
+
         for attempt in 0..=self.metadata.max_retries {
             let _attempt_start = Instant::now();
-            
+
             match self.execute().await {
                 Ok(_) => {
                     return JobResult {
@@ -241,7 +245,7 @@ impl Job {
                 }
                 Err(e) => {
                     last_error = Some(e.to_string());
-                    
+
                     // Don't sleep after the last attempt
                     if attempt < self.metadata.max_retries {
                         // Exponential backoff: 1s, 2s, 4s, 8s, ...
@@ -404,9 +408,11 @@ impl JobBuilder {
         F: Fn() -> Fut + Send + Sync + 'static,
         Fut: Future<Output = Result<()>> + Send + 'static,
     {
-        let async_fn = Arc::new(move || -> Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>> {
-            Box::pin(job_fn())
-        });
+        let async_fn = Arc::new(
+            move || -> Pin<Box<dyn Future<Output = Result<()>> + Send + 'static>> {
+                Box::pin(job_fn())
+            },
+        );
 
         Job {
             name: self.name,
@@ -435,7 +441,7 @@ impl JobRegistry {
     #[cfg(feature = "tokio")]
     pub async fn register(&self, job: Job) -> Result<()> {
         let mut jobs = self.jobs.write().await;
-        
+
         // Check if job with same name already exists
         if jobs.iter().any(|j| j.name == job.name) {
             return Err(Error::validation(format!(
@@ -443,7 +449,7 @@ impl JobRegistry {
                 job.name
             )));
         }
-        
+
         jobs.push(job);
         Ok(())
     }
@@ -469,10 +475,7 @@ impl JobRegistry {
     #[cfg(feature = "tokio")]
     pub async fn get_by_tag(&self, tag: &str) -> Vec<Job> {
         let jobs = self.jobs.read().await;
-        jobs.iter()
-            .filter(|j| j.has_tag(tag))
-            .cloned()
-            .collect()
+        jobs.iter().filter(|j| j.has_tag(tag)).cloned().collect()
     }
 
     /// Get all jobs ordered by priority (highest first)
@@ -488,7 +491,7 @@ impl JobRegistry {
     #[cfg(feature = "tokio")]
     pub async fn remove(&self, name: &str) -> Result<Job> {
         let mut jobs = self.jobs.write().await;
-        
+
         if let Some(pos) = jobs.iter().position(|j| j.name == name) {
             Ok(jobs.remove(pos))
         } else {
@@ -543,8 +546,8 @@ impl fmt::Display for JobResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::{AtomicU32, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicU32, Ordering};
 
     #[test]
     fn test_job_creation() {
@@ -596,10 +599,13 @@ mod tests {
         let counter = Arc::new(AtomicU32::new(0));
         let counter_clone = counter.clone();
 
-        let job = Job::new("counter_job", Box::new(move || {
-            counter_clone.fetch_add(1, Ordering::SeqCst);
-            Ok(())
-        }));
+        let job = Job::new(
+            "counter_job",
+            Box::new(move || {
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+                Ok(())
+            }),
+        );
 
         assert_eq!(counter.load(Ordering::SeqCst), 0);
         job.execute().await.unwrap();
@@ -611,13 +617,16 @@ mod tests {
         let counter = Arc::new(AtomicU32::new(0));
         let counter_clone = counter.clone();
 
-        let job = Job::new_async("async_counter_job", Box::new(move || {
-            let counter = counter_clone.clone();
-            async move {
-                counter.fetch_add(1, Ordering::SeqCst);
-                Ok(())
-            }
-        }));
+        let job = Job::new_async(
+            "async_counter_job",
+            Box::new(move || {
+                let counter = counter_clone.clone();
+                async move {
+                    counter.fetch_add(1, Ordering::SeqCst);
+                    Ok(())
+                }
+            }),
+        );
 
         assert_eq!(counter.load(Ordering::SeqCst), 0);
         job.execute().await.unwrap();
@@ -629,14 +638,18 @@ mod tests {
         let attempt_count = Arc::new(AtomicU32::new(0));
         let attempt_count_clone = attempt_count.clone();
 
-        let job = Job::new("failing_job", Box::new(move || {
-            let count = attempt_count_clone.fetch_add(1, Ordering::SeqCst);
-            if count < 2 {
-                Err(Error::custom("Simulated failure".to_string()))
-            } else {
-                Ok(())
-            }
-        })).with_max_retries(3);
+        let job = Job::new(
+            "failing_job",
+            Box::new(move || {
+                let count = attempt_count_clone.fetch_add(1, Ordering::SeqCst);
+                if count < 2 {
+                    Err(Error::custom("Simulated failure".to_string()))
+                } else {
+                    Ok(())
+                }
+            }),
+        )
+        .with_max_retries(3);
 
         let result = job.execute_with_retries().await;
         assert!(result.success);
@@ -646,7 +659,7 @@ mod tests {
     #[tokio::test]
     async fn test_job_registry() {
         let registry = JobRegistry::new();
-        
+
         let job1 = Job::new("job1", Box::new(|| Ok(()))).with_category("test");
         let job2 = Job::new("job2", Box::new(|| Ok(()))).with_category("prod");
         let job3 = Job::new("job3", Box::new(|| Ok(()))).with_tag("important");
@@ -676,7 +689,7 @@ mod tests {
     #[tokio::test]
     async fn test_job_registry_duplicate_name() {
         let registry = JobRegistry::new();
-        
+
         let job1 = Job::new("duplicate", Box::new(|| Ok(())));
         let job2 = Job::new("duplicate", Box::new(|| Ok(())));
 

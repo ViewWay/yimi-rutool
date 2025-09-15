@@ -2,7 +2,7 @@
 //!
 //! This module provides comprehensive string manipulation utilities,
 //! inspired by Hutool's `CharSequenceUtil`.
-//! 
+//!
 //! 本模块提供全面的字符串操作工具，灵感来源于Hutool的字符序列工具。
 
 use regex::Regex;
@@ -134,9 +134,7 @@ impl StrUtil {
     /// assert_eq!(StrUtil::remove_all_whitespace("a\tb\nc"), "abc");
     /// ```
     pub fn remove_all_whitespace(s: &str) -> String {
-        s.chars()
-            .filter(|c| !c.is_whitespace())
-            .collect()
+        s.chars().filter(|c| !c.is_whitespace()).collect()
     }
 
     /// Convert string to lowercase
@@ -482,9 +480,7 @@ impl StrUtil {
     /// Returns `regex::Error` if the pattern is invalid
     pub fn extract_all(s: &str, pattern: &str) -> Result<Vec<String>, regex::Error> {
         let regex = Regex::new(pattern)?;
-        Ok(regex.find_iter(s)
-            .map(|m| m.as_str().to_string())
-            .collect())
+        Ok(regex.find_iter(s).map(|m| m.as_str().to_string()).collect())
     }
 
     /// Reverse a string
@@ -712,14 +708,20 @@ mod tests {
 
     #[test]
     fn test_replace() {
-        assert_eq!(StrUtil::replace("hello world", "world", "rust"), "hello rust");
+        assert_eq!(
+            StrUtil::replace("hello world", "world", "rust"),
+            "hello rust"
+        );
         assert_eq!(StrUtil::replace("aaa", "a", "b"), "bbb");
     }
 
     #[test]
     fn test_format() {
         assert_eq!(StrUtil::format("Hello, {0}!", &["World"]), "Hello, World!");
-        assert_eq!(StrUtil::format("{0} + {1} = {2}", &["1", "2", "3"]), "1 + 2 = 3");
+        assert_eq!(
+            StrUtil::format("{0} + {1} = {2}", &["1", "2", "3"]),
+            "1 + 2 = 3"
+        );
     }
 
     #[test]

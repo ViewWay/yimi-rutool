@@ -187,17 +187,17 @@ impl JsonUtil {
     ///
     /// let json = r#"{"user": {"name": "Alice", "address": {"city": "New York"}}}"#;
     /// let value = JsonUtil::parse(json).unwrap();
-    /// 
+    ///
     /// let name = JsonUtil::get_by_path(&value, "user.name").unwrap();
     /// assert_eq!(name, "Alice");
-    /// 
+    ///
     /// let city = JsonUtil::get_by_path(&value, "user.address.city").unwrap();
     /// assert_eq!(city, "New York");
     /// ```
     pub fn get_by_path<'a>(value: &'a Value, path: &str) -> Option<&'a Value> {
         let parts: Vec<&str> = path.split('.').collect();
         let mut current = value;
-        
+
         for part in parts {
             match current {
                 Value::Object(map) => {
@@ -213,7 +213,7 @@ impl JsonUtil {
                 _ => return None,
             }
         }
-        
+
         Some(current)
     }
 
@@ -227,7 +227,7 @@ impl JsonUtil {
     ///
     /// let mut value = json!({"user": {"name": "Alice"}});
     /// JsonUtil::set_by_path(&mut value, "user.age", json!(30)).unwrap();
-    /// 
+    ///
     /// assert_eq!(value["user"]["age"], 30);
     /// ```
     pub fn set_by_path(value: &mut Value, path: &str, new_value: Value) -> Result<()> {
@@ -235,9 +235,9 @@ impl JsonUtil {
         if parts.is_empty() {
             return Err(Error::validation("Empty path".to_string()));
         }
-        
+
         let mut current = value;
-        
+
         for (i, part) in parts.iter().enumerate() {
             if i == parts.len() - 1 {
                 // Last part, set the value
@@ -255,7 +255,11 @@ impl JsonUtil {
                         }
                         return Err(Error::validation("Invalid array index".to_string()));
                     }
-                    _ => return Err(Error::validation("Cannot set value on non-object/array".to_string())),
+                    _ => {
+                        return Err(Error::validation(
+                            "Cannot set value on non-object/array".to_string(),
+                        ));
+                    }
                 }
             }
             // Navigate deeper
@@ -276,10 +280,14 @@ impl JsonUtil {
                         return Err(Error::validation("Invalid array index".to_string()));
                     }
                 }
-                _ => return Err(Error::validation("Cannot navigate through non-object/array".to_string())),
+                _ => {
+                    return Err(Error::validation(
+                        "Cannot navigate through non-object/array".to_string(),
+                    ));
+                }
             }
         }
-        
+
         Ok(())
     }
 
@@ -293,7 +301,7 @@ impl JsonUtil {
     ///
     /// let mut value = json!({"user": {"name": "Alice", "age": 30}});
     /// JsonUtil::remove_by_path(&mut value, "user.age").unwrap();
-    /// 
+    ///
     /// assert!(value["user"]["age"].is_null());
     /// ```
     pub fn remove_by_path(value: &mut Value, path: &str) -> Result<Value> {
@@ -301,47 +309,57 @@ impl JsonUtil {
         if parts.is_empty() {
             return Err(Error::validation("Empty path".to_string()));
         }
-        
+
         let mut current = value;
-        
+
         // Navigate to parent
         for part in &parts[..parts.len() - 1] {
             match current {
                 Value::Object(map) => {
-                    current = map.get_mut(*part)
+                    current = map
+                        .get_mut(*part)
                         .ok_or_else(|| Error::not_found(format!("Path not found: {}", part)))?;
                 }
                 Value::Array(arr) => {
                     if let Ok(index) = part.parse::<usize>() {
-                        current = arr.get_mut(index)
-                            .ok_or_else(|| Error::not_found(format!("Array index not found: {}", index)))?;
+                        current = arr.get_mut(index).ok_or_else(|| {
+                            Error::not_found(format!("Array index not found: {}", index))
+                        })?;
                     } else {
                         return Err(Error::validation("Invalid array index".to_string()));
                     }
                 }
-                _ => return Err(Error::validation("Cannot navigate through non-object/array".to_string())),
+                _ => {
+                    return Err(Error::validation(
+                        "Cannot navigate through non-object/array".to_string(),
+                    ));
+                }
             }
         }
-        
+
         // Remove the final key
         let final_key = parts[parts.len() - 1];
         match current {
-            Value::Object(map) => {
-                map.remove(final_key)
-                    .ok_or_else(|| Error::not_found(format!("Key not found: {}", final_key)))
-            }
+            Value::Object(map) => map
+                .remove(final_key)
+                .ok_or_else(|| Error::not_found(format!("Key not found: {}", final_key))),
             Value::Array(arr) => {
                 if let Ok(index) = final_key.parse::<usize>() {
                     if index < arr.len() {
                         Ok(arr.remove(index))
                     } else {
-                        Err(Error::not_found(format!("Array index not found: {}", index)))
+                        Err(Error::not_found(format!(
+                            "Array index not found: {}",
+                            index
+                        )))
                     }
                 } else {
                     Err(Error::validation("Invalid array index".to_string()))
                 }
             }
-            _ => Err(Error::validation("Cannot remove from non-object/array".to_string())),
+            _ => Err(Error::validation(
+                "Cannot remove from non-object/array".to_string(),
+            )),
         }
     }
 
@@ -355,9 +373,9 @@ impl JsonUtil {
     ///
     /// let mut base = json!({"a": 1, "b": {"c": 2}});
     /// let overlay = json!({"b": {"d": 3}, "e": 4});
-    /// 
+    ///
     /// JsonUtil::merge(&mut base, &overlay);
-    /// 
+    ///
     /// assert_eq!(base["a"], 1);
     /// assert_eq!(base["b"]["c"], 2);
     /// assert_eq!(base["b"]["d"], 3);
@@ -391,7 +409,7 @@ impl JsonUtil {
     ///
     /// let value = json!({"user": {"name": "Alice", "age": 30}});
     /// let map = JsonUtil::to_flat_map(&value);
-    /// 
+    ///
     /// assert_eq!(map.get("user.name"), Some(&"Alice".to_string()));
     /// assert_eq!(map.get("user.age"), Some(&"30".to_string()));
     /// ```
@@ -448,7 +466,7 @@ impl JsonUtil {
     ///     ("name", "Alice"),
     ///     ("city", "New York"),
     /// ];
-    /// 
+    ///
     /// let json = JsonUtil::from_pairs(&pairs);
     /// assert_eq!(json["name"], "Alice");
     /// assert_eq!(json["city"], "New York");
@@ -471,7 +489,7 @@ impl JsonUtil {
     ///
     /// let value = json!({"user": {"name": "Alice", "age": 30}, "status": "active"});
     /// let keys = JsonUtil::get_all_keys(&value);
-    /// 
+    ///
     /// assert!(keys.contains(&"user.name".to_string()));
     /// assert!(keys.contains(&"user.age".to_string()));
     /// assert!(keys.contains(&"status".to_string()));
@@ -491,7 +509,7 @@ impl JsonUtil {
                     } else {
                         format!("{}.{}", prefix, key)
                     };
-                    
+
                     match val {
                         Value::Object(_) | Value::Array(_) => {
                             Self::collect_keys(val, full_key, keys);
@@ -509,7 +527,7 @@ impl JsonUtil {
                     } else {
                         format!("{}.{}", prefix, index)
                     };
-                    
+
                     match val {
                         Value::Object(_) | Value::Array(_) => {
                             Self::collect_keys(val, full_key, keys);
@@ -542,12 +560,8 @@ impl JsonUtil {
     /// ```
     pub fn count_elements(value: &Value) -> usize {
         match value {
-            Value::Object(map) => {
-                map.values().map(|v| Self::count_elements(v)).sum()
-            }
-            Value::Array(arr) => {
-                arr.iter().map(|v| Self::count_elements(v)).sum()
-            }
+            Value::Object(map) => map.values().map(|v| Self::count_elements(v)).sum(),
+            Value::Array(arr) => arr.iter().map(|v| Self::count_elements(v)).sum(),
             _ => 1,
         }
     }
@@ -590,10 +604,10 @@ mod tests {
             name: "Alice".to_string(),
             age: 30,
         };
-        
+
         let json_str = JsonUtil::to_string(&person).unwrap();
         let parsed: TestPerson = JsonUtil::from_str(&json_str).unwrap();
-        
+
         assert_eq!(parsed, person);
     }
 
@@ -603,7 +617,7 @@ mod tests {
             name: "Alice".to_string(),
             age: 30,
         };
-        
+
         let pretty = JsonUtil::to_string_pretty(&person).unwrap();
         assert!(pretty.contains("  \"name\": \"Alice\""));
         assert!(pretty.contains("  \"age\": 30"));
@@ -614,7 +628,7 @@ mod tests {
         let json_str = r#"{"name": "Alice", "age": 30}"#;
         let value = JsonUtil::parse(json_str).unwrap();
         let stringified = JsonUtil::stringify(&value).unwrap();
-        
+
         assert!(stringified.contains("Alice"));
         assert!(stringified.contains("30"));
     }
@@ -626,7 +640,7 @@ mod tests {
         assert!(JsonUtil::is_valid(r#""string""#));
         assert!(JsonUtil::is_valid("42"));
         assert!(JsonUtil::is_valid("true"));
-        
+
         assert!(!JsonUtil::is_valid(r#"{"name": "Alice""#));
         assert!(!JsonUtil::is_valid(r#"invalid json"#));
     }
@@ -637,12 +651,12 @@ mod tests {
             "name": "Alice",
             "age": 30
         }"#;
-        
+
         let minified = JsonUtil::minify(pretty_json).unwrap();
         // JSON key order might vary, so check that both keys are present
         assert!(minified.contains(r#""name":"Alice""#));
         assert!(minified.contains(r#""age":30"#));
-        
+
         let prettified = JsonUtil::prettify(&minified).unwrap();
         assert!(prettified.contains("  \"name\": \"Alice\""));
     }
@@ -657,18 +671,18 @@ mod tests {
                 }
             }
         });
-        
+
         // Test get_by_path
         let name = JsonUtil::get_by_path(&value, "user.name").unwrap();
         assert_eq!(name, "Alice");
-        
+
         let city = JsonUtil::get_by_path(&value, "user.address.city").unwrap();
         assert_eq!(city, "New York");
-        
+
         // Test set_by_path
         JsonUtil::set_by_path(&mut value, "user.age", json!(30)).unwrap();
         assert_eq!(value["user"]["age"], 30);
-        
+
         // Test remove_by_path
         let removed = JsonUtil::remove_by_path(&mut value, "user.address.city").unwrap();
         assert_eq!(removed, "New York");
@@ -679,9 +693,9 @@ mod tests {
     fn test_merge() {
         let mut base = json!({"a": 1, "b": {"c": 2}});
         let overlay = json!({"b": {"d": 3}, "e": 4});
-        
+
         JsonUtil::merge(&mut base, &overlay);
-        
+
         assert_eq!(base["a"], 1);
         assert_eq!(base["b"]["c"], 2);
         assert_eq!(base["b"]["d"], 3);
@@ -697,9 +711,9 @@ mod tests {
             },
             "status": "active"
         });
-        
+
         let flat_map = JsonUtil::to_flat_map(&value);
-        
+
         assert_eq!(flat_map.get("user.name"), Some(&"Alice".to_string()));
         assert_eq!(flat_map.get("user.age"), Some(&"30".to_string()));
         assert_eq!(flat_map.get("status"), Some(&"active".to_string()));
@@ -707,11 +721,8 @@ mod tests {
 
     #[test]
     fn test_from_pairs() {
-        let pairs = vec![
-            ("name", "Alice"),
-            ("city", "New York"),
-        ];
-        
+        let pairs = vec![("name", "Alice"), ("city", "New York")];
+
         let json = JsonUtil::from_pairs(&pairs);
         assert_eq!(json["name"], "Alice");
         assert_eq!(json["city"], "New York");
@@ -726,9 +737,9 @@ mod tests {
             },
             "status": "active"
         });
-        
+
         let keys = JsonUtil::get_all_keys(&value);
-        
+
         assert!(keys.contains(&"user.name".to_string()));
         assert!(keys.contains(&"user.age".to_string()));
         assert!(keys.contains(&"status".to_string()));
@@ -744,7 +755,7 @@ mod tests {
             },
             "status": "active"
         });
-        
+
         let count = JsonUtil::count_elements(&value);
         assert_eq!(count, 3);
     }
@@ -754,7 +765,7 @@ mod tests {
         let value = json!(42);
         let num: i32 = JsonUtil::convert_to(&value).unwrap();
         assert_eq!(num, 42);
-        
+
         let value = json!({"name": "Alice", "age": 30});
         let person: TestPerson = JsonUtil::convert_to(&value).unwrap();
         assert_eq!(person.name, "Alice");
@@ -769,11 +780,11 @@ mod tests {
                 {"name": "Bob", "age": 25}
             ]
         });
-        
+
         // Test get from array
         let name = JsonUtil::get_by_path(&value, "users.0.name").unwrap();
         assert_eq!(name, "Alice");
-        
+
         // Test set in array
         JsonUtil::set_by_path(&mut value, "users.1.age", json!(26)).unwrap();
         assert_eq!(value["users"][1]["age"], 26);

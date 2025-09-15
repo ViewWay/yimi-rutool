@@ -316,11 +316,12 @@ impl QueryBuilder {
 
     /// Add a WHERE condition with IN
     pub fn where_in(mut self, column: &str, values: &[&str]) -> Self {
-        let values_str = values.iter()
+        let values_str = values
+            .iter()
             .map(|v| format!("'{}'", v.replace('\'', "''")))
             .collect::<Vec<_>>()
             .join(", ");
-        
+
         self.conditions.push(Condition {
             column: column.to_string(),
             operator: "IN".to_string(),
@@ -430,7 +431,7 @@ impl QueryBuilder {
 
     fn build_select(&self) -> Result<String> {
         let mut query = String::new();
-        
+
         // SELECT clause
         query.push_str("SELECT ");
         if self.columns.is_empty() {
@@ -438,20 +439,24 @@ impl QueryBuilder {
         } else {
             query.push_str(&self.columns.join(", "));
         }
-        
+
         // FROM clause
         if let Some(table) = &self.table {
             query.push_str(&format!(" FROM {}", table));
         } else {
-            return Err(Error::validation("Table name is required for SELECT query".to_string()));
+            return Err(Error::validation(
+                "Table name is required for SELECT query".to_string(),
+            ));
         }
-        
+
         // JOIN clauses
         for join in &self.joins {
-            query.push_str(&format!(" {} JOIN {} ON {}", 
-                join.join_type, join.table, join.on_condition));
+            query.push_str(&format!(
+                " {} JOIN {} ON {}",
+                join.join_type, join.table, join.on_condition
+            ));
         }
-        
+
         // WHERE clause
         if !self.conditions.is_empty() {
             query.push_str(" WHERE ");
@@ -459,16 +464,20 @@ impl QueryBuilder {
                 if i > 0 {
                     query.push_str(&format!(" {} ", condition.connector));
                 }
-                query.push_str(&format!("{} {} {}", 
-                    condition.column, condition.operator, self.format_value(&condition.value)));
+                query.push_str(&format!(
+                    "{} {} {}",
+                    condition.column,
+                    condition.operator,
+                    self.format_value(&condition.value)
+                ));
             }
         }
-        
+
         // GROUP BY clause
         if !self.group_by.is_empty() {
             query.push_str(&format!(" GROUP BY {}", self.group_by.join(", ")));
         }
-        
+
         // HAVING clause
         if !self.having.is_empty() {
             query.push_str(" HAVING ");
@@ -476,77 +485,98 @@ impl QueryBuilder {
                 if i > 0 {
                     query.push_str(&format!(" {} ", condition.connector));
                 }
-                query.push_str(&format!("{} {} {}", 
-                    condition.column, condition.operator, self.format_value(&condition.value)));
+                query.push_str(&format!(
+                    "{} {} {}",
+                    condition.column,
+                    condition.operator,
+                    self.format_value(&condition.value)
+                ));
             }
         }
-        
+
         // ORDER BY clause
         if !self.order_by.is_empty() {
             query.push_str(" ORDER BY ");
-            let order_parts: Vec<String> = self.order_by.iter()
+            let order_parts: Vec<String> = self
+                .order_by
+                .iter()
                 .map(|order| format!("{} {}", order.column, order.direction))
                 .collect();
             query.push_str(&order_parts.join(", "));
         }
-        
+
         // LIMIT clause
         if let Some(limit) = self.limit {
             query.push_str(&format!(" LIMIT {}", limit));
         }
-        
+
         // OFFSET clause
         if let Some(offset) = self.offset {
             query.push_str(&format!(" OFFSET {}", offset));
         }
-        
+
         Ok(query)
     }
 
     fn build_insert(&self) -> Result<String> {
-        let table = self.table.as_ref().ok_or_else(|| 
-            Error::validation("Table name is required for INSERT query".to_string()))?;
-        
+        let table = self.table.as_ref().ok_or_else(|| {
+            Error::validation("Table name is required for INSERT query".to_string())
+        })?;
+
         if self.columns.is_empty() {
-            return Err(Error::validation("Columns are required for INSERT query".to_string()));
+            return Err(Error::validation(
+                "Columns are required for INSERT query".to_string(),
+            ));
         }
-        
+
         if self.values.len() != self.columns.len() {
-            return Err(Error::validation("Number of values must match number of columns".to_string()));
+            return Err(Error::validation(
+                "Number of values must match number of columns".to_string(),
+            ));
         }
-        
+
         let mut query = format!("INSERT INTO {} ({})", table, self.columns.join(", "));
-        
-        let values_str: Vec<String> = self.values.iter()
+
+        let values_str: Vec<String> = self
+            .values
+            .iter()
             .map(|value| self.format_value(value))
             .collect();
-        
+
         query.push_str(&format!(" VALUES ({})", values_str.join(", ")));
-        
+
         Ok(query)
     }
 
     fn build_update(&self) -> Result<String> {
-        let table = self.table.as_ref().ok_or_else(|| 
-            Error::validation("Table name is required for UPDATE query".to_string()))?;
-        
+        let table = self.table.as_ref().ok_or_else(|| {
+            Error::validation("Table name is required for UPDATE query".to_string())
+        })?;
+
         if self.columns.is_empty() {
-            return Err(Error::validation("SET clause is required for UPDATE query".to_string()));
+            return Err(Error::validation(
+                "SET clause is required for UPDATE query".to_string(),
+            ));
         }
-        
+
         if self.values.len() != self.columns.len() {
-            return Err(Error::validation("Number of values must match number of columns".to_string()));
+            return Err(Error::validation(
+                "Number of values must match number of columns".to_string(),
+            ));
         }
-        
+
         let mut query = format!("UPDATE {}", table);
-        
+
         // SET clause
         query.push_str(" SET ");
-        let set_parts: Vec<String> = self.columns.iter().zip(self.values.iter())
+        let set_parts: Vec<String> = self
+            .columns
+            .iter()
+            .zip(self.values.iter())
             .map(|(col, val)| format!("{} = {}", col, self.format_value(val)))
             .collect();
         query.push_str(&set_parts.join(", "));
-        
+
         // WHERE clause
         if !self.conditions.is_empty() {
             query.push_str(" WHERE ");
@@ -554,20 +584,25 @@ impl QueryBuilder {
                 if i > 0 {
                     query.push_str(&format!(" {} ", condition.connector));
                 }
-                query.push_str(&format!("{} {} {}", 
-                    condition.column, condition.operator, self.format_value(&condition.value)));
+                query.push_str(&format!(
+                    "{} {} {}",
+                    condition.column,
+                    condition.operator,
+                    self.format_value(&condition.value)
+                ));
             }
         }
-        
+
         Ok(query)
     }
 
     fn build_delete(&self) -> Result<String> {
-        let table = self.table.as_ref().ok_or_else(|| 
-            Error::validation("Table name is required for DELETE query".to_string()))?;
-        
+        let table = self.table.as_ref().ok_or_else(|| {
+            Error::validation("Table name is required for DELETE query".to_string())
+        })?;
+
         let mut query = format!("DELETE FROM {}", table);
-        
+
         // WHERE clause
         if !self.conditions.is_empty() {
             query.push_str(" WHERE ");
@@ -575,11 +610,15 @@ impl QueryBuilder {
                 if i > 0 {
                     query.push_str(&format!(" {} ", condition.connector));
                 }
-                query.push_str(&format!("{} {} {}", 
-                    condition.column, condition.operator, self.format_value(&condition.value)));
+                query.push_str(&format!(
+                    "{} {} {}",
+                    condition.column,
+                    condition.operator,
+                    self.format_value(&condition.value)
+                ));
             }
         }
-        
+
         Ok(query)
     }
 
@@ -649,24 +688,22 @@ pub struct QueryExecutor;
 
 impl QueryExecutor {
     /// Execute a query and return a formatted result
-    pub fn format_query_result(
-        rows: Vec<HashMap<String, serde_json::Value>>
-    ) -> Result<String> {
+    pub fn format_query_result(rows: Vec<HashMap<String, serde_json::Value>>) -> Result<String> {
         if rows.is_empty() {
             return Ok("No results found.".to_string());
         }
 
         let mut result = String::new();
-        
+
         // Get column names from first row
         let columns: Vec<String> = rows[0].keys().cloned().collect();
-        
+
         // Calculate column widths
         let mut widths: HashMap<String, usize> = HashMap::new();
         for col in &columns {
             widths.insert(col.clone(), col.len());
         }
-        
+
         for row in &rows {
             for (col, value) in row {
                 let value_str = match value {
@@ -679,7 +716,7 @@ impl QueryExecutor {
                 }
             }
         }
-        
+
         // Create header
         result.push('|');
         for col in &columns {
@@ -687,7 +724,7 @@ impl QueryExecutor {
             result.push_str(&format!(" {:width$} |", col, width = width));
         }
         result.push('\n');
-        
+
         // Create separator
         result.push('|');
         for col in &columns {
@@ -695,7 +732,7 @@ impl QueryExecutor {
             result.push_str(&format!("{:-<width$}|", "", width = width + 2));
         }
         result.push('\n');
-        
+
         // Create data rows
         for row in &rows {
             result.push('|');
@@ -711,7 +748,7 @@ impl QueryExecutor {
             }
             result.push('\n');
         }
-        
+
         Ok(result)
     }
 
@@ -722,35 +759,38 @@ impl QueryExecutor {
         }
 
         let mut result = String::new();
-        
+
         // Get column names from first row
         let columns: Vec<String> = rows[0].keys().cloned().collect();
-        
+
         // Write header
         result.push_str(&columns.join(","));
         result.push('\n');
-        
+
         // Write data rows
         for row in &rows {
-            let values: Vec<String> = columns.iter().map(|col| {
-                let value = row.get(col).unwrap_or(&serde_json::Value::Null);
-                match value {
-                    serde_json::Value::String(s) => {
-                        if s.contains(',') || s.contains('"') || s.contains('\n') {
-                            format!("\"{}\"", s.replace('"', "\"\""))
-                        } else {
-                            s.clone()
+            let values: Vec<String> = columns
+                .iter()
+                .map(|col| {
+                    let value = row.get(col).unwrap_or(&serde_json::Value::Null);
+                    match value {
+                        serde_json::Value::String(s) => {
+                            if s.contains(',') || s.contains('"') || s.contains('\n') {
+                                format!("\"{}\"", s.replace('"', "\"\""))
+                            } else {
+                                s.clone()
+                            }
                         }
+                        serde_json::Value::Null => String::new(),
+                        _ => value.to_string(),
                     }
-                    serde_json::Value::Null => String::new(),
-                    _ => value.to_string(),
-                }
-            }).collect();
-            
+                })
+                .collect();
+
             result.push_str(&values.join(","));
             result.push('\n');
         }
-        
+
         Ok(result)
     }
 }
@@ -876,13 +916,25 @@ mod tests {
     fn test_query_executor_format() {
         let mut rows = Vec::new();
         let mut row1 = HashMap::new();
-        row1.insert("id".to_string(), serde_json::Value::Number(serde_json::Number::from(1)));
-        row1.insert("name".to_string(), serde_json::Value::String("Alice".to_string()));
+        row1.insert(
+            "id".to_string(),
+            serde_json::Value::Number(serde_json::Number::from(1)),
+        );
+        row1.insert(
+            "name".to_string(),
+            serde_json::Value::String("Alice".to_string()),
+        );
         rows.push(row1);
 
         let mut row2 = HashMap::new();
-        row2.insert("id".to_string(), serde_json::Value::Number(serde_json::Number::from(2)));
-        row2.insert("name".to_string(), serde_json::Value::String("Bob".to_string()));
+        row2.insert(
+            "id".to_string(),
+            serde_json::Value::Number(serde_json::Number::from(2)),
+        );
+        row2.insert(
+            "name".to_string(),
+            serde_json::Value::String("Bob".to_string()),
+        );
         rows.push(row2);
 
         let result = QueryExecutor::format_query_result(rows).unwrap();
@@ -895,8 +947,14 @@ mod tests {
     fn test_query_executor_csv() {
         let mut rows = Vec::new();
         let mut row1 = HashMap::new();
-        row1.insert("id".to_string(), serde_json::Value::Number(serde_json::Number::from(1)));
-        row1.insert("name".to_string(), serde_json::Value::String("Alice".to_string()));
+        row1.insert(
+            "id".to_string(),
+            serde_json::Value::Number(serde_json::Number::from(1)),
+        );
+        row1.insert(
+            "name".to_string(),
+            serde_json::Value::String("Alice".to_string()),
+        );
         rows.push(row1);
 
         let csv = QueryExecutor::to_csv(rows).unwrap();

@@ -3,7 +3,10 @@
 //! This module provides comprehensive date and time manipulation utilities,
 //! inspired by Hutool's `DateUtil`.
 
-use chrono::{DateTime, Datelike, Duration, Local, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Timelike, Utc, Weekday};
+use chrono::{
+    DateTime, Datelike, Duration, Local, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Timelike,
+    Utc, Weekday,
+};
 
 /// Date and time utility functions
 pub struct DateUtil;
@@ -73,7 +76,10 @@ impl DateUtil {
     /// assert_eq!(datetime.minute(), 30);
     /// assert_eq!(datetime.second(), 45);
     /// ```
-    pub fn parse_datetime(datetime_str: &str, format: &str) -> Result<NaiveDateTime, chrono::ParseError> {
+    pub fn parse_datetime(
+        datetime_str: &str,
+        format: &str,
+    ) -> Result<NaiveDateTime, chrono::ParseError> {
         NaiveDateTime::parse_from_str(datetime_str, format)
     }
 
@@ -550,12 +556,12 @@ impl DateUtil {
     pub fn parse_auto(date_str: &str) -> Result<NaiveDate, chrono::ParseError> {
         // Try different common formats
         let formats = [
-            "%Y-%m-%d",     // 2023-12-25
-            "%m/%d/%Y",     // 12/25/2023
-            "%d/%m/%Y",     // 25/12/2023
-            "%Y/%m/%d",     // 2023/12/25
-            "%d-%m-%Y",     // 25-12-2023
-            "%m-%d-%Y",     // 12-25-2023
+            "%Y-%m-%d", // 2023-12-25
+            "%m/%d/%Y", // 12/25/2023
+            "%d/%m/%Y", // 25/12/2023
+            "%Y/%m/%d", // 2023/12/25
+            "%d-%m-%Y", // 25-12-2023
+            "%m-%d-%Y", // 12-25-2023
         ];
 
         for format in &formats {
