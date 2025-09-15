@@ -108,7 +108,7 @@ impl HttpUtil {
     ///
     /// # Examples
     ///
-    /// ```rust
+    /// ```rust,no_run
     /// use yimi_rutool::http::HttpUtil;
     /// use serde::{Deserialize, Serialize};
     ///
@@ -119,6 +119,7 @@ impl HttpUtil {
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     // Note: This example requires network access and may fail in CI
     ///     let response: ApiResponse = HttpUtil::get_json("https://httpbin.org/get").await?;
     ///     println!("URL: {}", response.url);
     ///     Ok(())
