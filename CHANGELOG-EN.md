@@ -16,13 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- 版本管理自动化工具和脚本
-- GitHub Actions CI/CD工作流
-- 统一的版本发布流程
+- Version management automation tools and scripts
+- GitHub Actions CI/CD workflows
+- Unified version release process
 
 ### Changed
-- 改进版本管理策略
-- 标准化提交消息格式
+- Improved version management strategy
+- Standardized commit message format
 
 ## [0.2.4] - 2025-09-15
 

@@ -1,5 +1,13 @@
 # Version Management for yimi-rutool
 
+<div align="center">
+  <h3>🌍 Language / 语言</h3>
+  <p>
+    <a href="VERSION_MANAGEMENT.md">中文</a> •
+    <a href="VERSION_MANAGEMENT-EN.md">English</a>
+  </p>
+</div>
+
 This document provides an overview of the version management system implemented for yimi-rutool.
 
 ## 🎯 Overview

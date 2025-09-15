@@ -1,0 +1,31 @@
+{
+  "languages": {
+    "zh": {
+      "name": "中文",
+      "code": "zh",
+      "readme": "README.md",
+      "changelog": "CHANGELOG.md",
+      "contributing": "CONTRIBUTING.md",
+      "branch_strategy": "BRANCH_STRATEGY.md",
+      "release_checklist": "RELEASE_CHECKLIST.md",
+      "version_management": "VERSION_MANAGEMENT.md"
+    },
+    "en": {
+      "name": "English",
+      "code": "en",
+      "readme": "README-EN.md",
+      "changelog": "CHANGELOG-EN.md",
+      "contributing": "CONTRIBUTING-EN.md",
+      "branch_strategy": "BRANCH_STRATEGY-EN.md",
+      "release_checklist": "RELEASE_CHECKLIST-EN.md",
+      "version_management": "VERSION_MANAGEMENT-EN.md"
+    }
+  },
+  "default_language": "zh",
+  "supported_languages": ["zh", "en"],
+  "language_switcher_template": {
+    "header": "<div align=\"center\">\n  <h3>🌍 Language / 语言</h3>\n  <p>",
+    "separator": " • ",
+    "footer": "  </p>\n</div>"
+  }
+}

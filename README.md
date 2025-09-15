@@ -2,7 +2,15 @@
 
 [![Crates.io](https://img.shields.io/crates/v/yimi-rutool.svg)](https://crates.io/crates/yimi-rutool)
 [![Documentation](https://docs.rs/yimi-rutool/badge.svg)](https://docs.rs/yimi-rutool)
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/yimiliya/yimi-rutool)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](https://github.com/ViewWay/yimi-rutool)
+
+<div align="center">
+  <h3>🌍 Language / 语言</h3>
+  <p>
+    <a href="README.md">中文</a> •
+    <a href="README-EN.md">English</a>
+  </p>
+</div>
 
 **yimi-rutool** 是一个受 [Hutool](https://hutool.cn/) 启发的综合性 Rust 工具库，为日常开发任务提供丰富的工具函数。
 
