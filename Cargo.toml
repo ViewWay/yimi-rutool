@@ -44,9 +44,9 @@ integration_tests = []
 # Core dependencies
 thiserror = "2.0.16"
 anyhow = "1.0.99"
-once_cell = "1.21"
-regex = "1.11"
-lazy_static = "1.5"
+once_cell = "1.21.3"
+regex = "1.11.1"
+lazy_static = "1.5.0"
 itertools = "0.14.0"
 rayon = "1.11.0"
 chrono = { version = "0.4", features = ["serde"], optional = true }
