@@ -55,12 +55,12 @@ urlencoding = "2.1"
 hex = "0.4"
 
 # Optional dependencies
-tokio = { version = "1.47", features = ["full"], optional = true }
+tokio = { version = "1.47.1", features = ["full"], optional = true }
 serde = { version = "1.0.223", features = ["derive"], optional = true }
 serde_json = { version = "1.0.145", optional = true }
 reqwest = { version = "0.12.23", features = ["json", "blocking"], optional = true }
-futures = { version = "0.3", optional = true }
-url = { version = "2.5", optional = true }
+futures = { version = "0.3.31", optional = true }
+url = { version = "2.5.7", optional = true }
 
 # Crypto dependencies
 rand = { version = "0.8.5", optional = true }
