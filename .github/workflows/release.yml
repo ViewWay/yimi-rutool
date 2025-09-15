@@ -1,0 +1,135 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 0.2.5)'
+        required: true
+        type: string
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Cache cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install release tools
+      run: |
+        cargo install cargo-release
+        cargo install cargo-audit
+
+    - name: Verify tag
+      if: github.ref_type == 'tag'
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        echo "Releasing version: $TAG"
+        
+        # Verify tag format
+        if [[ ! $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "Error: Invalid tag format. Expected vX.Y.Z"
+          exit 1
+        fi
+
+    - name: Set version
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        VERSION=${{ github.event.inputs.version }}
+        echo "Releasing version: $VERSION"
+        
+        # Verify version format
+        if [[ ! $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "Error: Invalid version format. Expected X.Y.Z"
+          exit 1
+        fi
+
+    - name: Run tests
+      run: |
+        cargo test --all-features
+        cargo test --doc
+        cargo clippy --all-targets --all-features -- -D warnings
+        cargo fmt --all -- --check
+
+    - name: Run security audit
+      run: cargo audit
+
+    - name: Build documentation
+      run: cargo doc --no-deps --all-features
+
+    - name: Create release archive
+      run: |
+        cargo package --allow-dirty
+
+    - name: Upload release assets
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-assets
+        path: target/package/yimi-rutool-*.crate
+
+    - name: Create GitHub Release
+      if: github.ref_type == 'tag'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: target/package/yimi-rutool-*.crate
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to crates.io
+      if: github.ref_type == 'tag'
+      run: |
+        # Only publish if this is not a pre-release
+        TAG=${GITHUB_REF#refs/tags/}
+        if [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "Publishing to crates.io..."
+          cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        else
+          echo "Skipping crates.io publish for pre-release tag: $TAG"
+        fi
+
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: release
+    if: always()
+
+    steps:
+    - name: Notify on success
+      if: needs.release.result == 'success'
+      run: |
+        echo "Release completed successfully!"
+        # Add notification logic here (Slack, Discord, etc.)
+
+    - name: Notify on failure
+      if: needs.release.result == 'failure'
+      run: |
+        echo "Release failed!"
+        # Add failure notification logic here

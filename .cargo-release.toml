@@ -1,0 +1,145 @@
+# cargo-release configuration for yimi-rutool
+
+[workspace]
+# Workspace configuration
+members = []
+
+[release]
+# Release configuration
+tag-prefix = "v"
+tag-message = "Release {{crate_name}} {{version}}"
+tag-message-single = "Release {{crate_name}} {{version}}"
+tag-message-multiple = "Release {{crate_name}} {{version}}"
+
+# Commit message configuration
+commit-message = "chore: release {{crate_name}} {{version}}"
+commit-message-single = "chore: release {{crate_name}} {{version}}"
+commit-message-multiple = "chore: release {{crate_name}} {{version}}"
+
+# Pre-release hooks
+pre-release-commit-message = "chore: prepare release {{crate_name}} {{version}}"
+pre-release-commit-message-single = "chore: prepare release {{crate_name}} {{version}}"
+pre-release-commit-message-multiple = "chore: prepare release {{crate_name}} {{version}}"
+
+# Post-release hooks
+post-release-commit-message = "chore: post-release {{crate_name}} {{version}}"
+post-release-commit-message-single = "chore: post-release {{crate_name}} {{version}}"
+post-release-commit-message-multiple = "chore: post-release {{crate_name}} {{version}}"
+
+# Version configuration
+version-ext = "{{version}}"
+version-ext-single = "{{version}}"
+version-ext-multiple = "{{version}}"
+
+# Allow dirty working directory (for development)
+allow-dirty = false
+
+# Allow branch configuration
+allow-branch = ["main", "master"]
+
+# Sign tags
+sign-tags = false
+
+# Push to remote
+push = true
+
+# Push remote name
+push-remote = "origin"
+
+# Registry configuration
+registry = "crates-io"
+
+# Package configuration
+package = "yimi-rutool"
+
+# Changelog configuration
+changelog = "CHANGELOG.md"
+changelog-single = "CHANGELOG.md"
+changelog-multiple = "CHANGELOG.md"
+
+# Auto publish to crates.io
+publish = true
+
+# Auto publish registry
+publish-registry = "crates-io"
+
+# Auto publish timeout
+publish-timeout = 300
+
+# Auto publish retry
+publish-retry = 3
+
+# Auto publish retry delay
+publish-retry-delay = 5
+
+# Auto publish dry run
+publish-dry-run = false
+
+# Auto publish allow dirty
+publish-allow-dirty = false
+
+# Auto publish allow branch
+publish-allow-branch = ["main", "master"]
+
+# Auto publish sign
+publish-sign = false
+
+# Auto publish registry
+publish-registry = "crates-io"
+
+# Auto publish package
+publish-package = "yimi-rutool"
+
+# Auto publish version
+publish-version = "{{version}}"
+
+# Auto publish version ext
+publish-version-ext = "{{version}}"
+
+# Auto publish version ext single
+publish-version-ext-single = "{{version}}"
+
+# Auto publish version ext multiple
+publish-version-ext-multiple = "{{version}}"
+
+# Auto publish tag
+publish-tag = "v{{version}}"
+
+# Auto publish tag prefix
+publish-tag-prefix = "v"
+
+# Auto publish tag message
+publish-tag-message = "Release {{crate_name}} {{version}}"
+
+# Auto publish tag message single
+publish-tag-message-single = "Release {{crate_name}} {{version}}"
+
+# Auto publish tag message multiple
+publish-tag-message-multiple = "Release {{crate_name}} {{version}}"
+
+# Auto publish commit message
+publish-commit-message = "chore: release {{crate_name}} {{version}}"
+
+# Auto publish commit message single
+publish-commit-message-single = "chore: release {{crate_name}} {{version}}"
+
+# Auto publish commit message multiple
+publish-commit-message-multiple = "chore: release {{crate_name}} {{version}}"
+
+# Auto publish pre release commit message
+publish-pre-release-commit-message = "chore: prepare release {{crate_name}} {{version}}"
+
+# Auto publish pre release commit message single
+publish-pre-release-commit-message-single = "chore: prepare release {{crate_name}} {{version}}"
+
+# Auto publish pre release commit message multiple
+publish-pre-release-commit-message-multiple = "chore: prepare release {{crate_name}} {{version}}"
+
+# Auto publish post release commit message
+publish-post-release-commit-message = "chore: post-release {{crate_name}} {{version}}"
+
+# Auto publish post release commit message single
+publish-post-release-commit-message-single = "chore: post-release {{crate_name}} {{version}}"
+
+# Auto publish post release commit message multiple
+publish-post-release-commit-message-multiple = "chore: post-release {{crate_name}} {{version}}"

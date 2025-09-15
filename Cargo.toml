@@ -89,6 +89,7 @@ jsonwebtoken = { version = "9.3", optional = true }
 criterion = "0.7.0"
 proptest = "1.7"
 tempfile = "3.22"
+cargo-release = "0.25.18"
 
 [profile.release]
 opt-level = 3
