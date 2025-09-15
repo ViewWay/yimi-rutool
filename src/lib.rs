@@ -98,6 +98,14 @@ pub mod extra;
 #[cfg(feature = "jwt")]
 pub mod jwt;
 
+/// Algorithm implementations (bloom filters, etc.)
+#[cfg(feature = "algorithms")]
+pub mod algorithms;
+
+/// Text processing utilities (sensitive word filtering, etc.)
+#[cfg(feature = "text")]
+pub mod text;
+
 /// Error types used throughout the library
 pub mod error;
 

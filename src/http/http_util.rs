@@ -30,7 +30,7 @@ impl HttpUtil {
     /// ```
     pub fn client() -> Client {
         Client::builder()
-            .timeout(Duration::from_secs(30))
+            .timeout(Duration::from_secs(60))  // Increased timeout for network reliability
             .user_agent("rutool/0.1.0")
             .build()
             .unwrap()
@@ -62,11 +62,12 @@ impl HttpUtil {
     ///
     /// # Examples
     ///
-    /// ```rust
+    /// ```rust,no_run
     /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    ///     // Note: This example requires network access and may timeout in CI
     ///     let response = HttpUtil::get("https://httpbin.org/get").await?;
     ///     println!("Status: {}", response.status());
     ///     Ok(())
@@ -85,7 +86,7 @@ impl HttpUtil {
     ///
     /// # Examples
     ///
-    /// ```rust
+    /// ```rust,no_run
     /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
@@ -410,7 +411,7 @@ impl HttpUtil {
     ///
     /// # Examples
     ///
-    /// ```rust
+    /// ```rust,no_run
     /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
@@ -458,7 +459,7 @@ impl HttpUtil {
     ///
     /// # Examples
     ///
-    /// ```rust
+    /// ```rust,no_run
     /// use yimi_rutool::http::HttpUtil;
     ///
     /// #[tokio::main]
@@ -617,7 +618,7 @@ impl HttpUtil {
     /// ```
     pub fn get_blocking(url: &str) -> Result<reqwest::blocking::Response> {
         let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(30))
+            .timeout(Duration::from_secs(60))  // Increased timeout for network reliability
             .user_agent("rutool/0.1.0")
             .build()
             .map_err(|e| Error::Http(e))?;
@@ -665,7 +666,7 @@ impl HttpUtil {
     /// ```
     pub fn post_json_blocking<T: Serialize>(url: &str, json: &T) -> Result<reqwest::blocking::Response> {
         let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(30))
+            .timeout(Duration::from_secs(60))  // Increased timeout for network reliability
             .user_agent("rutool/0.1.0")
             .build()
             .map_err(|e| Error::Http(e))?;
